@@ -14,3 +14,24 @@ Goal: Allow CLI agents to answer PGxQA questions. We specifically also want to c
 
 ## Links
 [BixBench](https://huggingface.co/datasets/futurehouse/BixBench/viewer/default/train?row=0)
+
+
+## Available Agents
+Provided by harbor:
+- oracle
+- nop
+- claude-code
+- cline-cli
+- terminus
+- terminus-1
+- terminus-2
+- aider
+- codex
+- cursor-cli
+- gemini-cli
+- goose
+- mini-swe-agent
+- swe-agent
+- opencode
+- openhands
+- qwen-coder
