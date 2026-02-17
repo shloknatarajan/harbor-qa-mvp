@@ -26,53 +26,109 @@ def _get_task_dir(result: dict) -> Path | None:
     return task_dir if task_dir.exists() else None
 
 
-def parse_answer_options(result: dict) -> dict[str, str]:
-    """Parse answer options from instruction.md, returning {letter: text}."""
+def parse_answer_options(result: dict) -> dict[str, dict[str, str]]:
+    """Parse answer options from instruction.md.
+
+    Returns {question_number: {letter: text}}, e.g.
+    {"1": {"a": "temsirolimus", "b": "sirolimus", ...}, "2": {...}}
+    For single-question tasks, returns {"1": {letter: text}}.
+    """
     task_dir = _get_task_dir(result)
     if not task_dir:
         return {}
     instruction = task_dir / "instruction.md"
     if not instruction.exists():
         return {}
+    text = instruction.read_text()
+
+    # Detect multi-question format (## Question N)
+    q_headers = list(re.finditer(r"^## Question (\d+)", text, re.MULTILINE))
+    if q_headers:
+        result_opts: dict[str, dict[str, str]] = {}
+        for i, hdr in enumerate(q_headers):
+            q_num = hdr.group(1)
+            start = hdr.end()
+            end = q_headers[i + 1].start() if i + 1 < len(q_headers) else len(text)
+            section = text[start:end]
+            opts = {}
+            for m in re.finditer(r"^- ([a-z])\)\s+(.+)$", section, re.MULTILINE):
+                opts[m.group(1)] = m.group(2).strip()
+            result_opts[q_num] = opts
+        return result_opts
+
+    # Single-question fallback
     options = {}
-    for m in re.finditer(
-        r"^- ([a-z])\)\s+(.+)$", instruction.read_text(), re.MULTILINE
-    ):
+    for m in re.finditer(r"^- ([a-z])\)\s+(.+)$", text, re.MULTILINE):
         options[m.group(1)] = m.group(2).strip()
-    return options
+    return {"1": options} if options else {}
 
 
-def extract_correct_answer(result: dict) -> str | None:
-    """Extract the correct answer letter from the task's test file."""
+def extract_correct_answers(result: dict) -> dict[str, str]:
+    """Extract correct answer letters from the task's test file.
+
+    Returns a dict like {"1": "c", "2": "a"} for multi-question tasks,
+    or {"1": "c"} for single-question tasks.
+    """
     task_dir = _get_task_dir(result)
     if not task_dir:
-        return None
+        return {}
     test_file = task_dir / "tests" / "test_outputs.py"
     if test_file.exists():
         content = test_file.read_text()
+        # Multi-question: EXPECTED = {"1": "c", "2": "a"}
+        m = re.search(r"EXPECTED\s*=\s*(\{[^}]+\})", content)
+        if m:
+            try:
+                # Remove trailing commas before closing brace (Python dict literal)
+                raw = m.group(1).replace("'", '"')
+                raw = re.sub(r",\s*}", "}", raw)
+                return json.loads(raw)
+            except json.JSONDecodeError:
+                pass
+        # Single-question: assert answer == "c"
         m = re.search(r'assert\s+answer\s*==\s*["\'](\w+)["\']', content)
         if m:
-            return m.group(1)
-    return None
+            return {"1": m.group(1)}
+    return {}
 
 
-def extract_agent_answer(trial_dir: Path) -> str | None:
-    """Extract the agent's answer from its log/trajectory."""
+def extract_agent_answers(trial_dir: Path) -> dict[str, str]:
+    """Extract the agent's answers from its log/trajectory.
+
+    Returns a dict like {"1": "c", "2": "a"} for multi-question tasks,
+    or {"1": "c"} for single-question tasks.
+    """
     log_file = trial_dir / "agent" / "claude-code.txt"
-    if log_file.exists():
-        content = log_file.read_text()
-        # Look for Write tool result with answer.txt content
-        for m in re.finditer(
-            r'"filePath"\s*:\s*"/app/answer\.txt"\s*,\s*"content"\s*:\s*"([^"]*)"',
-            content,
-        ):
-            return m.group(1).strip()
-        # Check for echo commands (handles escaped quotes in JSON)
-        for m in re.finditer(
-            r'echo\s+(?:\\?"?|\'?)(\w)(?:\\?"?|\'?)\s*>\s*/app/answer\.txt', content
-        ):
-            return m.group(1).strip()
-    return None
+    if not log_file.exists():
+        return {}
+    content = log_file.read_text()
+
+    # Multi-question: Write tool with /app/answers.json content
+    # Matches both "file_path" (tool input) and "filePath" (tool result)
+    for m in re.finditer(
+        r'"(?:file_path|filePath)"\s*:\s*"/app/answers\.json"\s*,\s*"content"\s*:\s*"((?:[^"\\]|\\.)*)"',
+        content,
+    ):
+        try:
+            raw = m.group(1).replace("\\n", "\n").replace('\\"', '"')
+            return json.loads(raw)
+        except json.JSONDecodeError:
+            continue
+
+    # Single-question: Write tool with /app/answer.txt content
+    for m in re.finditer(
+        r'"(?:file_path|filePath)"\s*:\s*"/app/answer\.txt"\s*,\s*"content"\s*:\s*"((?:[^"\\]|\\.)*)"',
+        content,
+    ):
+        return {"1": m.group(1).strip()}
+
+    # Fallback: echo commands
+    for m in re.finditer(
+        r'echo\s+(?:\\?"?|\'?)(\w)(?:\\?"?|\'?)\s*>\s*/app/answer\.txt', content
+    ):
+        return {"1": m.group(1).strip()}
+
+    return {}
 
 
 def format_answer(letter: str | None, options: dict[str, str]) -> str:
@@ -162,15 +218,24 @@ def format_trial(trial_dir: Path) -> tuple[list[str], dict]:
             exc_msg = exc_msg[:120] + "..."
         lines.append(f"        error: {exc_type}: {exc_msg}")
 
-    options = parse_answer_options(result)
-    agent_ans = extract_agent_answer(trial_dir)
-    correct_ans = extract_correct_answer(result)
-    if agent_ans or correct_ans:
-        agent_str = format_answer(agent_ans, options)
-        correct_str = format_answer(correct_ans, options)
-        lines.append(
-            f"        agent answer: {agent_str}  |  correct answer: {correct_str}"
-        )
+    options_by_q = parse_answer_options(result)
+    agent_answers = extract_agent_answers(trial_dir)
+    correct_answers = extract_correct_answers(result)
+    all_q_nums = sorted(set(agent_answers) | set(correct_answers))
+    if all_q_nums:
+        for q in all_q_nums:
+            q_options = options_by_q.get(q, {})
+            agent_str = format_answer(agent_answers.get(q), q_options)
+            correct_str = format_answer(correct_answers.get(q), q_options)
+            match = (
+                "✓"
+                if agent_answers.get(q, "").lower()
+                == correct_answers.get(q, "").lower()
+                else "✗"
+            )
+            lines.append(
+                f"        Q{q}: {match}  model: {agent_str}  |  expected: {correct_str}"
+            )
 
     return lines, {"status": status, "reward": reward}
 

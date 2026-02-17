@@ -13,7 +13,7 @@ uvx \
   pytest --ctrf /logs/verifier/ctrf.json /tests/test_outputs.py -rA
 
 # Write the fraction of passed tests as the reward
-python3 - <<'PYEOF'
+$HOME/.local/bin/uv run python - <<'PYEOF'
 import json, pathlib
 ctrf = json.loads(pathlib.Path("/logs/verifier/ctrf.json").read_text())
 summary = ctrf["results"]["summary"]

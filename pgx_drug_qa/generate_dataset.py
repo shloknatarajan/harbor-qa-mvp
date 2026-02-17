@@ -70,7 +70,7 @@ uvx \\
   pytest --ctrf /logs/verifier/ctrf.json /tests/test_outputs.py -rA
 
 # Write the fraction of passed tests as the reward
-python3 - <<'PYEOF'
+$HOME/.local/bin/uv run python - <<'PYEOF'
 import json, pathlib
 ctrf = json.loads(pathlib.Path("/logs/verifier/ctrf.json").read_text())
 summary = ctrf["results"]["summary"]
@@ -108,7 +108,7 @@ def build_instruction(pmcid: str, questions: list[dict]) -> str:
     lines.append("")
     lines.append(
         f"Write your answers to `/app/answers.json` as a JSON object mapping "
-        f'question numbers (as strings) to answer letters. For example:'
+        f"question numbers (as strings) to answer letters. For example:"
     )
     lines.append("")
     lines.append("```json")
@@ -117,7 +117,7 @@ def build_instruction(pmcid: str, questions: list[dict]) -> str:
     lines.append("```")
     lines.append("")
     lines.append(
-        f"You must answer all {len(questions)} questions (keys \"1\" through \"{len(questions)}\")."
+        f'You must answer all {len(questions)} questions (keys "1" through "{len(questions)}").'
     )
     lines.append("")
 
@@ -152,7 +152,7 @@ def build_test_py(questions: list[dict]) -> str:
         lines.append(f'    got = answers.get("{i}", "").strip().lower()')
         lines.append(
             f'    assert got == "{q["correct_answer"]}", '
-            f'f"Q{i}: expected \'{q["correct_answer"]}\', got \'{{got}}\'"'
+            f"f\"Q{i}: expected '{q['correct_answer']}', got '{{got}}'\""
         )
         lines.append("")
         lines.append("")
@@ -218,7 +218,9 @@ def main():
         (tests_dir / "test.sh").write_text(TEST_SH)
         (tests_dir / "test_outputs.py").write_text(build_test_py(questions))
 
-        print(f"  [{idx:3d}/{MAX_PMCIDS}] {task_name} ({pmcid}) — {len(questions)} questions")
+        print(
+            f"  [{idx:3d}/{MAX_PMCIDS}] {task_name} ({pmcid}) — {len(questions)} questions"
+        )
 
     print(f"\nGenerated {len(selected)} tasks with {total_questions} total questions.")
 

@@ -10,7 +10,7 @@ EXPECTED = {
 }
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def answers():
     f = Path("/app/answers.json")
     assert f.exists(), "answers.json not found"
@@ -25,4 +25,3 @@ def test_question_1(answers):
 def test_question_2(answers):
     got = answers.get("2", "").strip().lower()
     assert got == "a", f"Q2: expected 'a', got '{got}'"
-
