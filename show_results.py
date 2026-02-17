@@ -35,7 +35,9 @@ def parse_answer_options(result: dict) -> dict[str, str]:
     if not instruction.exists():
         return {}
     options = {}
-    for m in re.finditer(r'^- ([a-z])\)\s+(.+)$', instruction.read_text(), re.MULTILINE):
+    for m in re.finditer(
+        r"^- ([a-z])\)\s+(.+)$", instruction.read_text(), re.MULTILINE
+    ):
         options[m.group(1)] = m.group(2).strip()
     return options
 
@@ -60,10 +62,15 @@ def extract_agent_answer(trial_dir: Path) -> str | None:
     if log_file.exists():
         content = log_file.read_text()
         # Look for Write tool result with answer.txt content
-        for m in re.finditer(r'"filePath"\s*:\s*"/app/answer\.txt"\s*,\s*"content"\s*:\s*"([^"]*)"', content):
+        for m in re.finditer(
+            r'"filePath"\s*:\s*"/app/answer\.txt"\s*,\s*"content"\s*:\s*"([^"]*)"',
+            content,
+        ):
             return m.group(1).strip()
         # Check for echo commands (handles escaped quotes in JSON)
-        for m in re.finditer(r'echo\s+(?:\\?"?|\'?)(\w)(?:\\?"?|\'?)\s*>\s*/app/answer\.txt', content):
+        for m in re.finditer(
+            r'echo\s+(?:\\?"?|\'?)(\w)(?:\\?"?|\'?)\s*>\s*/app/answer\.txt', content
+        ):
             return m.group(1).strip()
     return None
 
@@ -139,7 +146,9 @@ def format_trial(trial_dir: Path) -> tuple[list[str], dict]:
     ]:
         phase = result.get(phase_key)
         if phase and phase.get("started_at") and phase.get("finished_at"):
-            phases.append(f"{phase_name}={format_duration(phase['started_at'], phase['finished_at'])}")
+            phases.append(
+                f"{phase_name}={format_duration(phase['started_at'], phase['finished_at'])}"
+            )
 
     reward_str = f"reward={reward}" if reward is not None else "no reward"
     lines.append(f"  [{icon}] {task_name:<20} {reward_str:<14} {duration:<10}{tokens}")
@@ -159,7 +168,9 @@ def format_trial(trial_dir: Path) -> tuple[list[str], dict]:
     if agent_ans or correct_ans:
         agent_str = format_answer(agent_ans, options)
         correct_str = format_answer(correct_ans, options)
-        lines.append(f"        agent answer: {agent_str}  |  correct answer: {correct_str}")
+        lines.append(
+            f"        agent answer: {agent_str}  |  correct answer: {correct_str}"
+        )
 
     return lines, {"status": status, "reward": reward}
 
@@ -185,7 +196,9 @@ def format_job(job_dir: Path) -> str:
             duration = format_duration(result["started_at"], result["finished_at"])
         n_trials = result.get("n_total_trials", "?")
         n_errors = result.get("stats", {}).get("n_errors", 0)
-        lines.append(f"  Trials:   {n_trials}  |  Errors: {n_errors}  |  Duration: {duration}")
+        lines.append(
+            f"  Trials:   {n_trials}  |  Errors: {n_errors}  |  Duration: {duration}"
+        )
 
         for eval_name, eval_data in result.get("stats", {}).get("evals", {}).items():
             metrics = eval_data.get("metrics", [])
