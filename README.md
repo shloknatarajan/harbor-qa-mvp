@@ -7,7 +7,7 @@ Goal: Allow CLI agents to answer PGxQA questions. We specifically also want to c
 - Gemini
 
 ## Tasks
-- [ ] Basic running of a harbor cli agent on a local question
+- [X] Basic running of a harbor cli agent on a local question
 - [ ] MVP: Figure out how to feed papers + question to the CLI agent
 - [ ] Flush out one dataset
 - [ ] Benchmark the popular cli agents on the dataset
