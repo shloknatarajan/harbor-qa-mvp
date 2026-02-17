@@ -5,6 +5,7 @@ Example usage:
     python main.py -p mvp_pgx -a claude-code -n 1           # run mvp_pgx dataset
     python main.py -p pgx_drug_qa -a claude-code -n 1       # run pgx_drug_qa (100 PMCIDs)
     python main.py -p mvp_dataset -a claude-code -n 2       # run 2 attempts
+    python main.py -p pgx_drug_qa -a codex -m o3-mini -n 1  # run pgx_drug_qa with codex
 
 Filtering tasks:
     python main.py -p pgx_drug_qa -a claude-code -l 5                       # first 5 tasks only
