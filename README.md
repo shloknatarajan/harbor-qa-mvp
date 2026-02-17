@@ -8,8 +8,8 @@ Goal: Allow CLI agents to answer PGxQA questions. We specifically also want to c
 
 ## Tasks
 - [X] Basic running of a harbor cli agent on a local question
-- [ ] MVP: Figure out how to feed papers + question to the CLI agent
-- [ ] Flush out one dataset
+- [X] MVP: Figure out how to feed papers + question to the CLI agent
+- [ ] Port over one dataset from PGxQA
 - [ ] Benchmark the popular cli agents on the dataset
 
 ## Links

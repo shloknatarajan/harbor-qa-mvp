@@ -1,0 +1,149 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **12 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Allele A is associated with increased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) Epidermal growth factor receptor (EGFR) tyrosine kinase inhibitors
+- b) Protein kinase inhibitors
+- c) Direct factor Xa inhibitors
+- d) BCR-ABL tyrosine kinase inhibitors
+
+## Question 2
+
+Allele A is associated with increased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) Protein kinase inhibitors
+- b) BCR-ABL tyrosine kinase inhibitors
+- c) Direct factor Xa inhibitors
+- d) None of the options
+
+## Question 3
+
+Allele G is associated with increased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele A.
+
+Which drug correctly fills in the blank?
+
+- a) Direct factor Xa inhibitors
+- b) BCR-ABL tyrosine kinase inhibitors
+- c) Epidermal growth factor receptor (EGFR) tyrosine kinase inhibitors
+- d) Protein kinase inhibitors
+
+## Question 4
+
+Allele G is associated with increased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele A.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) Protein kinase inhibitors
+- c) BCR-ABL tyrosine kinase inhibitors
+- d) Direct factor Xa inhibitors
+
+## Question 5
+
+Allele A is associated with decreased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) Epidermal growth factor receptor (EGFR) tyrosine kinase inhibitors
+- b) Protein kinase inhibitors
+- c) Direct factor Xa inhibitors
+- d) BCR-ABL tyrosine kinase inhibitors
+
+## Question 6
+
+Allele A is associated with decreased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) BCR-ABL tyrosine kinase inhibitors
+- b) None of the options
+- c) Direct factor Xa inhibitors
+- d) Protein kinase inhibitors
+
+## Question 7
+
+Allele T is associated with decreased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele A.
+
+Which drug correctly fills in the blank?
+
+- a) Epidermal growth factor receptor (EGFR) tyrosine kinase inhibitors
+- b) Protein kinase inhibitors
+- c) BCR-ABL tyrosine kinase inhibitors
+- d) Direct factor Xa inhibitors
+
+## Question 8
+
+Allele T is associated with decreased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele A.
+
+Which drug correctly fills in the blank?
+
+- a) BCR-ABL tyrosine kinase inhibitors
+- b) None of the options
+- c) Protein kinase inhibitors
+- d) Direct factor Xa inhibitors
+
+## Question 9
+
+Allele C is associated with decreased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele T.
+
+Which drug correctly fills in the blank?
+
+- a) Epidermal growth factor receptor (EGFR) tyrosine kinase inhibitors
+- b) BCR-ABL tyrosine kinase inhibitors
+- c) Protein kinase inhibitors
+- d) Direct factor Xa inhibitors
+
+## Question 10
+
+Allele C is associated with decreased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele T.
+
+Which drug correctly fills in the blank?
+
+- a) Direct factor Xa inhibitors
+- b) BCR-ABL tyrosine kinase inhibitors
+- c) None of the options
+- d) Protein kinase inhibitors
+
+## Question 11
+
+Allele G is associated with decreased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele C.
+
+Which drug correctly fills in the blank?
+
+- a) Direct factor Xa inhibitors
+- b) Protein kinase inhibitors
+- c) BCR-ABL tyrosine kinase inhibitors
+- d) Epidermal growth factor receptor (EGFR) tyrosine kinase inhibitors
+
+## Question 12
+
+Allele G is associated with decreased progression-free survival when treated with ______ in people with Lung Neoplasms as compared to allele C.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) BCR-ABL tyrosine kinase inhibitors
+- c) Protein kinase inhibitors
+- d) Direct factor Xa inhibitors
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 12 questions (keys "1" through "12").

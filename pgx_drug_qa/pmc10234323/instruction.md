@@ -1,0 +1,61 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **4 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Allele G is associated with decreased likelihood of Drug Toxicity when treated with ______ in women with HIV Infections as compared to allele A.
+
+Which drug correctly fills in the blank?
+
+- a) tenofovir
+- b) brincidofovir
+- c) atenolol
+- d) cidofovir
+
+## Question 2
+
+Allele G is associated with decreased likelihood of Drug Toxicity when treated with ______ in women with HIV Infections as compared to allele A.
+
+Which drug correctly fills in the blank?
+
+- a) atenolol
+- b) brincidofovir
+- c) None of the options
+- d) cidofovir
+
+## Question 3
+
+Allele A is associated with increased likelihood of Drug Toxicity when treated with ______ in women with HIV Infections as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) cidofovir
+- b) atenolol
+- c) brincidofovir
+- d) tenofovir
+
+## Question 4
+
+Allele A is associated with increased likelihood of Drug Toxicity when treated with ______ in women with HIV Infections as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) cidofovir
+- b) None of the options
+- c) brincidofovir
+- d) atenolol
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 4 questions (keys "1" through "4").

@@ -1,0 +1,61 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **4 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+CYP2D6 *2 is associated with decreased metabolism of ______ as compared to CYP2D6 *1.
+
+Which drug correctly fills in the blank?
+
+- a) aripiprazole
+- b) omeprazole
+- c) dehydroaripiprazole
+- d) brexpiprazole
+
+## Question 2
+
+CYP2D6 *2 is associated with decreased metabolism of ______ as compared to CYP2D6 *1.
+
+Which drug correctly fills in the blank?
+
+- a) aripiprazole
+- b) dehydroaripiprazole
+- c) omeprazole
+- d) None of the options
+
+## Question 3
+
+CYP2D6 *9 +*10 + *14 + *17 + *29 + *41 is associated with decreased metabolism of ______ as compared to CYP2D6 *1.
+
+Which drug correctly fills in the blank?
+
+- a) aripiprazole
+- b) omeprazole
+- c) brexpiprazole
+- d) dehydroaripiprazole
+
+## Question 4
+
+CYP2D6 *9 +*10 + *14 + *17 + *29 + *41 is associated with decreased metabolism of ______ as compared to CYP2D6 *1.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) dehydroaripiprazole
+- c) omeprazole
+- d) aripiprazole
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 4 questions (keys "1" through "4").

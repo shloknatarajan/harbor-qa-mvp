@@ -1,0 +1,38 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **2 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Genotype CT is associated with decreased dose-adjusted trough concentrations of ______ in people with Kidney Transplantation as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) everolimus
+- b) sirolimus
+- c) temsirolimus
+- d) tacrolimus
+
+## Question 2
+
+Genotype CT is associated with decreased dose-adjusted trough concentrations of ______ in people with Kidney Transplantation as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) temsirolimus
+- b) everolimus
+- c) None of the options
+- d) sirolimus
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a"
+}
+```
+
+You must answer all 2 questions (keys "1" through "2").

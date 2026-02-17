@@ -1,0 +1,38 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **2 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+G6PD deficiency is not associated with increased likelihood of Anemia, Hemolytic when treated with ______ in people with Colitis, Ulcerative or Crohn Disease as compared to G6PD non-deficient.
+
+Which drug correctly fills in the blank?
+
+- a) mesalazine
+- b) sulfasalazine
+- c) hydralazine
+- d) mesoridazine
+
+## Question 2
+
+G6PD deficiency is not associated with increased likelihood of Anemia, Hemolytic when treated with ______ in people with Colitis, Ulcerative or Crohn Disease as compared to G6PD non-deficient.
+
+Which drug correctly fills in the blank?
+
+- a) sulfasalazine
+- b) hydralazine
+- c) None of the options
+- d) mesoridazine
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a"
+}
+```
+
+You must answer all 2 questions (keys "1" through "2").

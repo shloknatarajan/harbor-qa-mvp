@@ -1,0 +1,61 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **4 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Allele T is associated with increased dose of ______ in people with Gout as compared to allele C.
+
+Which drug correctly fills in the blank?
+
+- a) talinolol
+- b) allopurinol
+- c) methylmercaptopurine
+- d) mercaptopurine
+
+## Question 2
+
+Allele T is associated with increased dose of ______ in people with Gout as compared to allele C.
+
+Which drug correctly fills in the blank?
+
+- a) mercaptopurine
+- b) talinolol
+- c) None of the options
+- d) methylmercaptopurine
+
+## Question 3
+
+Allele C is associated with increased dose of ______ in people with Gout as compared to allele T.
+
+Which drug correctly fills in the blank?
+
+- a) methylmercaptopurine
+- b) mercaptopurine
+- c) allopurinol
+- d) talinolol
+
+## Question 4
+
+Allele C is associated with increased dose of ______ in people with Gout as compared to allele T.
+
+Which drug correctly fills in the blank?
+
+- a) methylmercaptopurine
+- b) talinolol
+- c) None of the options
+- d) mercaptopurine
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 4 questions (keys "1" through "4").

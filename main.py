@@ -3,6 +3,7 @@
 Example usage:
     python main.py                                          # run mvp_dataset (default)
     python main.py -p mvp_pgx -a claude-code -n 1           # run mvp_pgx dataset
+    python main.py -p pgx_drug_qa -a claude-code -n 1       # run pgx_drug_qa (100 PMCIDs)
     python main.py -p mvp_dataset -a claude-code -n 2       # run 2 attempts
 """
 

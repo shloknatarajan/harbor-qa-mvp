@@ -1,0 +1,127 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **10 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Genotypes CC + CT is associated with increased likelihood of Hemorrhage when treated with ______ as compared to genotype TT.
+
+Which drug correctly fills in the blank?
+
+- a) edoxaban
+- b) apixaban
+- c) doxazosin
+- d) rivaroxaban
+
+## Question 2
+
+Genotypes CC + CT is associated with increased likelihood of Hemorrhage when treated with ______ as compared to genotype TT.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) doxazosin
+- c) rivaroxaban
+- d) apixaban
+
+## Question 3
+
+Genotype GG is associated with decreased likelihood of Hemorrhage when treated with ______ as compared to genotypes AA + AG.
+
+Which drug correctly fills in the blank?
+
+- a) apixaban
+- b) edoxaban
+- c) rivaroxaban
+- d) doxazosin
+
+## Question 4
+
+Genotype GG is associated with decreased likelihood of Hemorrhage when treated with ______ as compared to genotypes AA + AG.
+
+Which drug correctly fills in the blank?
+
+- a) apixaban
+- b) None of the options
+- c) rivaroxaban
+- d) doxazosin
+
+## Question 5
+
+Genotype CC is associated with increased likelihood of Hemorrhage when treated with ______ as compared to genotypes CT + TT.
+
+Which drug correctly fills in the blank?
+
+- a) apixaban
+- b) rivaroxaban
+- c) edoxaban
+- d) doxazosin
+
+## Question 6
+
+Genotype CC is associated with increased likelihood of Hemorrhage when treated with ______ as compared to genotypes CT + TT.
+
+Which drug correctly fills in the blank?
+
+- a) apixaban
+- b) None of the options
+- c) doxazosin
+- d) rivaroxaban
+
+## Question 7
+
+Genotypes AA + AC is associated with increased likelihood of Hemorrhage when treated with ______ as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) edoxaban
+- b) doxazosin
+- c) apixaban
+- d) rivaroxaban
+
+## Question 8
+
+Genotypes AA + AC is associated with increased likelihood of Hemorrhage when treated with ______ as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) rivaroxaban
+- b) None of the options
+- c) apixaban
+- d) doxazosin
+
+## Question 9
+
+Genotypes CC + CT is associated with increased likelihood of Hemorrhage when treated with ______ as compared to genotype TT.
+
+Which drug correctly fills in the blank?
+
+- a) doxazosin
+- b) apixaban
+- c) edoxaban
+- d) rivaroxaban
+
+## Question 10
+
+Genotypes CC + CT is associated with increased likelihood of Hemorrhage when treated with ______ as compared to genotype TT.
+
+Which drug correctly fills in the blank?
+
+- a) doxazosin
+- b) rivaroxaban
+- c) None of the options
+- d) apixaban
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 10 questions (keys "1" through "10").

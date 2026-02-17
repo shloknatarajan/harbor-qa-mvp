@@ -1,0 +1,149 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **12 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+NAT2 slow acetylator is associated with decreased clearance of ______ in women with Tuberculosis as compared to NAT2 rapid acetylator.
+
+Which drug correctly fills in the blank?
+
+- a) levodopa
+- b) etonogestrel
+- c) levonorgestrel
+- d) estrone
+
+## Question 2
+
+NAT2 slow acetylator is associated with decreased clearance of ______ in women with Tuberculosis as compared to NAT2 rapid acetylator.
+
+Which drug correctly fills in the blank?
+
+- a) levodopa
+- b) etonogestrel
+- c) estrone
+- d) None of the options
+
+## Question 3
+
+CYP2B6 intermediate metabolizer is not associated with increased clearance of ______ in women with HIV Infections as compared to CYP2B6 normal metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) levonorgestrel
+- b) etonogestrel
+- c) levodopa
+- d) estrone
+
+## Question 4
+
+CYP2B6 intermediate metabolizer is not associated with increased clearance of ______ in women with HIV Infections as compared to CYP2B6 normal metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) levodopa
+- b) estrone
+- c) etonogestrel
+- d) None of the options
+
+## Question 5
+
+NAT2 intermediate acetylator is not associated with clearance of ______ in women with Tuberculosis as compared to NAT2 rapid acetylator.
+
+Which drug correctly fills in the blank?
+
+- a) etonogestrel
+- b) estrone
+- c) levonorgestrel
+- d) levodopa
+
+## Question 6
+
+NAT2 intermediate acetylator is not associated with clearance of ______ in women with Tuberculosis as compared to NAT2 rapid acetylator.
+
+Which drug correctly fills in the blank?
+
+- a) levodopa
+- b) None of the options
+- c) etonogestrel
+- d) estrone
+
+## Question 7
+
+CYP2B6 poor metabolizer is associated with increased clearance of ______ in women with HIV Infections as compared to CYP2B6 normal metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) estrone
+- b) levodopa
+- c) levonorgestrel
+- d) etonogestrel
+
+## Question 8
+
+CYP2B6 poor metabolizer is associated with increased clearance of ______ in women with HIV Infections as compared to CYP2B6 normal metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) estrone
+- b) None of the options
+- c) etonogestrel
+- d) levodopa
+
+## Question 9
+
+Genotypes CT + TT (assigned as intermediate metabolizer and poor metabolizer phenotype) is not associated with clearance of ______ in women with HIV Infections as compared to genotype CC (assigned as normal metabolizer phenotype) .
+
+Which drug correctly fills in the blank?
+
+- a) levodopa
+- b) levonorgestrel
+- c) estrone
+- d) etonogestrel
+
+## Question 10
+
+Genotypes CT + TT (assigned as intermediate metabolizer and poor metabolizer phenotype) is not associated with clearance of ______ in women with HIV Infections as compared to genotype CC (assigned as normal metabolizer phenotype) .
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) estrone
+- c) etonogestrel
+- d) levodopa
+
+## Question 11
+
+Genotypes CT + TT (assigned as intermediate metabolizer and poor metabolizer phenotype) is not associated with clearance of ______ in women with HIV Infections as compared to genotype CC (assigned as normal metabolizer phenotype) .
+
+Which drug correctly fills in the blank?
+
+- a) etonogestrel
+- b) estrone
+- c) levodopa
+- d) levonorgestrel
+
+## Question 12
+
+Genotypes CT + TT (assigned as intermediate metabolizer and poor metabolizer phenotype) is not associated with clearance of ______ in women with HIV Infections as compared to genotype CC (assigned as normal metabolizer phenotype) .
+
+Which drug correctly fills in the blank?
+
+- a) estrone
+- b) levodopa
+- c) None of the options
+- d) etonogestrel
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 12 questions (keys "1" through "12").

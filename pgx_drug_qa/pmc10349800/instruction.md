@@ -1,0 +1,61 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **4 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+NAT2 *16/*14 + *16/*16 + *16/*6 + *16/*7 + *6/*14 + *6/*6 + *6/*7 (assigned as slow acetylator phenotype) is associated with increased concentrations of ______ in people with Tuberculosis as compared to NAT2 *4/*14 + *4/*16 + *4/*6 + *4/*7 (assigned as intermediate acetylator phenotype) .
+
+Which drug correctly fills in the blank?
+
+- a) chlorothiazide
+- b) isoniazid
+- c) Thiazides
+- d) acetylisoniazid
+
+## Question 2
+
+NAT2 *16/*14 + *16/*16 + *16/*6 + *16/*7 + *6/*14 + *6/*6 + *6/*7 (assigned as slow acetylator phenotype) is associated with increased concentrations of ______ in people with Tuberculosis as compared to NAT2 *4/*14 + *4/*16 + *4/*6 + *4/*7 (assigned as intermediate acetylator phenotype) .
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) Thiazides
+- c) acetylisoniazid
+- d) chlorothiazide
+
+## Question 3
+
+NAT2 *16/*14 + *16/*16 + *16/*6 + *16/*7 + *6/*14 + *6/*6 + *6/*7 (assigned as slow acetylator phenotype) is associated with decreased concentrations of ______ in people with Tuberculosis as compared to NAT2 *4/*14 + *4/*16 + *4/*6 + *4/*7 (assigned as intermediate acetylator phenotype) .
+
+Which drug correctly fills in the blank?
+
+- a) acetylcysteine
+- b) acetylisoniazid
+- c) isoniazid
+- d) acetylcholine
+
+## Question 4
+
+NAT2 *16/*14 + *16/*16 + *16/*6 + *16/*7 + *6/*14 + *6/*6 + *6/*7 (assigned as slow acetylator phenotype) is associated with decreased concentrations of ______ in people with Tuberculosis as compared to NAT2 *4/*14 + *4/*16 + *4/*6 + *4/*7 (assigned as intermediate acetylator phenotype) .
+
+Which drug correctly fills in the blank?
+
+- a) acetylcysteine
+- b) None of the options
+- c) isoniazid
+- d) acetylcholine
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 4 questions (keys "1" through "4").

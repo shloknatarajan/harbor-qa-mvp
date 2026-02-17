@@ -1,0 +1,38 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **2 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+CYP2D6 *5/*5 is associated with increased severity of Drug Toxicity, adverse events and Sialorrhea when treated with ______.
+
+Which drug correctly fills in the blank?
+
+- a) Thiazides
+- b) pimozide
+- c) gliclazide
+- d) glipizide
+
+## Question 2
+
+CYP2D6 *5/*5 is associated with increased severity of Drug Toxicity, adverse events and Sialorrhea when treated with ______.
+
+Which drug correctly fills in the blank?
+
+- a) gliclazide
+- b) None of the options
+- c) Thiazides
+- d) glipizide
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a"
+}
+```
+
+You must answer all 2 questions (keys "1" through "2").

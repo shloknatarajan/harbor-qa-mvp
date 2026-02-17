@@ -1,0 +1,105 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **8 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Genotypes CT + TT is associated with increased resistance to ______ in people with Mood Disorders or Schizophrenia as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) antiepileptics
+- b) Antibiotics
+- c) Anticholinergics
+- d) antipsychotics
+
+## Question 2
+
+Genotypes CT + TT is associated with increased resistance to ______ in people with Mood Disorders or Schizophrenia as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) antiepileptics
+- c) Antibiotics
+- d) Anticholinergics
+
+## Question 3
+
+Allele G is associated with increased resistance to ______ in people with Mood Disorders or Schizophrenia as compared to allele del.
+
+Which drug correctly fills in the blank?
+
+- a) antipsychotics
+- b) antiepileptics
+- c) Antibiotics
+- d) Anticholinergics
+
+## Question 4
+
+Allele G is associated with increased resistance to ______ in people with Mood Disorders or Schizophrenia as compared to allele del.
+
+Which drug correctly fills in the blank?
+
+- a) Antibiotics
+- b) Anticholinergics
+- c) antiepileptics
+- d) None of the options
+
+## Question 5
+
+Genotype AG is associated with increased resistance to ______ in people with Mood Disorders or Schizophrenia as compared to genotypes AA + GG.
+
+Which drug correctly fills in the blank?
+
+- a) antipsychotics
+- b) Anticholinergics
+- c) Antibiotics
+- d) antiepileptics
+
+## Question 6
+
+Genotype AG is associated with increased resistance to ______ in people with Mood Disorders or Schizophrenia as compared to genotypes AA + GG.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) antiepileptics
+- c) Anticholinergics
+- d) Antibiotics
+
+## Question 7
+
+Genotype CT is associated with decreased resistance to ______ in people with Mood Disorders or Schizophrenia as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) Anticholinergics
+- b) antiepileptics
+- c) antipsychotics
+- d) Antibiotics
+
+## Question 8
+
+Genotype CT is associated with decreased resistance to ______ in people with Mood Disorders or Schizophrenia as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) antiepileptics
+- b) Antibiotics
+- c) Anticholinergics
+- d) None of the options
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 8 questions (keys "1" through "8").

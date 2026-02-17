@@ -1,0 +1,61 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **4 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Genotype CC is associated with increased dose of ______ in women with Pain, Postoperative as compared to genotypes CT + TT.
+
+Which drug correctly fills in the blank?
+
+- a) buprenorphine
+- b) morphine
+- c) ethylmorphine
+- d) dihydromorphine
+
+## Question 2
+
+Genotype CC is associated with increased dose of ______ in women with Pain, Postoperative as compared to genotypes CT + TT.
+
+Which drug correctly fills in the blank?
+
+- a) dihydromorphine
+- b) buprenorphine
+- c) ethylmorphine
+- d) None of the options
+
+## Question 3
+
+Genotypes AG + GG is associated with increased dose of ______ in women with Pain, Postoperative as compared to genotype AA.
+
+Which drug correctly fills in the blank?
+
+- a) dihydromorphine
+- b) morphine
+- c) buprenorphine
+- d) ethylmorphine
+
+## Question 4
+
+Genotypes AG + GG is associated with increased dose of ______ in women with Pain, Postoperative as compared to genotype AA.
+
+Which drug correctly fills in the blank?
+
+- a) buprenorphine
+- b) ethylmorphine
+- c) None of the options
+- d) dihydromorphine
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 4 questions (keys "1" through "4").

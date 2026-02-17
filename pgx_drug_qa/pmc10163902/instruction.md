@@ -1,0 +1,61 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **4 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Allele A is not associated with response to ______ in people with Arthritis, Rheumatoid as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) pralatrexate
+- b) trimethoprim
+- c) methotrexate
+- d) pemetrexed
+
+## Question 2
+
+Allele A is not associated with response to ______ in people with Arthritis, Rheumatoid as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) trimethoprim
+- c) pralatrexate
+- d) pemetrexed
+
+## Question 3
+
+Genotype GT is associated with increased response to ______ in people with Arthritis, Rheumatoid as compared to genotype TT.
+
+Which drug correctly fills in the blank?
+
+- a) methotrexate
+- b) pralatrexate
+- c) pemetrexed
+- d) trimethoprim
+
+## Question 4
+
+Genotype GT is associated with increased response to ______ in people with Arthritis, Rheumatoid as compared to genotype TT.
+
+Which drug correctly fills in the blank?
+
+- a) trimethoprim
+- b) None of the options
+- c) pemetrexed
+- d) pralatrexate
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 4 questions (keys "1" through "4").

@@ -1,0 +1,149 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **12 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Genotypes AG + GG is associated with increased likelihood of Constipation when treated with ______ in people with Pain, Postoperative as compared to genotype AA.
+
+Which drug correctly fills in the blank?
+
+- a) acetaminophen glucuronide
+- b) acetaminophen / tramadol
+- c) acetaminophen sulfate
+- d) acetaminophen / codeine
+
+## Question 2
+
+Genotypes AG + GG is associated with increased likelihood of Constipation when treated with ______ in people with Pain, Postoperative as compared to genotype AA.
+
+Which drug correctly fills in the blank?
+
+- a) acetaminophen / codeine
+- b) acetaminophen sulfate
+- c) acetaminophen glucuronide
+- d) None of the options
+
+## Question 3
+
+Genotypes CT + TT is associated with decreased likelihood of neuropathic pain when treated with ______ in people with Pain, Postoperative as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) acetaminophen / codeine
+- b) acetaminophen glucuronide
+- c) acetaminophen sulfate
+- d) acetaminophen / tramadol
+
+## Question 4
+
+Genotypes CT + TT is associated with decreased likelihood of neuropathic pain when treated with ______ in people with Pain, Postoperative as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) acetaminophen / codeine
+- b) None of the options
+- c) acetaminophen sulfate
+- d) acetaminophen glucuronide
+
+## Question 5
+
+Genotypes AA + AG is associated with decreased likelihood of Nausea when treated with ______ in people with Pain, Postoperative as compared to genotype GG.
+
+Which drug correctly fills in the blank?
+
+- a) acetaminophen glucuronide
+- b) acetaminophen / codeine
+- c) acetaminophen / tramadol
+- d) acetaminophen sulfate
+
+## Question 6
+
+Genotypes AA + AG is associated with decreased likelihood of Nausea when treated with ______ in people with Pain, Postoperative as compared to genotype GG.
+
+Which drug correctly fills in the blank?
+
+- a) acetaminophen / codeine
+- b) acetaminophen glucuronide
+- c) acetaminophen sulfate
+- d) None of the options
+
+## Question 7
+
+Genotype GG is associated with increased likelihood of Nausea when treated with ______ in people with Pain, Postoperative as compared to genotypes CC + CG.
+
+Which drug correctly fills in the blank?
+
+- a) acetaminophen / codeine
+- b) acetaminophen sulfate
+- c) acetaminophen / tramadol
+- d) acetaminophen glucuronide
+
+## Question 8
+
+Genotype GG is associated with increased likelihood of Nausea when treated with ______ in people with Pain, Postoperative as compared to genotypes CC + CG.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) acetaminophen sulfate
+- c) acetaminophen / codeine
+- d) acetaminophen glucuronide
+
+## Question 9
+
+Genotypes CG + GG is associated with increased likelihood of neuropathic pain when treated with ______ in people with Pain, Postoperative as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) acetaminophen sulfate
+- b) acetaminophen / codeine
+- c) acetaminophen glucuronide
+- d) acetaminophen / tramadol
+
+## Question 10
+
+Genotypes CG + GG is associated with increased likelihood of neuropathic pain when treated with ______ in people with Pain, Postoperative as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) acetaminophen / codeine
+- c) acetaminophen sulfate
+- d) acetaminophen glucuronide
+
+## Question 11
+
+Genotypes CT + TT is associated with increased likelihood of Constipation when treated with ______ in people with Pain, Postoperative as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) acetaminophen / tramadol
+- b) acetaminophen glucuronide
+- c) acetaminophen / codeine
+- d) acetaminophen sulfate
+
+## Question 12
+
+Genotypes CT + TT is associated with increased likelihood of Constipation when treated with ______ in people with Pain, Postoperative as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) acetaminophen glucuronide
+- b) acetaminophen sulfate
+- c) None of the options
+- d) acetaminophen / codeine
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 12 questions (keys "1" through "12").

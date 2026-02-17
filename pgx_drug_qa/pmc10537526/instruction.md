@@ -1,0 +1,61 @@
+You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **4 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+CYP2D6 poor metabolizer is associated with decreased concentrations of ______ in children with Pain as compared to CYP2D6 normal metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) tramadol
+- b) o-didesmethyltramadol
+- c) n-desmethyltramadol
+- d) o-desmethyltramadol
+
+## Question 2
+
+CYP2D6 poor metabolizer is associated with decreased concentrations of ______ in children with Pain as compared to CYP2D6 normal metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) tramadol
+- b) None of the options
+- c) o-didesmethyltramadol
+- d) n-desmethyltramadol
+
+## Question 3
+
+CYP2D6 poor metabolizer is not associated with decreased severity of Abnormal pupillary light reflex when treated with ______ in children with Pain as compared to CYP2D6 normal metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) n-didesmethyltramadol
+- b) n-desmethyltramadol
+- c) o-desmethyltramadol
+- d) tramadol
+
+## Question 4
+
+CYP2D6 poor metabolizer is not associated with decreased severity of Abnormal pupillary light reflex when treated with ______ in children with Pain as compared to CYP2D6 normal metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) n-didesmethyltramadol
+- b) n-desmethyltramadol
+- c) None of the options
+- d) o-desmethyltramadol
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 4 questions (keys "1" through "4").
