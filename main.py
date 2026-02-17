@@ -10,9 +10,12 @@ def main():
     load_dotenv()
 
     args = sys.argv[1:] or [
-        "-p", "mvp_dataset",
-        "-a", "claude-code",
-        "-n", "1",
+        "-p",
+        "mvp_dataset",
+        "-a",
+        "claude-code",
+        "-n",
+        "1",
     ]
 
     cmd = ["harbor", "run", *args]
