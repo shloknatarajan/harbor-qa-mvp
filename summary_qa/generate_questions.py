@@ -240,9 +240,7 @@ def main():
     print(f"Term banks: {len(drug_bank)} drugs, {len(phenotype_bank)} phenotypes")
 
     # Collect all available PMCIDs for distractor sampling
-    all_available_pmcids = [
-        p.stem for p in PAPERS_DIR.iterdir() if p.suffix == ".md"
-    ]
+    all_available_pmcids = [p.stem for p in PAPERS_DIR.iterdir() if p.suffix == ".md"]
 
     # Clean existing task dirs
     for d in BASE.iterdir():
@@ -268,7 +266,9 @@ def main():
 
         # Build task name: pmc<first_pmcid>_<variant>_summary
         first_pmcid = relevant_pmcids[0].lower()
-        variant_slug = re.sub(r"[^a-z0-9]+", "_", rec["variant_haplotypes"].lower()).strip("_")
+        variant_slug = re.sub(
+            r"[^a-z0-9]+", "_", rec["variant_haplotypes"].lower()
+        ).strip("_")
         task_name = f"{first_pmcid}_{variant_slug}_summary"
         # Handle collisions by appending annotation ID
         if task_name in seen_names:
@@ -278,9 +278,7 @@ def main():
 
         # instruction.md
         task_dir.mkdir(parents=True, exist_ok=True)
-        (task_dir / "instruction.md").write_text(
-            build_instruction(rec, all_pmcids)
-        )
+        (task_dir / "instruction.md").write_text(build_instruction(rec, all_pmcids))
 
         # task.toml
         (task_dir / "task.toml").write_text(TASK_TOML)
@@ -301,9 +299,7 @@ def main():
         term_banks_dir = env_dir / "term_banks"
         term_banks_dir.mkdir(exist_ok=True)
         (term_banks_dir / "drugs.txt").write_text("\n".join(drug_bank) + "\n")
-        (term_banks_dir / "phenotypes.txt").write_text(
-            "\n".join(phenotype_bank) + "\n"
-        )
+        (term_banks_dir / "phenotypes.txt").write_text("\n".join(phenotype_bank) + "\n")
 
         # tests/
         tests_dir = task_dir / "tests"

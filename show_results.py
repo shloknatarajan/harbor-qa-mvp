@@ -158,9 +158,7 @@ def extract_summary_qa_agent_answers(trial_dir: Path) -> dict | None:
     return None
 
 
-def format_summary_qa_comparison(
-    expected: dict, agent: dict | None, lines: list[str]
-):
+def format_summary_qa_comparison(expected: dict, agent: dict | None, lines: list[str]):
     """Append summary_qa comparison lines showing drugs/phenotypes/count."""
     if agent is None:
         lines.append("        (no agent answers extracted)")

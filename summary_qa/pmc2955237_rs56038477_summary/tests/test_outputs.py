@@ -9,7 +9,7 @@ EXPECTED_PHENOTYPES = ["neoplasms"]
 EXPECTED_RELEVANT_PAPER_COUNT = 2
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def answers():
     f = Path("/app/answers.json")
     assert f.exists(), "answers.json not found"
@@ -26,9 +26,7 @@ def test_drugs_recall(answers):
     got = normalize(answers.get("drugs", []))
     expected = set(EXPECTED_DRUGS)
     missing = expected - got
-    assert not missing, (
-        f"Missing drugs: {missing}. Got: {sorted(got)}"
-    )
+    assert not missing, f"Missing drugs: {missing}. Got: {sorted(got)}"
 
 
 def test_phenotypes_recall(answers):
@@ -36,9 +34,7 @@ def test_phenotypes_recall(answers):
     got = normalize(answers.get("phenotypes", []))
     expected = set(EXPECTED_PHENOTYPES)
     missing = expected - got
-    assert not missing, (
-        f"Missing phenotypes: {missing}. Got: {sorted(got)}"
-    )
+    assert not missing, f"Missing phenotypes: {missing}. Got: {sorted(got)}"
 
 
 def test_relevant_paper_count(answers):
