@@ -1,0 +1,50 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 3,
+            "passed": 2,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771405656.460161,
+            "stop": 1771405656.4951105
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_drugs_recall",
+                "status": "passed",
+                "duration": 0.00037550100023509003,
+                "start": 1771405656.489494,
+                "stop": 1771405656.4900057,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_phenotypes_recall",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00021408399970823666,
+                "start": 1771405656.490102,
+                "stop": 1771405656.4947705,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'drugs': ['fluorouracil', 'capecitabine', 'tegafur', 'tegafur / gimeracil / oteracil'], 'phenotypes': ['drug toxicity...ointestinal toxicity', 'diarrhea', 'mucositis', 'neutropenia', 'febrile neutropenia', ...], 'relevant_paper_count': 11}\n\n    def test_phenotypes_recall(answers):\n        \"\"\"Check that all expected phenotypes are found (recall).\"\"\"\n        got = normalize(answers.get(\"phenotypes\", []))\n        expected = set(EXPECTED_PHENOTYPES)\n        missing = expected - got\n>       assert not missing, (\n            f\"Missing phenotypes: {missing}. Got: {sorted(got)}\"\n        )\nE       AssertionError: Missing phenotypes: {'neoplasms'}. Got: ['diarrhea', 'drug toxicity', 'febrile neutropenia', 'gastrointestinal toxicity', 'mucositis', 'neutropenia', 'thrombocytopenia']\nE       assert not {'neoplasms'}\n\n/tests/test_outputs.py:39: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_relevant_paper_count",
+                "status": "passed",
+                "duration": 0.0001288739995288779,
+                "start": 1771405656.494851,
+                "stop": 1771405656.4950395,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

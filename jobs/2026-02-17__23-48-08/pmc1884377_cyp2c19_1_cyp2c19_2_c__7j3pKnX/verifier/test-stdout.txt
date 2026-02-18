@@ -1,0 +1,154 @@
+Hit:1 http://ports.ubuntu.com/ubuntu-ports noble InRelease
+Hit:2 http://ports.ubuntu.com/ubuntu-ports noble-updates InRelease
+Hit:3 http://ports.ubuntu.com/ubuntu-ports noble-backports InRelease
+Hit:4 http://ports.ubuntu.com/ubuntu-ports noble-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (8.5.0-2ubuntu10.6).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
+downloading uv 0.9.7 aarch64-unknown-linux-gnu
+no checksums to verify
+installing to /root/.local/bin
+  uv
+  uvx
+everything's installed!
+
+To add $HOME/.local/bin to your PATH, either restart your shell or run:
+
+    source $HOME/.local/bin/env (sh, bash, zsh)
+    source $HOME/.local/bin/env.fish (fish)
+Downloading cpython-3.14.0-linux-aarch64-gnu (download) (28.6MiB)
+ Downloading cpython-3.14.0-linux-aarch64-gnu (download)
+Downloading pygments (1.2MiB)
+ Downloading pygments
+Installed 6 packages in 40ms
+============================= test session starts ==============================
+platform linux -- Python 3.14.0, pytest-8.4.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.3.5
+collected 3 items
+
+../tests/test_outputs.py EEE                                             [100%]
+
+==================================== ERRORS ====================================
+_____________________ ERROR at setup of test_drugs_recall ______________________
+
+    @pytest.fixture(scope='module')
+    def answers():
+        f = Path("/app/answers.json")
+        assert f.exists(), "answers.json not found"
+>       return json.loads(f.read_text())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/root/.local/share/uv/python/cpython-3.14.0-linux-aarch64-gnu/lib/python3.14/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.local/share/uv/python/cpython-3.14.0-linux-aarch64-gnu/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0xffffa8078440>
+s = '{\\n  "drugs": [\\n    "citalopram",\\n    "mephenytoin",\\n    "omeprazole"\\n  ],\\n  "phenotypes": [\\n    "depres... "panic disorder",\\n    "obsessive-compulsive disorder",\\n    "dementia"\\n  ],\\n  "relevant_paper_count": 1\\n}\\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+/root/.local/share/uv/python/cpython-3.14.0-linux-aarch64-gnu/lib/python3.14/json/decoder.py:361: JSONDecodeError
+___________________ ERROR at setup of test_phenotypes_recall ___________________
+
+    @pytest.fixture(scope='module')
+    def answers():
+        f = Path("/app/answers.json")
+        assert f.exists(), "answers.json not found"
+>       return json.loads(f.read_text())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/root/.local/share/uv/python/cpython-3.14.0-linux-aarch64-gnu/lib/python3.14/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.local/share/uv/python/cpython-3.14.0-linux-aarch64-gnu/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0xffffa8078440>
+s = '{\\n  "drugs": [\\n    "citalopram",\\n    "mephenytoin",\\n    "omeprazole"\\n  ],\\n  "phenotypes": [\\n    "depres... "panic disorder",\\n    "obsessive-compulsive disorder",\\n    "dementia"\\n  ],\\n  "relevant_paper_count": 1\\n}\\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+/root/.local/share/uv/python/cpython-3.14.0-linux-aarch64-gnu/lib/python3.14/json/decoder.py:361: JSONDecodeError
+_________________ ERROR at setup of test_relevant_paper_count __________________
+
+    @pytest.fixture(scope='module')
+    def answers():
+        f = Path("/app/answers.json")
+        assert f.exists(), "answers.json not found"
+>       return json.loads(f.read_text())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/root/.local/share/uv/python/cpython-3.14.0-linux-aarch64-gnu/lib/python3.14/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.local/share/uv/python/cpython-3.14.0-linux-aarch64-gnu/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0xffffa8078440>
+s = '{\\n  "drugs": [\\n    "citalopram",\\n    "mephenytoin",\\n    "omeprazole"\\n  ],\\n  "phenotypes": [\\n    "depres... "panic disorder",\\n    "obsessive-compulsive disorder",\\n    "dementia"\\n  ],\\n  "relevant_paper_count": 1\\n}\\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+/root/.local/share/uv/python/cpython-3.14.0-linux-aarch64-gnu/lib/python3.14/json/decoder.py:361: JSONDecodeError
+=========================== short test summary info ============================
+ERROR ../tests/test_outputs.py::test_drugs_recall - json.decoder.JSONDecodeEr...
+ERROR ../tests/test_outputs.py::test_phenotypes_recall - json.decoder.JSONDec...
+ERROR ../tests/test_outputs.py::test_relevant_paper_count - json.decoder.JSON...
+============================== 3 errors in 0.05s ===============================

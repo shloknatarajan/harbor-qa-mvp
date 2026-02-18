@@ -1,0 +1,50 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 3,
+            "passed": 2,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771414288.2982233,
+            "stop": 1771414288.3330388
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_drugs_recall",
+                "status": "passed",
+                "duration": 0.00035587599813879933,
+                "start": 1771414288.3273785,
+                "stop": 1771414288.3278928,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_phenotypes_recall",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00022320899915939663,
+                "start": 1771414288.327988,
+                "stop": 1771414288.332677,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'drugs': ['atomoxetine'], 'phenotypes': ['long qt syndrome'], 'relevant_paper_count': 1}\n\n    def test_phenotypes_recall(answers):\n        \"\"\"Check that all expected phenotypes are found (recall).\"\"\"\n        got = normalize(answers.get(\"phenotypes\", []))\n        expected = set(EXPECTED_PHENOTYPES)\n        missing = expected - got\n>       assert not missing, (\n            f\"Missing phenotypes: {missing}. Got: {sorted(got)}\"\n        )\nE       AssertionError: Missing phenotypes: {'attention deficit disorder with hyperactivity'}. Got: ['long qt syndrome']\nE       assert not {'attention deficit disorder with hyperactivity'}\n\n/tests/test_outputs.py:39: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_relevant_paper_count",
+                "status": "passed",
+                "duration": 0.00014841699885437265,
+                "start": 1771414288.332765,
+                "stop": 1771414288.3329682,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

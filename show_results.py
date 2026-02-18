@@ -138,7 +138,10 @@ def extract_summary_qa_expected(result: dict) -> dict | None:
 
 def extract_summary_qa_agent_answers(trial_dir: Path) -> dict | None:
     """Extract the agent's summary_qa answers from its log."""
-    log_file = trial_dir / "agent" / "claude-code.txt"
+    agent_dir = trial_dir / "agent"
+    log_file = agent_dir / "claude-code.txt"
+    if not log_file.exists():
+        log_file = agent_dir / "codex.txt"
     if not log_file.exists():
         return None
     content = log_file.read_text()
@@ -155,6 +158,16 @@ def extract_summary_qa_agent_answers(trial_dir: Path) -> dict | None:
                 return parsed
         except json.JSONDecodeError:
             continue
+
+    # Fallback: some agents (e.g. codex) may print the JSON inline instead of writing it.
+    m = re.search(r"```json\s*(\{.*?\})\s*```", content, flags=re.DOTALL)
+    if m:
+        try:
+            parsed = json.loads(m.group(1))
+            if "drugs" in parsed or "phenotypes" in parsed:
+                return parsed
+        except json.JSONDecodeError:
+            pass
     return None
 
 
@@ -206,7 +219,10 @@ def extract_agent_answers(trial_dir: Path) -> dict[str, str]:
     Returns a dict like {"1": "c", "2": "a"} for multi-question tasks,
     or {"1": "c"} for single-question tasks.
     """
-    log_file = trial_dir / "agent" / "claude-code.txt"
+    agent_dir = trial_dir / "agent"
+    log_file = agent_dir / "claude-code.txt"
+    if not log_file.exists():
+        log_file = agent_dir / "codex.txt"
     if not log_file.exists():
         return {}
     content = log_file.read_text()
@@ -222,6 +238,16 @@ def extract_agent_answers(trial_dir: Path) -> dict[str, str]:
             return json.loads(raw)
         except json.JSONDecodeError:
             continue
+
+    # Fallback: inline JSON block (common with codex).
+    m = re.search(r"```json\s*(\{.*?\})\s*```", content, flags=re.DOTALL)
+    if m:
+        try:
+            parsed = json.loads(m.group(1))
+            if isinstance(parsed, dict):
+                return parsed
+        except json.JSONDecodeError:
+            pass
 
     # Single-question: Write tool with /app/answer.txt content
     for m in re.finditer(
@@ -299,7 +325,9 @@ def format_trial(trial_dir: Path) -> tuple[list[str], dict]:
     tokens = ""
     if result.get("agent_result"):
         ar = result["agent_result"]
-        tokens = f"  tokens: {ar.get('n_input_tokens', 0):,} in / {ar.get('n_output_tokens', 0):,} out"
+        n_in = ar.get('n_input_tokens') or 0
+        n_out = ar.get('n_output_tokens') or 0
+        tokens = f"  tokens: {n_in:,} in / {n_out:,} out"
 
     phases = []
     for phase_name, phase_key in [

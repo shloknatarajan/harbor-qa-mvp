@@ -1,0 +1,50 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 3,
+            "passed": 2,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771401787.8508155,
+            "stop": 1771401787.8855662
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_drugs_recall",
+                "status": "passed",
+                "duration": 0.0003472089997558214,
+                "start": 1771401787.87974,
+                "stop": 1771401787.880223,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_phenotypes_recall",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00023045699981594225,
+                "start": 1771401787.880313,
+                "stop": 1771401787.8851984,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'drugs': ['amitriptyline', 'maprotiline', 'clomipramine', 'nortriptyline', 'imipramine', 'doxepin', ...], 'phenotypes...', 'cardiotoxicity', 'discontinuation', 'dose reduction', 'drug toxicity', 'overdose', ...], 'relevant_paper_count': 2}\n\n    def test_phenotypes_recall(answers):\n        \"\"\"Check that all expected phenotypes are found (recall).\"\"\"\n        got = normalize(answers.get(\"phenotypes\", []))\n        expected = set(EXPECTED_PHENOTYPES)\n        missing = expected - got\n>       assert not missing, (\n            f\"Missing phenotypes: {missing}. Got: {sorted(got)}\"\n        )\nE       AssertionError: Missing phenotypes: {'depressive disorder'}. Got: ['adverse events', 'cardiotoxicity', 'cns depression', 'discontinuation', 'dose reduction', 'drug toxicity', 'overdose', 'respiratory insufficiency', 'tachycardia']\nE       assert not {'depressive disorder'}\n\n/tests/test_outputs.py:39: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_relevant_paper_count",
+                "status": "passed",
+                "duration": 0.00014016700060892617,
+                "start": 1771401787.8852968,
+                "stop": 1771401787.8854907,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

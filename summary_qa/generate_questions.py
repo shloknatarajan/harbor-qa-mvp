@@ -119,7 +119,22 @@ def build_instruction(record: dict, all_pmcids: list[str]) -> str:
         "",
         "---",
         "",
-        "Write your answers to `/app/answers.json` as a JSON object with the following structure:",
+        "You must write your answers to `/app/answers.json` (a real file on disk). Printing JSON in chat is not sufficient.",
+        "After writing the file, verify it exists and contains valid JSON.",
+        "",
+        "For example, you may use a shell heredoc to write the file:",
+        "```bash",
+        "cat > /app/answers.json <<'JSON'",
+        "{",
+        '  "drugs": ["drug1", "drug2"],',
+        '  "phenotypes": ["phenotype1", "phenotype2"],',
+        '  "relevant_paper_count": 3',
+        "}",
+        "JSON",
+        "python -c 'import json; json.load(open(\"/app/answers.json\"))'",
+        "```",
+        "",
+        "The JSON object must have the following structure:",
         "",
         "```json",
         "{",
@@ -133,6 +148,7 @@ def build_instruction(record: dict, all_pmcids: list[str]) -> str:
         "- Drug and phenotype names should be lowercase.",
         "- Only select terms from the provided term banks. Do not add terms that are not in the banks.",
         f"- The papers directory contains {len(all_pmcids)} papers total. Count only those relevant to {variant}.",
+        "- **Do not use web search.** All information you need is in the provided papers and term banks.",
     ]
     return "\n".join(lines)
 
@@ -247,7 +263,6 @@ def main():
         if d.is_dir() and d.name != "__pycache__":
             shutil.rmtree(d)
 
-    seen_names: set[str] = set()
     total_papers = 0
     for idx, rec in enumerate(selected, 1):
         ann_id = rec["summary_annotation_id"]
@@ -264,16 +279,11 @@ def main():
         random.shuffle(all_pmcids)
         total_papers += len(all_pmcids)
 
-        # Build task name: pmc<first_pmcid>_<variant>_summary
-        first_pmcid = relevant_pmcids[0].lower()
+        # Build task name: <variant>_<summary_annotation_id>
         variant_slug = re.sub(
             r"[^a-z0-9]+", "_", rec["variant_haplotypes"].lower()
         ).strip("_")
-        task_name = f"{first_pmcid}_{variant_slug}_summary"
-        # Handle collisions by appending annotation ID
-        if task_name in seen_names:
-            task_name = f"{task_name}_{ann_id}"
-        seen_names.add(task_name)
+        task_name = f"{variant_slug}_{ann_id}"
         task_dir = BASE / task_name
 
         # instruction.md
