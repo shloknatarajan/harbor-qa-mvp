@@ -325,8 +325,8 @@ def format_trial(trial_dir: Path) -> tuple[list[str], dict]:
     tokens = ""
     if result.get("agent_result"):
         ar = result["agent_result"]
-        n_in = ar.get('n_input_tokens') or 0
-        n_out = ar.get('n_output_tokens') or 0
+        n_in = ar.get("n_input_tokens") or 0
+        n_out = ar.get("n_output_tokens") or 0
         tokens = f"  tokens: {n_in:,} in / {n_out:,} out"
 
     phases = []
