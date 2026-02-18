@@ -92,13 +92,137 @@ def extract_correct_answers(result: dict) -> dict[str, str]:
     return {}
 
 
+def _is_summary_qa_task(result: dict) -> bool:
+    """Check if this is a summary_qa task (drugs/phenotypes/paper count)."""
+    task_dir = _get_task_dir(result)
+    if not task_dir:
+        return False
+    test_file = task_dir / "tests" / "test_outputs.py"
+    if not test_file.exists():
+        return False
+    content = test_file.read_text()
+    return "EXPECTED_DRUGS" in content
+
+
+def extract_summary_qa_expected(result: dict) -> dict | None:
+    """Extract expected drugs, phenotypes, and paper count from summary_qa test file."""
+    task_dir = _get_task_dir(result)
+    if not task_dir:
+        return None
+    test_file = task_dir / "tests" / "test_outputs.py"
+    if not test_file.exists():
+        return None
+    content = test_file.read_text()
+
+    expected = {}
+    m = re.search(r"EXPECTED_DRUGS\s*=\s*(\[.*?\])", content)
+    if m:
+        try:
+            expected["drugs"] = json.loads(m.group(1).replace("'", '"'))
+        except json.JSONDecodeError:
+            expected["drugs"] = []
+
+    m = re.search(r"EXPECTED_PHENOTYPES\s*=\s*(\[.*?\])", content)
+    if m:
+        try:
+            expected["phenotypes"] = json.loads(m.group(1).replace("'", '"'))
+        except json.JSONDecodeError:
+            expected["phenotypes"] = []
+
+    m = re.search(r"EXPECTED_RELEVANT_PAPER_COUNT\s*=\s*(\d+)", content)
+    if m:
+        expected["relevant_paper_count"] = int(m.group(1))
+
+    return expected if expected else None
+
+
+def extract_summary_qa_agent_answers(trial_dir: Path) -> dict | None:
+    """Extract the agent's summary_qa answers from its log."""
+    agent_dir = trial_dir / "agent"
+    log_file = agent_dir / "claude-code.txt"
+    if not log_file.exists():
+        log_file = agent_dir / "codex.txt"
+    if not log_file.exists():
+        return None
+    content = log_file.read_text()
+
+    # Look for Write tool with /app/answers.json
+    for m in re.finditer(
+        r'"(?:file_path|filePath)"\s*:\s*"/app/answers\.json"\s*,\s*"content"\s*:\s*"((?:[^"\\]|\\.)*)"',
+        content,
+    ):
+        try:
+            raw = m.group(1).replace("\\n", "\n").replace('\\"', '"')
+            parsed = json.loads(raw)
+            if "drugs" in parsed or "phenotypes" in parsed:
+                return parsed
+        except json.JSONDecodeError:
+            continue
+
+    # Fallback: some agents (e.g. codex) may print the JSON inline instead of writing it.
+    m = re.search(r"```json\s*(\{.*?\})\s*```", content, flags=re.DOTALL)
+    if m:
+        try:
+            parsed = json.loads(m.group(1))
+            if "drugs" in parsed or "phenotypes" in parsed:
+                return parsed
+        except json.JSONDecodeError:
+            pass
+    return None
+
+
+def format_summary_qa_comparison(expected: dict, agent: dict | None, lines: list[str]):
+    """Append summary_qa comparison lines showing drugs/phenotypes/count."""
+    if agent is None:
+        lines.append("        (no agent answers extracted)")
+        return
+
+    # Drugs comparison
+    exp_drugs = set(expected.get("drugs", []))
+    got_drugs = {s.strip().lower() for s in agent.get("drugs", []) if s.strip()}
+    drug_found = exp_drugs & got_drugs
+    drug_missing = exp_drugs - got_drugs
+    drug_extra = got_drugs - exp_drugs
+    drug_icon = "✓" if not drug_missing else "✗"
+    lines.append(
+        f"        Drugs {drug_icon}: {len(drug_found)}/{len(exp_drugs)} recall"
+        + (f"  missing: {sorted(drug_missing)}" if drug_missing else "")
+        + (f"  extra: {sorted(drug_extra)}" if drug_extra else "")
+    )
+
+    # Phenotypes comparison
+    exp_pheno = set(expected.get("phenotypes", []))
+    got_pheno = {s.strip().lower() for s in agent.get("phenotypes", []) if s.strip()}
+    pheno_found = exp_pheno & got_pheno
+    pheno_missing = exp_pheno - got_pheno
+    pheno_extra = got_pheno - exp_pheno
+    pheno_icon = "✓" if not pheno_missing else "✗"
+    lines.append(
+        f"        Pheno {pheno_icon}: {len(pheno_found)}/{len(exp_pheno)} recall"
+        + (f"  missing: {sorted(pheno_missing)}" if pheno_missing else "")
+        + (f"  extra: {sorted(pheno_extra)}" if pheno_extra else "")
+    )
+
+    # Paper count comparison
+    exp_count = expected.get("relevant_paper_count")
+    got_count = agent.get("relevant_paper_count", -1)
+    if exp_count is not None:
+        count_icon = "✓" if got_count == exp_count else "✗"
+        lines.append(
+            f"        Count {count_icon}: agent={got_count} expected={exp_count}"
+        )
+
+
 def extract_agent_answers(trial_dir: Path) -> dict[str, str]:
     """Extract the agent's answers from its log/trajectory.
 
     Returns a dict like {"1": "c", "2": "a"} for multi-question tasks,
     or {"1": "c"} for single-question tasks.
     """
-    log_file = trial_dir / "agent" / "claude-code.txt"
+    agent_dir = trial_dir / "agent"
+    log_file = agent_dir / "claude-code.txt"
+    if not log_file.exists():
+        log_file = agent_dir / "codex.txt"
     if not log_file.exists():
         return {}
     content = log_file.read_text()
@@ -114,6 +238,16 @@ def extract_agent_answers(trial_dir: Path) -> dict[str, str]:
             return json.loads(raw)
         except json.JSONDecodeError:
             continue
+
+    # Fallback: inline JSON block (common with codex).
+    m = re.search(r"```json\s*(\{.*?\})\s*```", content, flags=re.DOTALL)
+    if m:
+        try:
+            parsed = json.loads(m.group(1))
+            if isinstance(parsed, dict):
+                return parsed
+        except json.JSONDecodeError:
+            pass
 
     # Single-question: Write tool with /app/answer.txt content
     for m in re.finditer(
@@ -191,7 +325,9 @@ def format_trial(trial_dir: Path) -> tuple[list[str], dict]:
     tokens = ""
     if result.get("agent_result"):
         ar = result["agent_result"]
-        tokens = f"  tokens: {ar.get('n_input_tokens', 0):,} in / {ar.get('n_output_tokens', 0):,} out"
+        n_in = ar.get("n_input_tokens") or 0
+        n_out = ar.get("n_output_tokens") or 0
+        tokens = f"  tokens: {n_in:,} in / {n_out:,} out"
 
     phases = []
     for phase_name, phase_key in [
@@ -218,24 +354,32 @@ def format_trial(trial_dir: Path) -> tuple[list[str], dict]:
             exc_msg = exc_msg[:120] + "..."
         lines.append(f"        error: {exc_type}: {exc_msg}")
 
-    options_by_q = parse_answer_options(result)
-    agent_answers = extract_agent_answers(trial_dir)
-    correct_answers = extract_correct_answers(result)
-    all_q_nums = sorted(set(agent_answers) | set(correct_answers))
-    if all_q_nums:
-        for q in all_q_nums:
-            q_options = options_by_q.get(q, {})
-            agent_str = format_answer(agent_answers.get(q), q_options)
-            correct_str = format_answer(correct_answers.get(q), q_options)
-            match = (
-                "✓"
-                if agent_answers.get(q, "").lower()
-                == correct_answers.get(q, "").lower()
-                else "✗"
-            )
-            lines.append(
-                f"        Q{q}: {match}  model: {agent_str}  |  expected: {correct_str}"
-            )
+    # Summary QA tasks: show drugs/phenotypes/count comparison
+    if _is_summary_qa_task(result):
+        expected_sq = extract_summary_qa_expected(result)
+        agent_sq = extract_summary_qa_agent_answers(trial_dir)
+        if expected_sq:
+            format_summary_qa_comparison(expected_sq, agent_sq, lines)
+    else:
+        # MCQ tasks: show question-by-question comparison
+        options_by_q = parse_answer_options(result)
+        agent_answers = extract_agent_answers(trial_dir)
+        correct_answers = extract_correct_answers(result)
+        all_q_nums = sorted(set(agent_answers) | set(correct_answers))
+        if all_q_nums:
+            for q in all_q_nums:
+                q_options = options_by_q.get(q, {})
+                agent_str = format_answer(agent_answers.get(q), q_options)
+                correct_str = format_answer(correct_answers.get(q), q_options)
+                match = (
+                    "✓"
+                    if agent_answers.get(q, "").lower()
+                    == correct_answers.get(q, "").lower()
+                    else "✗"
+                )
+                lines.append(
+                    f"        Q{q}: {match}  model: {agent_str}  |  expected: {correct_str}"
+                )
 
     return lines, {"status": status, "reward": reward}
 

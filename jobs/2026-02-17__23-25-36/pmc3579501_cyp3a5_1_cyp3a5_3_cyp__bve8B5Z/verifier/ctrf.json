@@ -1,0 +1,50 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 3,
+            "passed": 2,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771405734.8727841,
+            "stop": 1771405734.9073122
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_drugs_recall",
+                "status": "passed",
+                "duration": 0.0003211250004824251,
+                "start": 1771405734.9014208,
+                "stop": 1771405734.901879,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_phenotypes_recall",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00021945899970887695,
+                "start": 1771405734.9019706,
+                "stop": 1771405734.9069552,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'drugs': ['cyclosporine', 'sirolimus', 'tacrolimus'], 'phenotypes': ['heart transplantation', 'hematopoietic stem cel...ey transplantation', 'liver transplantation', 'lupus nephritis', 'myasthenia gravis', ...], 'relevant_paper_count': 16}\n\n    def test_phenotypes_recall(answers):\n        \"\"\"Check that all expected phenotypes are found (recall).\"\"\"\n        got = normalize(answers.get(\"phenotypes\", []))\n        expected = set(EXPECTED_PHENOTYPES)\n        missing = expected - got\n>       assert not missing, (\n            f\"Missing phenotypes: {missing}. Got: {sorted(got)}\"\n        )\nE       AssertionError: Missing phenotypes: {'lung transplantation'}. Got: ['heart transplantation', 'hematopoietic stem cell transplantation', 'kidney transplantation', 'liver transplantation', 'lupus nephritis', 'myasthenia gravis', 'rheumatoid arthritis', 'ulcerative colitis']\nE       assert not {'lung transplantation'}\n\n/tests/test_outputs.py:39: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_relevant_paper_count",
+                "status": "passed",
+                "duration": 0.00013745800151809817,
+                "start": 1771405734.9070427,
+                "stop": 1771405734.9072335,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}
