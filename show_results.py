@@ -11,10 +11,23 @@ Usage:
 import json
 import re
 import sys
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
 RESULTS_DIR = Path("run_results")
+
+# Matches trial dirs like "variant_chain_001000_q1__fjTyZWX" or task names
+# like "variant_chain_001000_q1"
+CHAIN_TRIAL_RE = re.compile(r"^(variant_chain_\d+)_q(\d+)")
+
+
+def _parse_chain_trial(trial_dir: Path) -> tuple[str, int] | None:
+    """Return (chain_id, q_num) if this trial belongs to a chain, else None."""
+    m = CHAIN_TRIAL_RE.match(trial_dir.name)
+    if m:
+        return m.group(1), int(m.group(2))
+    return None
 
 
 def _get_task_dir(result: dict) -> Path | None:
@@ -160,6 +173,35 @@ def format_duration(start: str, end: str) -> str:
     return f"{total // 60}m {total % 60}s"
 
 
+def _trial_info(trial_dir: Path) -> dict:
+    """Return a dict with status, reward, icon, duration, exc for a trial."""
+    result = load_json(trial_dir / "result.json")
+    if result is None:
+        return {"status": "missing", "reward": None, "icon": "????", "duration": "?", "exc": None, "result": None}
+
+    reward = None
+    if result.get("verifier_result") and result["verifier_result"].get("rewards"):
+        reward = result["verifier_result"]["rewards"].get("reward")
+
+    exc = result.get("exception_info")
+    duration = "?"
+    if result.get("started_at") and result.get("finished_at"):
+        duration = format_duration(result["started_at"], result["finished_at"])
+
+    if exc:
+        icon, status = "FAIL", "error"
+    elif reward is not None and reward >= 1.0:
+        icon, status = "PASS", "pass"
+    elif reward is not None and reward > 0:
+        icon, status = "PART", "partial"
+    elif reward is not None:
+        icon, status = "FAIL", "fail"
+    else:
+        icon, status = "????", "unknown"
+
+    return {"status": status, "reward": reward, "icon": icon, "duration": duration, "exc": exc, "result": result}
+
+
 def format_trial(trial_dir: Path) -> tuple[list[str], dict]:
     lines = []
     result = load_json(trial_dir / "result.json")
@@ -240,6 +282,94 @@ def format_trial(trial_dir: Path) -> tuple[list[str], dict]:
     return lines, {"status": status, "reward": reward}
 
 
+def format_chains_block(trial_dirs: list[Path]) -> tuple[list[str], dict]:
+    """Format trial dirs grouped by chain. Returns (lines, chain_stats)."""
+    # Group by chain_id, collect (q_num, trial_dir) pairs
+    chains: dict[str, list[tuple[int, Path]]] = defaultdict(list)
+    non_chain: list[Path] = []
+
+    for td in trial_dirs:
+        parsed = _parse_chain_trial(td)
+        if parsed:
+            chain_id, q_num = parsed
+            chains[chain_id].append((q_num, td))
+        else:
+            non_chain.append(td)
+
+    lines = []
+    # Per-question pass counts: {q_num: [passed, total]}
+    q_stats: dict[int, list[int]] = defaultdict(lambda: [0, 0])
+    # First-failure position counts: {q_num: count}
+    first_fail_counts: dict[int, int] = defaultdict(int)
+    chain_pass = 0
+    chain_fail = 0
+
+    for chain_id in sorted(chains):
+        q_trials = sorted(chains[chain_id], key=lambda x: x[0])
+        q_nums = [q for q, _ in q_trials]
+        trial_dirs_sorted = [td for _, td in q_trials]
+
+        # Determine per-question status
+        q_infos = [_trial_info(td) for td in trial_dirs_sorted]
+
+        # Chain passes only if every question passes
+        chain_passed = all(info["status"] == "pass" for info in q_infos)
+        first_fail_q = None
+        for q_num, info in zip(q_nums, q_infos):
+            q_stats[q_num][1] += 1
+            if info["status"] == "pass":
+                q_stats[q_num][0] += 1
+            elif first_fail_q is None:
+                first_fail_q = q_num
+
+        if chain_passed:
+            chain_pass += 1
+            chain_icon = "PASS"
+        else:
+            chain_fail += 1
+            chain_icon = "FAIL"
+            if first_fail_q is not None:
+                first_fail_counts[first_fail_q] += 1
+
+        n_passed = sum(1 for info in q_infos if info["status"] == "pass")
+        chain_summary = f"{n_passed}/{len(q_infos)} questions passed"
+        if not chain_passed and first_fail_q is not None:
+            chain_summary += f", first failure at q{first_fail_q}"
+
+        lines.append(f"\n  Chain: {chain_id}  [{chain_icon}]  ({chain_summary})")
+
+        for q_num, td, info in zip(q_nums, trial_dirs_sorted, q_infos):
+            icon = info["icon"]
+            reward = info["reward"]
+            duration = info["duration"]
+            reward_str = f"reward={reward}" if reward is not None else "no reward"
+            lines.append(f"    [{icon}] q{q_num}  {reward_str:<14} {duration}")
+
+            if info["exc"]:
+                exc = info["exc"]
+                exc_type = exc.get("exception_type", "Unknown")
+                exc_msg = exc.get("exception_message", "")
+                if len(exc_msg) > 100:
+                    exc_msg = exc_msg[:100] + "..."
+                lines.append(f"           error: {exc_type}: {exc_msg}")
+
+    if non_chain:
+        lines.append("\n  Non-chain trials:")
+        stats = {"pass": 0, "fail": 0, "error": 0, "partial": 0, "unknown": 0, "missing": 0}
+        for td in non_chain:
+            trial_lines, info = format_trial(td)
+            lines.extend(trial_lines)
+            stats[info["status"]] = stats.get(info["status"], 0) + 1
+
+    chain_stats = {
+        "chain_pass": chain_pass,
+        "chain_fail": chain_fail,
+        "q_stats": dict(q_stats),
+        "first_fail_counts": dict(first_fail_counts),
+    }
+    return lines, chain_stats
+
+
 def format_job(job_dir: Path) -> str:
     lines = []
     result = load_json(job_dir / "result.json")
@@ -272,27 +402,63 @@ def format_job(job_dir: Path) -> str:
     else:
         lines.append("  (no job-level result.json)")
 
-    lines.append(f"\n  {'─' * 60}")
-    lines.append("  Trials:")
-
     trial_dirs = sorted(
         d for d in job_dir.iterdir() if d.is_dir() and (d / "result.json").exists()
     )
 
     if not trial_dirs:
-        lines.append("  (no trial results found)")
+        lines.append("\n  (no trial results found)")
         return "\n".join(lines)
 
-    stats = {"pass": 0, "fail": 0, "error": 0, "partial": 0, "unknown": 0, "missing": 0}
-    for td in trial_dirs:
-        trial_lines, info = format_trial(td)
-        lines.extend(trial_lines)
-        stats[info["status"]] = stats.get(info["status"], 0) + 1
+    # Detect chain run
+    is_chain = any(_parse_chain_trial(td) is not None for td in trial_dirs)
 
-    lines.append(
-        f"\n  Summary: {stats['pass']} passed, {stats['fail'] + stats['error']} failed, "
-        f"{stats.get('partial', 0)} partial"
-    )
+    if is_chain:
+        lines.append(f"\n  {'─' * 60}")
+        lines.append("  Chains:")
+        chain_lines, chain_stats = format_chains_block(trial_dirs)
+        lines.extend(chain_lines)
+
+        # Chain summary
+        n_chains = chain_stats["chain_pass"] + chain_stats["chain_fail"]
+        pass_pct = (chain_stats["chain_pass"] / n_chains * 100) if n_chains else 0
+        lines.append(f"\n  {'─' * 60}")
+        lines.append("  Chain Summary:")
+        lines.append(f"    Total chains:   {n_chains}")
+        lines.append(
+            f"    Passed:         {chain_stats['chain_pass']} / {n_chains}  ({pass_pct:.1f}%)"
+        )
+        lines.append(
+            f"    Failed:         {chain_stats['chain_fail']} / {n_chains}  ({100 - pass_pct:.1f}%)"
+        )
+
+        if chain_stats["first_fail_counts"]:
+            lines.append(f"\n    First failure position (among {chain_stats['chain_fail']} failed chains):")
+            for q_num in sorted(chain_stats["first_fail_counts"]):
+                count = chain_stats["first_fail_counts"][q_num]
+                pct = count / chain_stats["chain_fail"] * 100
+                lines.append(f"      q{q_num}: {count} chains  ({pct:.1f}%)")
+
+        if chain_stats["q_stats"]:
+            lines.append("\n    Per-question accuracy:")
+            for q_num in sorted(chain_stats["q_stats"]):
+                passed, total = chain_stats["q_stats"][q_num]
+                pct = passed / total * 100 if total else 0
+                lines.append(f"      q{q_num}: {passed}/{total}  ({pct:.1f}%)")
+    else:
+        lines.append(f"\n  {'─' * 60}")
+        lines.append("  Trials:")
+        stats = {"pass": 0, "fail": 0, "error": 0, "partial": 0, "unknown": 0, "missing": 0}
+        for td in trial_dirs:
+            trial_lines, info = format_trial(td)
+            lines.extend(trial_lines)
+            stats[info["status"]] = stats.get(info["status"], 0) + 1
+
+        lines.append(
+            f"\n  Summary: {stats['pass']} passed, {stats['fail'] + stats['error']} failed, "
+            f"{stats.get('partial', 0)} partial"
+        )
+
     return "\n".join(lines)
 
 
