@@ -1,0 +1,73 @@
+Hit:1 http://ports.ubuntu.com/ubuntu-ports noble InRelease
+Hit:2 http://ports.ubuntu.com/ubuntu-ports noble-updates InRelease
+Hit:3 http://ports.ubuntu.com/ubuntu-ports noble-backports InRelease
+Hit:4 http://ports.ubuntu.com/ubuntu-ports noble-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (8.5.0-2ubuntu10.6).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
+downloading uv 0.9.7 aarch64-unknown-linux-gnu
+no checksums to verify
+installing to /root/.local/bin
+  uv
+  uvx
+everything's installed!
+/tests/test.sh: line 8: /root/.local/bin/env: No such file or directory
+Downloading cpython-3.14.0-linux-aarch64-gnu (download) (28.6MiB)
+ Downloading cpython-3.14.0-linux-aarch64-gnu (download)
+Downloading pygments (1.2MiB)
+ Downloading pygments
+Installed 6 packages in 4ms
+============================= test session starts ==============================
+platform linux -- Python 3.14.0, pytest-8.4.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.3.5
+collected 3 items
+
+../tests/test_outputs.py FF.                                             [100%]
+
+=================================== FAILURES ===================================
+_____________________________ test_action_category _____________________________
+
+answers = {'classification': 'Strong', 'implication': 'DPYD activity score 1.5 corresponds to an Intermediate Metabolizer phenot...ability and, where available, pharmacokinetic monitoring. Avoid full standard dosing without DPD activity assessment.'}
+
+    def test_action_category(answers):
+        """Check that the recommendation maps to the correct action category."""
+        rec_text = answers.get("recommendation", "")
+        got_category = classify_recommendation(rec_text)
+>       assert got_category == EXPECTED_ACTION_CATEGORY, (
+            f"Expected action category '{EXPECTED_ACTION_CATEGORY}', got '{got_category}' "
+            f"from recommendation: {rec_text}"
+        )
+E       AssertionError: Expected action category 'dose_reduction', got 'avoid' from recommendation: Reduce starting capecitabine dose by 25-50% (start at 50-75% of the standard dose). A 25% dose reduction (i.e., 75% of normal starting dose) is the commonly applied initial adjustment for an activity score of 1.5. Subsequent dose titration should be guided by tolerability and, where available, pharmacokinetic monitoring. Avoid full standard dosing without DPD activity assessment.
+E       assert 'avoid' == 'dose_reduction'
+E         
+E         - dose_reduction
+E         + avoid
+
+/tests/test_outputs.py:46: AssertionError
+_____________________________ test_classification ______________________________
+
+answers = {'classification': 'Strong', 'implication': 'DPYD activity score 1.5 corresponds to an Intermediate Metabolizer phenot...ability and, where available, pharmacokinetic monitoring. Avoid full standard dosing without DPD activity assessment.'}
+
+    def test_classification(answers):
+        """Check that the classification strength matches."""
+        got = answers.get("classification", "").strip()
+>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (
+            f"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'"
+        )
+E       AssertionError: Expected classification 'Moderate', got 'Strong'
+E       assert 'strong' == 'moderate'
+E         
+E         - moderate
+E         + strong
+
+/tests/test_outputs.py:55: AssertionError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_key_terms
+FAILED ../tests/test_outputs.py::test_action_category - AssertionError: Expec...
+FAILED ../tests/test_outputs.py::test_classification - AssertionError: Expect...
+========================= 2 failed, 1 passed in 0.04s ==========================

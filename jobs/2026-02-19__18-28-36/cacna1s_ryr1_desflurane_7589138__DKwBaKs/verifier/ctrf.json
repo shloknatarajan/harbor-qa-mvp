@@ -1,0 +1,59 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 1,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771554617.4318502,
+            "stop": 1771554617.8603957
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_recommendation_file_exists",
+                "status": "passed",
+                "duration": 0.0002809169999977712,
+                "start": 1771554617.4568574,
+                "stop": 1771554617.4572473,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_match",
+                "status": "failed",
+                "duration": 0.3880038750000381,
+                "start": 1771554617.4573321,
+                "stop": 1771554617.8573415,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "agent_recommendation = 'Avoid desflurane and all other volatile inhalational anesthetic agents entirely; use non-triggering total intravenous...uding rising end-tidal CO\u2082, hyperthermia, muscle rigidity, and metabolic acidosis throughout the perioperative period.'\n\n    @pytest.fixture(scope=\"module\")\n    def judge_result(agent_recommendation):\n        \"\"\"Call LLM judge to evaluate the agent's recommendation.\"\"\"\n        api_key = os.environ.get(\"ANTHROPIC_API_KEY\", \"\")\n        if not api_key:\n            pytest.skip(\"ANTHROPIC_API_KEY not set \u2014 cannot run LLM judge\")\n    \n        from anthropic import Anthropic\n    \n        client = Anthropic(api_key=api_key)\n    \n        prompt = f\"\"\"You are evaluating a pharmacogenomics clinical recommendation.\n    \n    ## Ground Truth (CPIC Guideline)\n    - **Drug:** {DRUG}\n    - **Gene:** {GENE}\n    - **Patient Genotype:** {VARIANT}\n    - **Recommendation:** {EXPECTED_RECOMMENDATION}\n    - **Classification Strength:** {EXPECTED_CLASSIFICATION}\n    \n    ## Agent's Recommendation\n    {agent_recommendation}\n    \n    ## Evaluation Criteria\n    \n    Score EACH of the following dimensions on a scale of 1-5:\n    \n    1. **action_match**: Does the agent recommend the same clinical action as the ground truth?\n       (e.g., both say \"avoid\", both say \"reduce dose by 50%\", both say \"use standard dosing\")\n       - 5: Exact same action\n       - 4: Same general action with minor differences in wording\n       - 3: Similar but with meaningful differences (e.g., \"reduce dose\" vs \"reduce dose by 50%\")\n       - 2: Partially correct (gets the direction right but misses key details)\n       - 1: Wrong action (e.g., \"standard dosing\" when should be \"avoid\")\n    \n    2. **specificity**: Does the agent provide the same level of clinical detail?\n       (dosing percentages, monitoring recommendations, alternative suggestions)\n       - 5: All key details present\n       - 4: Most key details present\n       - 3: Some details present\n       - 2: Vague or missing most details\n       - 1: No useful clinical detail\n    \n    3. **safety**: Is the recommendation safe for the patient?\n       - 5: Fully safe, matches guideline\n       - 4: Safe with minor omissions\n       - 3: Mostly safe but missing important caveats\n       - 2: Could lead to suboptimal care\n       - 1: Potentially dangerous (e.g., recommending standard dose when drug should be avoided)\n    \n    Respond with ONLY a JSON object (no markdown, no explanation):\n>   {\"action_match\": <1-5>, \"specificity\": <1-5>, \"safety\": <1-5>, \"brief_rationale\": \"<1 sentence>\"}\"\"\"\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       ValueError: Invalid format specifier ' <1-5>, \"specificity\": <1-5>, \"safety\": <1-5>, \"brief_rationale\": \"<1 sentence>\"' for object of type 'str'\n\n/tests/test_outputs.py:74: ValueError"
+            },
+            {
+                "name": "test_outputs.py::test_specificity",
+                "status": "failed",
+                "duration": 0.00011058399996954904,
+                "start": 1771554617.857508,
+                "stop": 1771554617.8590367,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "agent_recommendation = 'Avoid desflurane and all other volatile inhalational anesthetic agents entirely; use non-triggering total intravenous...uding rising end-tidal CO\u2082, hyperthermia, muscle rigidity, and metabolic acidosis throughout the perioperative period.'\n\n    @pytest.fixture(scope=\"module\")\n    def judge_result(agent_recommendation):\n        \"\"\"Call LLM judge to evaluate the agent's recommendation.\"\"\"\n        api_key = os.environ.get(\"ANTHROPIC_API_KEY\", \"\")\n        if not api_key:\n            pytest.skip(\"ANTHROPIC_API_KEY not set \u2014 cannot run LLM judge\")\n    \n        from anthropic import Anthropic\n    \n        client = Anthropic(api_key=api_key)\n    \n        prompt = f\"\"\"You are evaluating a pharmacogenomics clinical recommendation.\n    \n    ## Ground Truth (CPIC Guideline)\n    - **Drug:** {DRUG}\n    - **Gene:** {GENE}\n    - **Patient Genotype:** {VARIANT}\n    - **Recommendation:** {EXPECTED_RECOMMENDATION}\n    - **Classification Strength:** {EXPECTED_CLASSIFICATION}\n    \n    ## Agent's Recommendation\n    {agent_recommendation}\n    \n    ## Evaluation Criteria\n    \n    Score EACH of the following dimensions on a scale of 1-5:\n    \n    1. **action_match**: Does the agent recommend the same clinical action as the ground truth?\n       (e.g., both say \"avoid\", both say \"reduce dose by 50%\", both say \"use standard dosing\")\n       - 5: Exact same action\n       - 4: Same general action with minor differences in wording\n       - 3: Similar but with meaningful differences (e.g., \"reduce dose\" vs \"reduce dose by 50%\")\n       - 2: Partially correct (gets the direction right but misses key details)\n       - 1: Wrong action (e.g., \"standard dosing\" when should be \"avoid\")\n    \n    2. **specificity**: Does the agent provide the same level of clinical detail?\n       (dosing percentages, monitoring recommendations, alternative suggestions)\n       - 5: All key details present\n       - 4: Most key details present\n       - 3: Some details present\n       - 2: Vague or missing most details\n       - 1: No useful clinical detail\n    \n    3. **safety**: Is the recommendation safe for the patient?\n       - 5: Fully safe, matches guideline\n       - 4: Safe with minor omissions\n       - 3: Mostly safe but missing important caveats\n       - 2: Could lead to suboptimal care\n       - 1: Potentially dangerous (e.g., recommending standard dose when drug should be avoided)\n    \n    Respond with ONLY a JSON object (no markdown, no explanation):\n>   {\"action_match\": <1-5>, \"specificity\": <1-5>, \"safety\": <1-5>, \"brief_rationale\": \"<1 sentence>\"}\"\"\"\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       ValueError: Invalid format specifier ' <1-5>, \"specificity\": <1-5>, \"safety\": <1-5>, \"brief_rationale\": \"<1 sentence>\"' for object of type 'str'\n\n/tests/test_outputs.py:74: ValueError"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "duration": 0.00010604099998090533,
+                "start": 1771554617.8591127,
+                "stop": 1771554617.8603137,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "agent_recommendation = 'Avoid desflurane and all other volatile inhalational anesthetic agents entirely; use non-triggering total intravenous...uding rising end-tidal CO\u2082, hyperthermia, muscle rigidity, and metabolic acidosis throughout the perioperative period.'\n\n    @pytest.fixture(scope=\"module\")\n    def judge_result(agent_recommendation):\n        \"\"\"Call LLM judge to evaluate the agent's recommendation.\"\"\"\n        api_key = os.environ.get(\"ANTHROPIC_API_KEY\", \"\")\n        if not api_key:\n            pytest.skip(\"ANTHROPIC_API_KEY not set \u2014 cannot run LLM judge\")\n    \n        from anthropic import Anthropic\n    \n        client = Anthropic(api_key=api_key)\n    \n        prompt = f\"\"\"You are evaluating a pharmacogenomics clinical recommendation.\n    \n    ## Ground Truth (CPIC Guideline)\n    - **Drug:** {DRUG}\n    - **Gene:** {GENE}\n    - **Patient Genotype:** {VARIANT}\n    - **Recommendation:** {EXPECTED_RECOMMENDATION}\n    - **Classification Strength:** {EXPECTED_CLASSIFICATION}\n    \n    ## Agent's Recommendation\n    {agent_recommendation}\n    \n    ## Evaluation Criteria\n    \n    Score EACH of the following dimensions on a scale of 1-5:\n    \n    1. **action_match**: Does the agent recommend the same clinical action as the ground truth?\n       (e.g., both say \"avoid\", both say \"reduce dose by 50%\", both say \"use standard dosing\")\n       - 5: Exact same action\n       - 4: Same general action with minor differences in wording\n       - 3: Similar but with meaningful differences (e.g., \"reduce dose\" vs \"reduce dose by 50%\")\n       - 2: Partially correct (gets the direction right but misses key details)\n       - 1: Wrong action (e.g., \"standard dosing\" when should be \"avoid\")\n    \n    2. **specificity**: Does the agent provide the same level of clinical detail?\n       (dosing percentages, monitoring recommendations, alternative suggestions)\n       - 5: All key details present\n       - 4: Most key details present\n       - 3: Some details present\n       - 2: Vague or missing most details\n       - 1: No useful clinical detail\n    \n    3. **safety**: Is the recommendation safe for the patient?\n       - 5: Fully safe, matches guideline\n       - 4: Safe with minor omissions\n       - 3: Mostly safe but missing important caveats\n       - 2: Could lead to suboptimal care\n       - 1: Potentially dangerous (e.g., recommending standard dose when drug should be avoided)\n    \n    Respond with ONLY a JSON object (no markdown, no explanation):\n>   {\"action_match\": <1-5>, \"specificity\": <1-5>, \"safety\": <1-5>, \"brief_rationale\": \"<1 sentence>\"}\"\"\"\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       ValueError: Invalid format specifier ' <1-5>, \"specificity\": <1-5>, \"safety\": <1-5>, \"brief_rationale\": \"<1 sentence>\"' for object of type 'str'\n\n/tests/test_outputs.py:74: ValueError"
+            }
+        ]
+    }
+}
