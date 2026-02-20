@@ -1,0 +1,53 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 3,
+            "passed": 1,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771415453.6209297,
+            "stop": 1771415453.6561928
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_drugs_recall",
+                "status": "passed",
+                "duration": 0.0003128750067844521,
+                "start": 1771415453.6498454,
+                "stop": 1771415453.6502879,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_phenotypes_recall",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0001982080029847566,
+                "start": 1771415453.6503792,
+                "stop": 1771415453.6551235,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'drugs': ['codeine', 'tramadol', 'hydrocodone', 'oxycodone', 'nortriptyline'], 'phenotypes': ['pain'], 'relevant_paper_count': 4}\n\n    def test_phenotypes_recall(answers):\n        \"\"\"Check that all expected phenotypes are found (recall).\"\"\"\n        got = normalize(answers.get(\"phenotypes\", []))\n        expected = set(EXPECTED_PHENOTYPES)\n        missing = expected - got\n>       assert not missing, (\n            f\"Missing phenotypes: {missing}. Got: {sorted(got)}\"\n        )\nE       AssertionError: Missing phenotypes: {'pain, postoperative'}. Got: ['pain']\nE       assert not {'pain, postoperative'}\n\n/tests/test_outputs.py:39: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_relevant_paper_count",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.000188666999747511,
+                "start": 1771415453.6552012,
+                "stop": 1771415453.6561165,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'drugs': ['codeine', 'tramadol', 'hydrocodone', 'oxycodone', 'nortriptyline'], 'phenotypes': ['pain'], 'relevant_paper_count': 4}\n\n    def test_relevant_paper_count(answers):\n        \"\"\"Check the relevant paper count is correct.\"\"\"\n        got = answers.get(\"relevant_paper_count\", -1)\n>       assert got == EXPECTED_RELEVANT_PAPER_COUNT, (\n            f\"Expected {EXPECTED_RELEVANT_PAPER_COUNT} relevant papers, got {got}\"\n        )\nE       AssertionError: Expected 3 relevant papers, got 4\nE       assert 4 == 3\n\n/tests/test_outputs.py:47: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

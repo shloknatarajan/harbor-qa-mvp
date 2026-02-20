@@ -1,0 +1,962 @@
+{
+  "schema_version": "ATIF-v1.5",
+  "session_id": "019c6fc2-35ad-7d43-9878-0a354853c637",
+  "agent": {
+    "name": "codex",
+    "version": "0.104.0",
+    "model_name": "gpt-5",
+    "extra": {
+      "originator": "codex_exec",
+      "cwd": "/app"
+    }
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "timestamp": "2026-02-18T07:58:44.657Z",
+      "source": "system",
+      "message": "<permissions instructions>\nFilesystem sandboxing defines which files can be read or written. `sandbox_mode` is `danger-full-access`: No filesystem sandboxing - all commands are permitted. Network access is enabled.\nApproval policy is currently never. Do not provide the `sandbox_permissions` for any reason, commands will be rejected.\n</permissions instructions>"
+    },
+    {
+      "step_id": 2,
+      "timestamp": "2026-02-18T07:58:44.657Z",
+      "source": "user",
+      "message": "# AGENTS.md instructions for /app\n\n<INSTRUCTIONS>\n## Skills\nA skill is a set of local instructions to follow that is stored in a `SKILL.md` file. Below is the list of skills that can be used. Each entry includes a name, description, and file path so you can open the source for full instructions when using a specific skill.\n### Available skills\n- skill-creator: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Codex's capabilities with specialized knowledge, workflows, or tool integrations. (file: /logs/agent/skills/.system/skill-creator/SKILL.md)\n- skill-installer: Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable skills, install a curated skill, or install a skill from another repo (including private repos). (file: /logs/agent/skills/.system/skill-installer/SKILL.md)\n### How to use skills\n- Discovery: The list above is the skills available in this session (name + description + file path). Skill bodies live on disk at the listed paths.\n- Trigger rules: If the user names a skill (with `$SkillName` or plain text) OR the task clearly matches a skill's description shown above, you must use that skill for that turn. Multiple mentions mean use them all. Do not carry skills across turns unless re-mentioned.\n- Missing/blocked: If a named skill isn't in the list or the path can't be read, say so briefly and continue with the best fallback.\n- How to use a skill (progressive disclosure):\n  1) After deciding to use a skill, open its `SKILL.md`. Read only enough to follow the workflow.\n  2) When `SKILL.md` references relative paths (e.g., `scripts/foo.py`), resolve them relative to the skill directory listed above first, and only consider other paths if needed.\n  3) If `SKILL.md` points to extra folders such as `references/`, load only the specific files needed for the request; don't bulk-load everything.\n  4) If `scripts/` exist, prefer running or patching them instead of retyping large code blocks.\n  5) If `assets/` or templates exist, reuse them instead of recreating from scratch.\n- Coordination and sequencing:\n  - If multiple skills apply, choose the minimal set that covers the request and state the order you'll use them.\n  - Announce which skill(s) you're using and why (one short line). If you skip an obvious skill, say why.\n- Context hygiene:\n  - Keep context small: summarize long sections instead of pasting them; only load extra files when needed.\n  - Avoid deep reference-chasing: prefer opening only files directly linked from `SKILL.md` unless you're blocked.\n  - When variants exist (frameworks, providers, domains), pick only the relevant reference file(s) and note that choice.\n- Safety and fallback: If a skill can't be applied cleanly (missing files, unclear instructions), state the issue, pick the next-best approach, and continue.\n</INSTRUCTIONS>"
+    },
+    {
+      "step_id": 3,
+      "timestamp": "2026-02-18T07:58:44.658Z",
+      "source": "user",
+      "message": "<environment_context>\n  <cwd>/app</cwd>\n  <shell>bash</shell>\n</environment_context>"
+    },
+    {
+      "step_id": 4,
+      "timestamp": "2026-02-18T07:58:44.658Z",
+      "source": "user",
+      "message": "You are a pharmacogenomics researcher. A collection of research papers is available in `/app/papers/`. Some of these papers are relevant to the variant of interest, while many are unrelated distractors.\n\n**Variant:** CYP2D6*1, CYP2D6*1xN, CYP2D6*2, CYP2D6*3, CYP2D6*4, CYP2D6*5, CYP2D6*6, CYP2D6*10, CYP2D6*41\n**Gene:** CYP2D6\n**Phenotype Category:** Toxicity\n\nTerm banks of known drug and phenotype names are available at:\n- `/app/term_banks/drugs.txt` \u2014 one drug name per line\n- `/app/term_banks/phenotypes.txt` \u2014 one phenotype name per line\n\nYour task is to read through the papers and identify the following information about **CYP2D6*1, CYP2D6*1xN, CYP2D6*2, CYP2D6*3, CYP2D6*4, CYP2D6*5, CYP2D6*6, CYP2D6*10, CYP2D6*41** in gene **CYP2D6**:\n\n1. **Drugs**: Select all drugs associated with this variant from the drug term bank.\n2. **Phenotypes**: Select all phenotypes (diseases/conditions) associated with this variant from the phenotype term bank.\n3. **Relevant paper count**: How many of the papers in `/app/papers/` are relevant to CYP2D6*1, CYP2D6*1xN, CYP2D6*2, CYP2D6*3, CYP2D6*4, CYP2D6*5, CYP2D6*6, CYP2D6*10, CYP2D6*41?\n\n---\n\nWrite your answers to `/app/answers.json` as a JSON object with the following structure:\n\n```json\n{\n  \"drugs\": [\"drug1\", \"drug2\"],\n  \"phenotypes\": [\"phenotype1\", \"phenotype2\"],\n  \"relevant_paper_count\": 3\n}\n```\n\nNotes:\n- Drug and phenotype names should be lowercase.\n- Only select terms from the provided term banks. Do not add terms that are not in the banks.\n- The papers directory contains 12 papers total. Count only those relevant to CYP2D6*1, CYP2D6*1xN, CYP2D6*2, CYP2D6*3, CYP2D6*4, CYP2D6*5, CYP2D6*6, CYP2D6*10, CYP2D6*41.\n- **Do not use web search.** All information you need is in the provided papers and term banks."
+    },
+    {
+      "step_id": 5,
+      "timestamp": "2026-02-18T07:58:49.416Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "I\u2019ll scan the term banks, parse the papers for CYP2D6 variants, match drugs/phenotypes, and write answers.json."
+    },
+    {
+      "step_id": 6,
+      "timestamp": "2026-02-18T07:58:50.284Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_7GRMxlmGx9VhQePq456vozUs",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_7GRMxlmGx9VhQePq456vozUs",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "in_progress",
+                "step": "Load term banks (drugs, phenotypes)"
+              },
+              {
+                "status": "pending",
+                "step": "Scan papers for CYP2D6 variants"
+              },
+              {
+                "status": "pending",
+                "step": "Extract matching drugs/phenotypes"
+              },
+              {
+                "status": "pending",
+                "step": "Count relevant papers"
+              },
+              {
+                "status": "pending",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_7GRMxlmGx9VhQePq456vozUs",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"in_progress\",\"step\":\"Load term banks (drugs, phenotypes)\"},{\"status\":\"pending\",\"step\":\"Scan papers for CYP2D6 variants\"},{\"status\":\"pending\",\"step\":\"Extract matching drugs/phenotypes\"},{\"status\":\"pending\",\"step\":\"Count relevant papers\"},{\"status\":\"pending\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 7,
+      "timestamp": "2026-02-18T07:58:51.407Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_xQCS1MN5m6wK0OZZ4Oz1Iz9o",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_xQCS1MN5m6wK0OZZ4Oz1Iz9o",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "ls -la /app && echo && ls -la /app/papers && echo && ls -la /app/term_banks"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_xQCS1MN5m6wK0OZZ4Oz1Iz9o",
+            "content": "Chunk ID: 9b9c75\nWall time: 0.0528 seconds\nProcess exited with code 0\nOriginal token count: 294\nOutput:\ntotal 16\ndrwxr-xr-x 1 root root 4096 Feb 18 07:28 .\ndrwxr-xr-x 1 root root 4096 Feb 18 07:58 ..\ndrwxr-xr-x 2 root root 4096 Feb 18 05:50 papers\ndrwxr-xr-x 2 root root 4096 Feb 18 07:28 term_banks\n\ntotal 776\ndrwxr-xr-x 2 root root  4096 Feb 18 05:50 .\ndrwxr-xr-x 1 root root  4096 Feb 18 07:28 ..\n-rw-r--r-- 1 root root 84897 Feb 17 05:19 PMC11732454.md\n-rw-r--r-- 1 root root 62680 Feb 17 05:19 PMC11853772.md\n-rw-r--r-- 1 root root 82316 Feb 17 05:19 PMC12331468.md\n-rw-r--r-- 1 root root 46712 Feb 17 05:19 PMC2291379.md\n-rw-r--r-- 1 root root 53665 Feb 17 05:19 PMC2976713.md\n-rw-r--r-- 1 root root 21997 Feb 17 05:19 PMC3550197.md\n-rw-r--r-- 1 root root 83474 Feb 17 05:19 PMC3952719.md\n-rw-r--r-- 1 root root 58838 Feb 17 05:19 PMC4292894.md\n-rw-r--r-- 1 root root 54012 Feb 17 05:19 PMC4470685.md\n-rw-r--r-- 1 root root 61204 Feb 17 05:19 PMC4719145.md\n-rw-r--r-- 1 root root 78092 Feb 17 05:19 PMC8841435.md\n-rw-r--r-- 1 root root 69016 Feb 17 05:19 PMC8940650.md\n\ntotal 28\ndrwxr-xr-x 2 root root 4096 Feb 18 07:28 .\ndrwxr-xr-x 1 root root 4096 Feb 18 07:28 ..\n-rw-r--r-- 1 root root 9201 Feb 18 06:43 drugs.txt\n-rw-r--r-- 1 root root 7008 Feb 18 06:43 phenotypes.txt\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"ls -la /app && echo && ls -la /app/papers && echo && ls -la /app/term_banks\"}"
+      }
+    },
+    {
+      "step_id": 8,
+      "timestamp": "2026-02-18T07:58:59.090Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Scanning the term banks and papers with ripgrep to identify CYP2D6 mentions, drugs, and phenotypes."
+    },
+    {
+      "step_id": 9,
+      "timestamp": "2026-02-18T07:59:00.059Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_5EWQ2tyPM7ut3aITjhOXKRnX",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_5EWQ2tyPM7ut3aITjhOXKRnX",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"CYP2D6|\\*1xN|\\*1|\\*2|\\*3|\\*4|\\*5|\\*6|\\*10|\\*41|ultrarapid|poor metabolizer|UM|PM|IM|NM\" /app/papers -n --colors 'match:fg:yellow'"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_5EWQ2tyPM7ut3aITjhOXKRnX",
+            "content": "Chunk ID: 55ee5a\nWall time: 0.0540 seconds\nProcess exited with code 0\nOriginal token count: 57184\nOutput:\nTotal output lines: 382\n\n/app/papers/PMC8940650.md:8:**PMID:** 34877660\n/app/papers/PMC8940650.md:9:**PMCID:** PMC8940650\n/app/papers/PMC8940650.md:10:**URL:** https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8940650/\n/app/papers/PMC8940650.md:11:**PDF:** [https://pmc.ncbi.nlm.nih.gov/articles/PMC8940650/pdf/nihms-1762618.pdf](https://pmc.ncbi.nlm.nih.gov/articles/PMC8940650/pdf/nihms-1762618.pdf)\n/app/papers/PMC8940650.md:15:Fentanyl is an anesthetic/analgesic commonly used in surgical and recovery settings. CYP3A4 and CYP3A5 encode enzymes which metabolize fentanyl; genetic variants in these genes impact fentanyl pharmacokinetics in adults. Pharmacokinetic (PK) studies are difficult to replicate in children due to the burden of additional blood taken solely for research purposes. The aim of this study is to test the effect of CYP3A5 and CYP3A4 genetic variants on fentanyl PK in children using opportunistically collected samples. Fentanyl concentrations were measured from remnant blood specimens and dosing data were extracted from electronic health records. Variant data defining CYP3A4*1G and CYP3A5*3 and *6 alleles were available from prior genotyping; alleles with no variant were defined as *1. The study cohort included 434 individuals (median age 9 months, 52% male) and 1937 fentanyl concentrations were available. A two-compartment model was selected as the base model, and the final covariate model included age, weight, and surgical severity score. Clearance was significantly associated with either CYP3A5*3 or CYP3A5*6 alleles, but not the CYP3A4*1G allele. A genotype of CYP3A5*1/*3 or CYP3A5*1/*6 (i.e., intermediate metabolizer status) was associated with a 0.84-fold (95% confidence interval [CI]: 0.71 to 1.00) reduction in clearance vs. CYP3A5*1/*1 (i.e., normal metabolizer status). CYP3A5*3/*3, CYP3A5*3/*6, or CYP3A5*6/*6 (i.e., poor metabolizer status) was associated with a 0.76-fold (95% CI: 0.58 to 0.99) reduction in clearance. In the final model, expected clearance was 8.9 and 6.8 L/hr for a normal and poor metabolizer, respectively, with median population covariates (9 months old, 7.7 kg, low surgical severity).\n/app/papers/PMC8940650.md:23:Fentanyl produces adverse effects including fatigue, nausea, vomiting, dizziness, respiratory depression, and bradycardia;^8^ chronic use can lead to withdrawal symptoms. It is therefore ideal to tailor individual dosage to maintain effective blood concentrations while minimizing risk of adverse effects. PopPK analyses have the potential to illuminate important individual factors to influence dosing decisions, part of which may include genomic data. Fentanyl is known to be metabolized by Cytochrome P450 (CYP) enzymes, *CYP3A4* and *CYP3A5*. Specifically *CYP3A4*1G*, *CYP3A5*3*, and *CYP3A5*6* alleles have been shown to affect fentanyl PK in adults,^9\u201314^ although not all studies have reported significant effects.^15^ Fentanyl clearance is reduced in neonates and rapidly matures in the first month of life,^16^ likely due in part to the maturation of *CYP3A* encoded enzymes. In children, these variants have been shown to be associated with tacrolimus blood concentrations^17,18^ but no studies to date have detected their effects on fentanyl disposition in pediatric populations using popPK analysis. The *ABCB1* variant rs1045642 has also been shown to be associated with reduced fentanyl dosing in children.^19^ Further, children with congenital heart disease have varying degrees of cardiac insufficiency in the immediate postoperative period, leading to organ hypoperfusion and less effective drug distribution.^20^ This is partly offset by vasoactive drugs commonly used in the postoperative period which increase hepatic perfusion,^21^ but may have significant effects on fentanyl, as clearance is perfusion-limited.\n/app/papers/PMC8940650.md:25:The electronic health record (EHR) can be a critical resource in observational PK studies as it is a repository of information collected for clinical purposes. Further, non-clinical data recording can be burdensome to clinicians and unjustifiable during treatment of vulnerable populations such as pediatric intensive care unit (ICU) patients. We have been developing a system for popPK studies using EHRs called \u201c*EHR2PKPD*\u201d, which includes a set of tools for data extraction and processing from the EHR, implemented in the package *EHR*^22^ within the programming language R.^23^ The functions in this package can build PK datasets in a format common to PK modelling software such as NONMEM^24^ and Monolix^25^ using data extracted from EHRs (*e.g.*, demographic, dosing, blood concentration data). This study is one of the first popPK studies performed using our system to generate PK datasets.\n/app/papers/PMC8940650.md:41:Study participants provided anticoagulated blood, saliva, or a buccal swab for genetic analysis and genomic DNA was extracted through the Vanderbilt Technologies for Advanced Genomics (VANTAGE) Core laboratory. Study participants had been previously genotyped using either the Affymetrix Axiom\u2122 Precision Medicine Research Array or the Precision Medicine Diversity Array (Thermo Fisher Scientific, Waltham, MA). As part of genotype data quality control, variants were removed if genotype call rate was <98%, if minor allele frequency was >20% different from 1000 Genomes phase 3 European reference populations, or deviation from Hardy-Weinberg Equilibrium (p-value < 1\u00d710^\u221210^). Data for individuals were removed if their genotype call rate was <98%, if the genetically estimated sex differed from parental-reported sex, or if they are related (2nd degree or closer). Genotype data were imputed to the 1000 Genomes phase 3 reference panel. For this study, we extracted data for specific variants in *CYP3A5* (**3*, 6981A>G, rs776746, [NC_000007.14](https://www.ncbi.nlm.nih.gov/nuccore/NC_000007.14):g.99672916T>C; and **6*, 14685G>A, rs10264272, [NC_000007.14](https://www.ncbi.nlm.nih.gov/nuccore/NC_000007.14):g.99665212C>T), *CYP3A4* (**1G*, 20239G>A, rs2242480, [NC_000007.14](https://www.ncbi.nlm.nih.gov/nuccore/NC_000007.14):g.99763843C>T), and *ABCB1* (rs1045642) from the study database.\n/app/papers/PMC8940650.md:53:We performed a popPK analysis in Monolix\u00ae 2021R with the stochastic approximation of expectation and maximization (SAEM) method. To handle the BLOQ observations, we used a likelihood method that treats the BLOQ observations as censored,^27^ equivalent to the NONMEM\u00ae M3 method. We first selected the base model, assuming a lognormal distribution for the random effects PK parameters. After selecting the base model, we prespecified a fixed allometric scaling factor centered at 70 kg on each of the main PK parameters as recommended by Holford *et al*.^28^ With this model, we further performed covariate modeling with *a priori* selected candidate covariates based on previous research and biological plausibility: age (months, recorded at study entry), sex, race (per parent report at study enrollment), serum creatinine, Society of Thoracic Surgery\u2013European Association for Cardio-Thoracic Surgery (STAT) Congenital Heart Surgery Mortality Score,^29^ cardiopulmonary bypass time, and co-medications for *CYP3A* inducer (coded 2 if any drug classified as an inducer is present, 1 otherwise) and *CYP3A* inhibitor (coded 2 if any drug classified as an inhibitor is present, 1 otherwise). In addition, because *CYP3A* allele frequencies covary with both ancestral origins and PK outcomes, the first five ancestry PCs were included as covariates to account for confounding by population substructure. Continuous covariates were standardized by dividing by their median while ordered covariates such as genotypes were coded additively as 1, 2, \u2026, m where m is the number of unique levels in the variable. Once covariates were selected, effects of genetic variants on clearance were tested. *CYP3A5*3*, *CYP3A5*6*, *CYP3A4*1G,* and rs1045642 were assessed separately. For *CYP3A5*, we also assigned those individuals who had no variant alleles as normal metabolizers (*i.e.*, *CYP3A5*1/*1*), one variant allele as intermediate metabolizers (*i.e., CYP3A5*1/*3* or **1/*6*), and 2 variant alleles as poor metabolizers (*i.e*., *CYP3A5*3/*3*, **3/*6,* or **6/*6*). Age was also tested against a maturation model using gestational age, a coefficient for half-adult-clearance-age, and a Hill coefficient as described in Holford *et al.*^28^\n/app/papers/PMC8940650.md:59:Using the final model with covariates including genetic variants (*CYP3A5*3* or **6* variants), we checked for clinical significance using simulation. We established a set of profiles typical for younger (2 months, 5 kg), average age (9 months, 8 kg), and older (120 months, 32 kg) individuals. For each of these profiles, we simulated 1000 random effects for *Cl*, *V1*, *Q*, and *V2* according to our model estimates, making 3000 simulated PK profiles. We further replicate each profile into 3 individuals with normal, intermediate, or poor metabolizer status but who are otherwise identical. Using these PK profiles, we calculated the expected response to a 1 mcg/kg intravenous (IV) bolus followed by a 1, 2, 3, and 4 mcg/kg/hour IV infusion over 12 hours. We reported the proportion of individuals which is expected to reach or exceed the therapeutic drug range (TDR, 1 to 3 ng/mL)^31^ as well as the mean times to reach those cutoffs among the subset of patients who reach them within the 12 hour window.\n/app/papers/PMC8940650.md:69:|   | Wholecohort | CYP3A5 normalmetabolizers | CYP3A5 intermediate metabolizers | CYP3A5 poormetabolizers | CYP3A4 *1/*1 | CYP3A4 *1/*1G | CYP3A4 *1G/*1G |\n/app/papers/PMC8940650.md:91:| CYP3A4*1G |   |   |   |   |   |   |   |\n/app/papers/PMC8940650.md:95:| CYP3A5*6 |   |   |   |   |   |   |   |\n/app/papers/PMC8940650.md:99:| CYP3A5*3 |   |   |   |   |   |   |   |\n/app/papers/PMC8940650.md:117:There were 311 individuals (71.1%) with no *CYP3A4*1G* alleles, 90 (20.7%) with 1 allele and 33 (7.6%) with 2 alleles. For *CYP3A5*6*, 411 individuals (94.7%) had no alleles, 21 (4.8%) had 1 allele, and 2 (0.5%) had 2 alleles. For *CYP3A5*3*, 22 individuals (5.1%) had no alleles, and 77 (17.7%) and 335 (77.2%) had 1 and 2 alleles, respectively. Based on both *CYP3A5*3* and **6*, 10 (2.3%) of the cohort were normal metabolizers, 76 (17.5%) were intermediate metabolizers, and 348 (80.2%) were poor metabolizers. For the rs1045642 variant in *ABCB1*, 213 (49.1%) were heterozygous, and 100 (23.0%) were homozygous for the A allele.\n/app/papers/PMC8940650.md:125:| Base Model |  | Base+Weight Model |  | CYP3A4*1G Model |  | Final Model |  |\n/app/papers/PMC8940650.md:130:|   |   | CL= \u03b81* \u00d7 (wt/70)0.75 |   | CL = \u03b81 \u00d7 (wt/70)0.75 \u00d7 (age/9)\u03b82 \u00d7 (STAT)\u03b83 \u00d7 (CYP3A4*1G)\u03b84 |   | CL = \u03b81 \u00d7 (wt/70)0.75 \u00d7 (age/9)\u03b82 \u00d7 (STAT)\u03b83 \u00d7 (CYP3A5)\u03b84 |   |\n/app/papers/PMC8940650.md:150:Inclusion of weight on all the main PK parameters with fixed allometric scaling parameters markedly improved the model fit (objective function reduction of 466 from the base model). Additional inclusion of age and STAT significantly improved the model fit (objective function reduction of 9.8 and 6.9, respectively), while other covariates including inducer- and inhibitor-comedication, race, ancestry PCs, and cardiopulmonary bypass time were not selected as they did not improve the model fit. A maturation factor for gestational age did not yield any improvement in objective function over age, so was not included in the final model. Independent inclusion of *CYP3A5*3* and CYP3A5 normal/intermediate/poor metabolizer status were statistically significant (p=0.043 and p=0.046, respectively). CYP3A5 metabolizer status, denoted by *CYP3A5* in the model, was included in our final model.\n/app/papers/PMC8940650.md:164:where *CL*_i_, *V1*_i_, *Q*_i_, and *V2*_i_ are the individual-specific *CL*, *V1*, *Q*, and *V2* for individual *i*, *wt* is body weight in kilogram (kg), *age* is individual age in months, *STAT* is individual surgical severity score ranging from 1 to 5, and *CYP3A5* is metabolizer status, coded by 1, 2, and 3 for normal, intermediate, and poor metabolizer, respectively. The \u03b7_i_^CL^_,_ \u03b7_i_^V1^_,_ \u03b7_i_^Q^_,_ and \u03b7_i_^V2^ are random effects explaining between-individual variability for *CL, V1, Q,* and *V2*, which follow a lognormal distribution with means zero and covariance matrix with \u03c9^2^_CL_, \u03c9^2^_V1_, \u03c9^2^_Q_, and \u03c9^2^_V2_ in the diagonal. The \u03b8s in the equations denote model parameters as typically used in statistical models. Estimates (%CV) for typical parameter values for an individual of weight 7.7 kg, age 9 month, with STAT score 1 and normal metabolizer function are *CL* = 8.9 L/hr (47.9%), *V1* = 30.5 L (59.3%), *Q* = 4.0 L/hr (70.0%), and *V2* = 58.2 L (70.0%). Compared to the %CV of 63.7% for *CL* in the base model, the %CV in the final model, 47.9%, is substantially reduced due to the inclusion of covariates which explain some of the interindividual variability in *CL*.\n/app/papers/PMC8940650.md:166:The estimates for the effect on *CL* (with 95% Wald CI) for *CYP3A4*1G, CYP3A5*3*, *CYP3A5*6,* and rs1045642 variants are 0.03 [\u22120.11, 0.17], \u22120.20 [\u22120.39, \u22120.01], 0.13 [\u22120.19, 0.45], and 0.01 [\u22120.12, 0.14], respectively. These correspond to 1.03-fold [0.89, 1.21], 0.80-fold [0.65, 0.99], 1.15-fold [0.81, 1.64], and 1.01-fold [0.88, 1.17] changes to *CL* in the presence of two *CYP3A4*1G, CYP3A5*3*, *CYP3A5*6,* or rs1045642 AA variants. The estimate and 95% CI for a CYP3A5 metabolizer status is \u22120.25 [\u22120.49, \u22120.01], corresponding to a 0.76-fold [0.58, 0.99] change to *CL* in the presence of two *CYP3A5* variants. We proceed to report results in terms of this composite metabolizer status because it is clinically meaningful and has the greater estimated effect size (\u22120.25 *vs*. \u22120.20). [Figure 1](#F1) ([A](#F1)) shows that estimated *CL* for normal, intermediate, and poor metabolizers have medians (horizontal lines) of 13.5 L/hr, 9.0 L/hr, and 7.8 L/hr, respectively. Median estimated CL for the entire population is 8.2 L/hr.\n/app/papers/PMC8940650.md:172:[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=8940650_nihms-1762618-f0001.jpg)\n/app/papers/PMC8940650.md:174:Clearance is summarized for normal, intermediate, and poor metabolizers. The hinge is set at the median, the boxes span the 25th to 75th percentile, and the whiskers extend to the most extreme datum which is at most 1.5 times the interquartile range. Clearances are shown for (A) the entire cohort and (B) separately for individuals whose self-reported race was Black vs. the rest of the cohort.\n/app/papers/PMC8940650.md:186:[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=8940650_nihms-1762618-f0002.jpg)\n/app/papers/PMC8940650.md:192:[Figure 3A](#F3) shows the dose response for a random sample of 20 simulated individuals, grouped by age/weight and infusion rate. Each individual is simulated to receive a 1 mcg/kg IV bolus at time 0 and then receives the specified IV infusion for 12 hours. The TDR cutoffs are shown as horizontal dotted lines. The population average response is shown as a dashed line. It is clinically desirable to reach the TDR quickly and avoid surpassing it. Variability shown in the response curves is indicative of estimated inter-individual variability in PK parameters as represented by the \u03c9 parameters in [Table 2](#T2). [Figure 3B](#F3) shows the summary of the full simulation with 1000 individuals in each scenario receiving a 1 mcg/kg loading bolus followed by 1, 2, 3, or 4 mcg/kg/hr infusions over 12 hours, representing a reasonable but longer continuous infusion time in our dataset. The estimated effect of metabolizer status is apparent in how the normal metabolizer group is typically the last to enter/leave the TDR and the least likely to pass those thresholds. For example, in the 9 month/8 kg population receiving 4 mcg/kg/hr infusions, the percentage of normal metabolizers surpassing the TDR upper limit of 3ng/mL is 42% compared to 60% for poor metabolizers. For the same population receiving 1 mcg/kg/hr, 19% of normal metabolizers compared to 33% of poor metabolizers reach the lower TDR cutoff of 1 ng/mL during the 12 hour infusion. Generally, per kg dose response is more modulated by age/weight than by metabolizer status, with older and heavier individuals requiring lower doses to achieve similar responses. Note that in some instances, none of the simulated individuals surpassed the TDR and no bar is displayed for \u201cHours to surpass TDR\u201d. In other instances a small proportion of individuals in a group surpass the TDR, and hence \u201cHours to Surpass TDR\u201d is subject to chance variation due to the small sample.\n/app/papers/PMC8940650.md:198:[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=8940650_nihms-1762618-f0003.jpg)\n/app/papers/PMC8940650.md:200:(A) Expected response to varying intravenous (IV) infusion rates, 1 \u2013 4 mcg/kg/hr, following a 1mcg/kg IV bolus for populations from three hypothetical groups with varying age and weight (from left to right, younger: 2 months, 5 kg; average: 9 months, 8 kg); older: 120 months, 32 kg). Within each scenario, we simulate 20 normal, intermediate, and poor metabolizers (left to right) and calculate their expected dose response over 12 hours, which is presented in different color for each individual. Horizontal dotted lines represent the therapeutic drug range (TDR) for fentanyl blood concentration and a dashed line represents the population average response. Each of the panels under their respective age/weight categories represent the same 20 simulated random effects but applied to the indicated metabolizer status/infusion rate to allow for easy comparison of the genetic and dosage effects. (B) Summary of complete simulation results for the three hypothetical groups with normal/intermediate/poor metabolizers receiving 1/2/3/4 mcg/kg/hr infusions. For each scenario, 1000 individuals were simulated. We report the proportion of individuals who reach the TDR, the average time to reach the TDR (among those who do reach it), the proportion of individuals who surpass the TDR, and the average time to surpass the TDR (among those who do so). When no bar is present in \u201cHours to Surpass TDR\u201d none of the 1000 simulated patents reached the cutoff within 12 hours.\n/app/papers/PMC8940650.md:208:*CYP3A5*6* has been shown in previous studies to reduce fentanyl clearance but our estimate for the effect is positive because the effect is being compared to all variants in the population, not just to the *CYP3A5*1* allele. Because the *CYP3A5*3* no function variant dominates in this dataset (77% of individuals have the *CYP3A5*3/*3* genotype) the positive effect of the *CYP3A5*6* allele indicates mostly that the variant does not reduce clearance as much as the *CYP3A5*3* allele. Regardless, we suggest that the two variants should be considered jointly, as the physiological loss-of-function effect of both variants is well-established and testing for both variants is routinely performed on panel-based pharmacogenetic tests. *CYP3A4*1G* and rs1045642 have been associated with fentanyl clearance and dosing^13,19^ but neither showed evidence of impacting clearance in our analysis.\n/app/papers/PMC8940650.md:210:The difference in estimated clearance based on CYP3A5 metabolizer status is obscured in [Figure 1](#F1) ([A](#F1)) by the differential distribution of weight in the subgroups, with normal metabolizers being older and heavier (median weight 14.2 kg *vs.* 7.6 kg and 7.7 kg for intermediate and poor metabolizers, respectively). [Figure S1](#SD3) provides clearance standardized by a fixe\u202647184 tokens truncated\u2026/papers/PMC2291379.md:128:| *4/*4 | 80 (6.7) |\n/app/papers/PMC2291379.md:134:| Antidepressant | Number of patients (%) n = 1198 | Extent of CYP2D6 metabolism* |\n/app/papers/PMC2291379.md:160:Table 2 Caption: Frequencies and types of antidepressants used during the study period (1991\u20132005) and the extent of CYP2D6 metabolism for each antidepressant\n/app/papers/PMC2291379.md:162:Genotype distributions of *CYP2D6***4* are given in [Table 1](#tbl1). The allele frequency of the *CYP2D6***4* polymorphism in our population was 20.8%. We identified 777 patients (64.9%) with the wild type genotype (EMs), 341 patients (28.5%) were heterozygous (IMs), and 80 patients (6.7%) were homozygous for the **4* allele (PMs). Genotype frequencies significantly deviated from the Hardy\u2013Weinberg equilibrium.\n/app/papers/PMC2291379.md:164:Only approximately 4% of the antidepressant users switched to another antidepressant within 45 days. [Table 3](#tbl3) shows the association between *CYP2D6* genotype and switching. Overall PMs had a higher risk of switching to another antidepressant than EMs, although this difference was not statistically significant. In TCA users the risk of switching was significantly higher in PMs compared with EMs (OR = 5.77; 95% CI 1.59, 21.03; *P* = 0.01). This effect was not seen in SSRI users. An increased risk of discontinuation of therapy was seen in PMs compared with EMs (OR = 1.45; 95% CI 0.91, 2.32; *P* = 0.12), but this difference was not statistically significant ([Table 4](#tbl4)). This association was somewhat more explicit in TCA users (OR = 1.62; 95% CI 0.84, 3.12; *P* = 0.15) than in SSRI users (OR = 1.20; 95% CI 0.56, 2.57; *P* = 0.65).\n/app/papers/PMC2291379.md:168:| CYP2D6 genotype | Number of switchers | ORadj* switching (95% CI) | P value |\n/app/papers/PMC2291379.md:171:| *1/*1 | 33 | ref |   |\n/app/papers/PMC2291379.md:172:| *1/*4 | 13 | 0.90 (0.47, 1.73) | 0.74 |\n/app/papers/PMC2291379.md:173:| *4/*4 | 6 | 1.80 (0.72, 4.48) | 0.20 |\n/app/papers/PMC2291379.md:175:| *1/*1 | 11 | ref |   |\n/app/papers/PMC2291379.md:176:| *1/*4 | 4 | 0.84 (0.26, 2.70) | 0.77 |\n/app/papers/PMC2291379.md:177:| *4/*4 | 4 | 5.77 (1.59, 21.03) | 0.01 |\n/app/papers/PMC2291379.md:179:| *1/*1 | 19 | ref |   |\n/app/papers/PMC2291379.md:180:| *1/*4 | 9 | 1.09 (0.48, 2.49) | 0.84 |\n/app/papers/PMC2291379.md:181:| *4/*4 | 2 | 0.91 (0.20, 4.15) | 0.90 |\n/app/papers/PMC2291379.md:183:Table 3 Caption: Association between CYP2D6 genotype and switching to any other antidepressant <45 days\n/app/papers/PMC2291379.md:187:| CYP2D6 genotype | Number of discontinuations | ORadj* discontinuation (95% CI) | P value |\n/app/papers/PMC2291379.md:190:| *1/*1 | 285 | ref |   |\n/app/papers/PMC2291379.md:191:| *1/*4 | 135 | 1.13 (0.87, 1.47) | 0.36 |\n/app/papers/PMC2291379.md:192:| *4/*4 | 36 | 1.45 (0.91, 2.32) | 0.12 |\n/app/papers/PMC2291379.md:194:| *1/*1 | 144 | ref |   |\n/app/papers/PMC2291379.md:195:| *1/*4 | 74 | 1.33 (0.92, 1.90) | 0.13 |\n/app/papers/PMC2291379.md:196:| *4/*4 | 19 | 1.62 (0.84, 3.12) | 0.15 |\n/app/papers/PMC2291379.md:198:| *1/*1 | 118 | ref |   |\n/app/papers/PMC2291379.md:199:| *1/*4 | 51 | 0.96 (0.63, 1.45) | 0.83 |\n/app/papers/PMC2291379.md:200:| *4/*4 | 13 | 1.20 (0.56, 2.57) | 0.65 |\n/app/papers/PMC2291379.md:202:Table 4 Caption: Association between CYP2D6 genotype and discontinuation of antidepressive therapy <45 days\n/app/papers/PMC2291379.md:204:The change in mean dose (PDD/DDD ratio) over time for TCAs is given in [Figure 1](#fig01). The average TCA starting dose was 0.36 DDD. At the first prescription the mean doses did not significantly differ between *CYP2D6* genotypes. For all genotypes the prescribed daily dose increased over the first four prescriptions although this increase was smaller in PMs and IMs. At the third and fourth prescription the mean dose was significantly lower in PMs than in EMs (difference 0.11 DDD, *P* = 0.03). Additionally, we analyzed the difference in TCA doses between genotypes with a repeated measurements analysis. In PMs the adjusted difference in PDD/DDD ratio was 0.05 DDD compared with EMs (95% CI \u22120.07, 0.16, *P* = 0.46). The mean dose of the IMs was lower compared with EMs (difference 0.02 DDD, 95% CI \u22120.03, 0.08, *P* = 0.43). In the repeated measurements analyses we adjusted for age, gender and starting dose. Adjusting for renal function and BMI did not significantly affect the results.\n/app/papers/PMC2291379.md:210:Change in mean tricyclic antidepressant dose over time per genotype (*1/*1, (); *1/*4, (); *4/*4, ()). \u2227 For each prescription the mean prescribed daily dose (PDD)/defined daily dose (DDD) ratio was calculated. \u22a5 95% confidence interval of the mean PDD/DDD ratio of CYP2D6 PMs. *P value < 0.05\n/app/papers/PMC2291379.md:212:For SSRIs the effect of *CYP2D6* genotype on mean dose (PDD/DDD ratio) over time is given in [Figure 2](#fig02). The average starting dose was 0.84 DDD. The starting doses of EM, IM or PM patients did not significantly differ. In SSRI users the difference in mean dose between PMs and EMs was significant at the third prescription (difference 0.17 DDD; *P* = 0.02), but not significant for the following prescriptions. The curve of the IMs overlapped the EM mean dose to a large extent. With repeated measurements analysis the adjusted difference was 0.08 DDD (95% CI \u22120.02, 0.20; *P* = 0.11) between PMs and EMs and 0.13 DDD (95% CI \u22120.01, 0.24; *P* = 0.04) between PMs and IMs.\n/app/papers/PMC2291379.md:218:Change in mean SSRI dose over time per genotype (*1/*1, (); *1/*4, (); *4/*4, ()). \u2227 For each prescription the mean prescribed daily dose (PDD)/defined daily dose (DDD) ratio was calculated. \u22a5 95% confidence interval of the mean PDD/DDD ratio of CYP2D6 PMs. *P value < 0.05\n/app/papers/PMC2291379.md:222:This study demonstrated that in users of TCA the risk of switching to any other antidepressant within 45 days is significantly higher in PMs than in EMs. These findings are in concordance with Mulder *et al.*[[15](#b15)] who found a HR of 3.50 (95% CI 1.52, 8.10) for switching to another drug in the same therapeutic class in PMs *vs.* EMs. In their study switching could be seen as an overall expression of unsatisfactory response to treatment including ineffectiveness and adverse drug reactions. We studied switching within 45 days of antidepressant use, since after a period of 6 weeks ineffectiveness could be the reason for switching instead of adverse drug reactions. The increased risk of switching to another antidepressant was not seen in SSRI users. Selection of SSRIs primarily metabolized by CYP2D6 (fluoxetine, paroxetine, fluvoxamine) did not alter these results. In contrast to TCAs, for which a narrow therapeutic range exists, no clear relationship between clinical effect and plasma concentration has been found for SSRIs. ADRs seemed not to be associated with high plasma concentrations of SSRIs [[16](#b16)]. Therefore, higher plasma concentrations of SSRIs in PMs would not lead to an increased frequency of switching. In IMs the risk of switching to any other antidepressant was not increased. Unlike PMs, in whom CYP2D6 enzyme activity is absent, patients heterozygous for the **4* allele have decreased enzyme activity. Plasma concentrations of antidepressants in these IMs would be slightly higher compared with EMs, but apparently did not lead to more switching. The clinical relevance of this genotype was less important than PMs. The low frequency of switching in our study (\u223c4%) may be the result of a carefully chosen low starting dose by general practitioners and psychiatrists diminishing the occurrence of ADRs or adjusting the initial dose. In our study a large proportion of amitriptyline users started on a low dose, probably also because this drug is not only used as antidepressant, but is also prescribed for the treatment of neuropathic pain [[17](#b17)]. As information on the exact indication was not available we have included all amitriptyline users in the study. We have repeated the analysis after exclusion of low dose amitriptyline users (<25 mg amitriptyline), but this did not alter our results. Due to the low frequency of switching in our cohort genotyping patients prior to the start of antidepressive therapy could only prevent a few patients from switching.\n/app/papers/PMC2291379.md:224:Discontinuation of antidepressant therapy was also studied, but was not associated with *CYP2D6* genotype. Over 30% of our patients stopped their antidepressive medication within 45 days. Reasons for discontinuation of initial therapy are ADRs, non-compliance, lack of improvement and patient's belief about depression and antidepressants, with non-compliance being the most frequent reason [[18](#b18)].\n/app/papers/PMC2291379.md:226:After titrating the dose of an antidepressant to an optimal level of effectiveness with minimum ADRs, the mean antidepressant dose was significantly lower in PMs than in EMs. The absolute dose difference between PMs and EMs was smaller than 0.10 DDD, corresponding to 2\u201315 mg depending on the drug. This small difference in mean dose has limited impact on clinical outcome.\n/app/papers/PMC2291379.md:228:In TCA users with genotype **1*/**4* (IMs) the optimum dose lay between EMs and PMs, while the mean SSRI dose of heterozygous patients overlapped with EMs. This difference could be explained by the amount of drug metabolized by CYP2D6. CYP2D6 is not the only cytochrome P450 enzyme involved in the metabolism of antidepressants. CYP2C19 plays a role in the demethylation of amitriptyline, imipramine, clomipramine, sertraline and citalopram, CYP1A2 and CYP3A4 contribute to a lesser extent [[19](#b19), [20](#b20)]. However, CYP2D6 exerts a higher influence on antidepressants metabolism than CYP2C19 [[21](#b21)]. Most tricyclic antidepressants are (partly) metabolized by CYP2D6, whereas some SSRIs are not metabolized by CYP2D6 (citalopram, escitalopram and sertraline). Our results indicate that the metabolism of TCAs depends more on CYP2D6 than that of SSRIs. Due to the low number of prescriptions for the newer SSRIs (non CYP2D6 substrates) we did not separate the SSRI group into substrates and non-substrates in our analysis.\n/app/papers/PMC2291379.md:230:Some potential limitations of our cohort study should be considered. Selection bias was unlikely because all antidepressant users were identified in a population based cohort study and prescribing doctors were not aware of CYP2D6 status of their patients. Missing blood samples and difficulties with genotyping (due to the suboptimal quality of long-term storage of DNA or a homozygous **5* subject) were probably not related to *CYP2D6* genotype. The frequency of the *CYP2D6***4* allele in our study (20.8%) was in accordance with the literature [[4](#b4)], but interestingly no Hardy\u2013Weinberg equilibrium was observed. The assay was validated by DNA sequencing, and thus it seems not to be responsible for this discrepancy. However, our genotyping assay discriminated between the presence and absence of the *CYP2D6***4* allele, but was unable to distinguish **4*/**5* from **4*/**4* individuals, who were classified as *CYP2D6***4*/**4*. This led to an overestimation of **4*/**4* individuals in the Hardy\u2013Weinberg equilibrium. However, this does not affect phenotype classification since both **4*/**4* and **4*/*5 are PMs.\n/app/papers/PMC2291379.md:232:In this study we only determined *CYP2D6***4*, because this polymorphism is the most cost-effective in this large number of subjects and cost-effectiveness is a consideration of increasing importance in healthcare. High throughput assays are very expensive; moreover determination of *CYP2D6***4* in our population should predict >75% of PMs [[4](#b4)]. Taking into account other, less frequent genetic variants (**3*, **5*, **6*, **7*, **8*, **10*, **41*), it can be calculated that we missed approximately 209 IMs (17%), 10 PMs (0.8%) and 24 UMs (2%), who were all included in the EM group. Nevertheless, we believe that these misclassifications would have led to an underestimation of our association.\n/app/papers/PMC2291379.md:234:Information bias is not likely, since data on genotype and prescription data were collected prospectively without prior knowledge of the study hypothesis. We assessed potential confounding factors such as age, gender, BMI, renal function and starting dose in the multivariate analyses, but no association was found between CYP2D6 and BMI, renal function and starting antidepressant dose. Elderly subjects frequently use multiple drugs, due to comorbidity. Potentially, this could lead to ADRs due to drug\u2013drug interactions. However, we assumed that comedication of CYP2D6 inhibitors did not confound our results, because comedication is prescribed independent of *CYP2D6* genotype.\n/app/papers/PMC2291379.md:236:Our observational study demonstrated that CYP2D6 PM genotype is associated with an increased risk of switching to another antidepressant within the first 6 weeks of TCA pharmacotherapy and showed that PMs required a lower maintenance dose compared with EMs. Our data showed that starting doses of antidepressants prescribed to the elderly general population are carefully low and are titrated to the optimum dose, reducing the risk of adverse drug reactions. Therefore, although this study demonstrated that the *CYP2D6* polymorphism is associated with antidepressant use the question remains whether genotyping prior to the start of antidepressant therapy contributes substantially to the optimi*z*ation of pharmacotherapy.\n/app/papers/PMC2291379.md:246:3. Ingelman-Sundberg M. Genetic polymorphisms of cytochrome P450 2D6 (CYP2D6): clinical consequences, evolutionary aspects and functional diversity. Pharmacogenomics J. 2005;5:6\u201313. doi: 10.1038/sj.tpj.6500285.  [DOI](https://doi.org/10.1038/sj.tpj.6500285) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/15492763/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Pharmacogenomics%20J&title=Genetic%20polymorphisms%20of%20cytochrome%20P450%202D6%20(CYP2D6):%20clinical%20consequences,%20evolutionary%20aspects%20and%20functional%20diversity&author=M%20Ingelman-Sundberg&volume=5&publication_year=2005&pages=6-13&pmid=15492763&doi=10.1038/sj.tpj.6500285&)\n/app/papers/PMC2291379.md:248:4. Bradford LD. CYP2D6 allele frequency in European Caucasians, Asians, Africans and their descendants. Pharmacogenomics. 2002;3:229\u201343. doi: 10.1517/14622416.3.2.229.  [DOI](https://doi.org/10.1517/14622416.3.2.229) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/11972444/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Pharmacogenomics&title=CYP2D6%20allele%20frequency%20in%20European%20Caucasians,%20Asians,%20Africans%20and%20their%20descendants&author=LD%20Bradford&volume=3&publication_year=2002&pages=229-43&pmid=11972444&doi=10.1517/14622416.3.2.229&)\n/app/papers/PMC2291379.md:250:5. Gaedigk A, Blum M, Gaedigk R, Eichelbaum M, Meyer UA. Deletion of the entire cytochrome P450 CYP2D6 gene as a cause of impaired drug metabolism in poor metabolizers of the debrisoquine/sparteine polymorphism. Am J Hum Genet. 1991;48:943\u201350.  [PMC free article](/articles/PMC1683061/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/1673290/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Am%20J%20Hum%20Genet&title=Deletion%20of%20the%20entire%20cytochrome%20P450%20CYP2D6%20gene%20as%20a%20cause%20of%20impaired%20drug%20metabolism%20in%20poor%20metabolizers%20of%20the%20debrisoquine/sparteine%20polymorphism&author=A%20Gaedigk&author=M%20Blum&author=R%20Gaedigk&author=M%20Eichelbaum&author=UA%20Meyer&volume=48&publication_year=1991&pages=943-50&pmid=1673290&)\n/app/papers/PMC2291379.md:252:6. Sachse C, Brockmoller J, Bauer S, Roots I. Cytochrome P450 2D6 variants in a Caucasian population: allele frequencies and phenotypic consequences. Am J Hum Genet. 1997;60:284\u201395.  [PMC free article](/articles/PMC1712396/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/9012401/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Am%20J%20Hum%20Genet&title=Cytochrome%20P450%202D6%20variants%20in%20a%20Caucasian%20population:%20allele%20frequencies%20and%20phenotypic%20consequences&author=C%20Sachse&author=J%20Brockmoller&author=S%20Bauer&author=I%20Roots&volume=60&publication_year=1997&pages=284-95&pmid=9012401&)\n/app/papers/PMC2291379.md:254:7. Lovlie R, Daly AK, Matre GE, Molven A, Steen VM. Polymorphisms in CYP2D6 duplication-negative individuals with the ultrarapid metabolizer phenotype: a role for the CYP2D6*35 allele in ultrarapid metabolism? Pharmacogenetics. 2001;11:45\u201355. doi: 10.1097/00008571-200102000-00006.  [DOI](https://doi.org/10.1097/00008571-200102000-00006) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/11207030/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Pharmacogenetics&title=Polymorphisms%20in%20CYP2D6%20duplication-negative%20individuals%20with%20the%20ultrarapid%20metabolizer%20phenotype:%20a%20role%20for%20the%20CYP2D6*35%20allele%20in%20ultrarapid%20metabolism?&author=R%20Lovlie&author=AK%20Daly&author=GE%20Matre&author=A%20Molven&author=VM%20Steen&volume=11&publication_year=2001&pages=45-55&pmid=11207030&doi=10.1097/00008571-200102000-00006&)\n/app/papers/PMC2291379.md:258:9. Steimer W, Zopf K, von Amelunxen S, Pfeiffer H, Bachofer J, Popp J, Messner B, Kissling W, Leucht S. Amitriptyline or not, that is the question: pharmacogenetic testing of CYP2D6 and CYP2C19 identifies patients with low or high risk for side effects in amitriptyline therapy. Clin Chem. 2005;51:376\u201385. doi: 10.1373/clinchem.2004.041327.  [DOI](https://doi.org/10.1373/clinchem.2004.041327) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/15590749/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin%20Chem&title=Amitriptyline%20or%20not,%20that%20is%20the%20question:%20pharmacogenetic%20testing%20of%20CYP2D6%20and%20CYP2C19%20identifies%20patients%20with%20low%20or%20high%20risk%20for%20side%20effects%20in%20amitriptyline%20therapy&author=W%20Steimer&author=K%20Zopf&author=S%20von%20Amelunxen&author=H%20Pfeiffer&author=J%20Bachofer&volume=51&publication_year=2005&pages=376-85&pmid=15590749&doi=10.1373/clinchem.2004.041327&)\n/app/papers/PMC2291379.md:262:11. Rau T, Wohlleben G, Wuttke H, Thuerauf N, Lunkenheimer J, Lanczik M, Eschenhagen T. CYP2D6 genotype: impact on adverse effects and nonresponse during treatment with antidepressants-a pilot study. Clin Pharmacol Ther. 2004;75:386\u201393. doi: 10.1016/j.clpt.2003.12.015.  [DOI](https://doi.org/10.1016/j.clpt.2003.12.015) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/15116051/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin%20Pharmacol%20Ther&title=CYP2D6%20genotype:%20impact%20on%20adverse%20effects%20and%20nonresponse%20during%20treatment%20with%20antidepressants-a%20pilot%20study&author=T%20Rau&author=G%20Wohlleben&author=H%20Wuttke&author=N%20Thuerauf&author=J%20Lunkenheimer&volume=75&publication_year=2004&pages=386-93&pmid=15116051&doi=10.1016/j.clpt.2003.12.015&)\n/app/papers/PMC2291379.md:278:19. Kirchheiner J, Brosen K, Dahl ML, Gram LF, Kasper S, Roots I, Soqvist F, Spina E, Brockmoller J. CYP2D6 and CYP2C19 genotype-based dose recommendations for antidepressants: a first step towards subpopulation-specific dosages. Acta Psychiatr Scand. 2001;104:173\u201392. doi: 10.1034/j.1600-0447.2001.00299.x.  [DOI](https://doi.org/10.1034/j.1600-0447.2001.00299.x) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/11531654/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Acta%20Psychiatr%20Scand&title=CYP2D6%20and%20CYP2C19%20genotype-based%20dose%20recommendations%20for%20antidepressants:%20a%20first%20step%20towards%20subpopulation-specific%20dosages&author=J%20Kirchheiner&author=K%20Brosen&author=ML%20Dahl&author=LF%20Gram&author=S%20Kasper&volume=104&publication_year=2001&pages=173-92&pmid=11531654&doi=10.1034/j.1600-0447.2001.00299.x&)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"CYP2D6|\\\\*1xN|\\\\*1|\\\\*2|\\\\*3|\\\\*4|\\\\*5|\\\\*6|\\\\*10|\\\\*41|ultrarapid|poor metabolizer|UM|PM|IM|NM\\\" /app/papers -n --colors 'match:fg:yellow'\"}"
+      }
+    },
+    {
+      "step_id": 10,
+      "timestamp": "2026-02-18T07:59:02.290Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_kBzue1NfnRWq0i1SW4aT8D9b",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_kBzue1NfnRWq0i1SW4aT8D9b",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,220p' /app/papers/PMC2291379.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_kBzue1NfnRWq0i1SW4aT8D9b",
+            "content": "Chunk ID: 6ea75e\nWall time: 0.0528 seconds\nProcess exited with code 0\nOriginal token count: 5662\nOutput:\n# Influence of the CYP2D6*4 polymorphism on dose, switching and discontinuation of antidepressants\n\n## Metadata\n**Authors:** Monique J Bijl, Loes E Visser, Albert Hofman, Arnold G Vulto, Teun van Gelder, Bruno H Ch Stricker, Ron H N van Schaik\n**Journal:** British Journal of Clinical Pharmacology\n**Date:** 2007 Dec 7\n**DOI:** [10.1111/j.1365-2125.2007.03052.x](https://doi.org/10.1111/j.1365-2125.2007.03052.x)\n**PMID:** 18070221\n**PMCID:** PMC2291379\n**URL:** https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2291379/\n**PDF:** [https://pmc.ncbi.nlm.nih.gov/articles/PMC2291379/pdf/bcp0065-0558.pdf](https://pmc.ncbi.nlm.nih.gov/articles/PMC2291379/pdf/bcp0065-0558.pdf)\n\n## Abstract\n\n**Aims:** \nTo study the effect of CYP2D6*4 on antidepressant dose, switching and discontinuation of therapy.\n\n**Methods:** \nThe study consisted of all subjects in the Rotterdam Study, who received a first antidepressant prescription between April 1st 1991 and July 1st 2005 and for whom data on CYP2D6 genotype were available. Binary logistic regression was performed to study the association between CYP2D6*4 and switching to any other antidepressant or discontinuation of therapy within 45 days. The difference in mean antidepressant dose was compared between CYP2D6 genotypes using t-tests and repeated measurements analyses.\n\n**Results:** \nIn users of tricyclic antidepressants (TCAs) the risk of switching to another antidepressant was significantly higher in poor metabolizers (PMs:*4/*4) compared with extensive metabolizers (EMs:*1/*1), with an adjusted OR of 5.77 (95% CI 1.59, 21.03; P = 0.01). In SSRI users there was no significant difference (OR 0.91; 95% CI 0.20, 4.15; P = 0.90). Heterozygous patients did not have an increased risk of switching in both TCA and SSRI users. The mean TCA dose was significantly lower in PMs than in EMs at the third and fourth prescription (difference 0.11 DDD, P = 0.03). In SSRI users the difference in mean dose between PMs and EMs was significant at the third prescription (0.17 DDD; P = 0.02).\n\n**Conclusions:** \nThe risk of switching to another antidepressant in TCA users is higher in PMs than in EMs. The maintenance doses of antidepressants were significantly lower in PMs. However, the question whether genotyping prior to the start of antidepressant therapy contributes substantially to the optimization of pharmacotherapy, requires further study.\n\n**What is already known about this subject:** \nMost antidepressants are metabolized by CYP2D6. The variant allele CYP2D6*4 is the main polymorphism resulting in reduced enzyme activity in Caucasians.\n\nReduced enzyme activity potentially leads to increased toxicity of antidepressants, but the relevance of genotyping for clinical practice is unclear. Most clinical studies suffer from small numbers of patients.\n\n**What this study adds:** \nThis large population-based cohort study in 1198 elderly Dutch patients examines the influence of the CYP2D6*4 polymorphism on intolerability of antidepressants.\n\nThe risk of switching to another antidepressant in tricyclic antidepressant users is higher in poor metabolizers (PMs), but not in SSRI users. PMs require a lower maintenance dose of antidepressants compared with extensive metabolizers (EMs).\n\nAntidepressants were initiated in a relatively low dose, with gradual dose increments thereafter, reducing the risk of adverse drug reactions. Therefore, the question remains whether genotyping prior to the start of antidepressant therapy contributes substantially to the optimization of pharmacotherapy.\n\nKeywords: antidepressants, CYP2D6, pharmacogenetics, polymorphism\n\n### Aims\n\nTo study the effect of *CYP2D6***4* on antidepressant dose, switching and discontinuation of therapy.\n\n### Methods\n\nThe study consisted of all subjects in the Rotterdam Study, who received a first antidepressant prescription between April 1st 1991 and July 1st 2005 and for whom data on *CYP2D6* genotype were available. Binary logistic regression was performed to study the association between *CYP2D6***4* and switching to any other antidepressant or discontinuation of therapy within 45 days. The difference in mean antidepressant dose was compared between *CYP2D6* genotypes using *t*-tests and repeated measurements analyses.\n\n### Results\n\nIn users of tricyclic antidepressants (TCAs) the risk of switching to another antidepressant was significantly higher in poor metabolizers (PMs:**4*/**4*) compared with extensive metabolizers (EMs:**1*/**1*), with an adjusted OR of 5.77 (95% CI 1.59, 21.03; *P* = 0.01). In SSRI users there was no significant difference (OR 0.91; 95% CI 0.20, 4.15; *P* = 0.90). Heterozygous patients did not have an increased risk of switching in both TCA and SSRI users. The mean TCA dose was significantly lower in PMs than in EMs at the third and fourth prescription (difference 0.11 DDD, *P* = 0.03). In SSRI users the difference in mean dose between PMs and EMs was significant at the third prescription (0.17 DDD; *P* = 0.02).\n\n### Conclusions\n\nThe risk of switching to another antidepressant in TCA users is higher in PMs than in EMs. The maintenance doses of antidepressants were significantly lower in PMs. However, the question whether genotyping prior to the start of antidepressant therapy contributes substantially to the optimization of pharmacotherapy, requires further study.\n\n#### What is already known about this subject\n\n#### What this study adds\n\n#### What is already known about this subject\n\n#### What is already known about this subject\n\n#### What this study adds\n\n#### What this study adds\n\n## Introduction\n\nDepression constitutes a major health problem in the elderly. For the treatment of major depression tricyclic antidepressants (TCAs), selective serotonin reuptake inhibitors (SSRIs) and other antidepressants are widely prescribed. However, 50% of patients will not respond adequately to first treatment [[1](#b1)]. This low response rate can be explained by a large interindividual variability in genetic, environmental and pathophysiological factors. In pharmacogenetics, the influence of genes on the pharmacokinetics and pharmacodynamics of drugs is investigated [[2](#b2)].\n\nMost antidepressants are metabolized by cytochrome P450 2D6 (CYP2D6). CYP2D6 accounts for a small percentage of all hepatic CYPs, but is responsible for the metabolism of approximately 25% of all drugs metabolized by CYPs [[3](#b3)]. The *CYP2D6* gene is highly polymorphic with more than 60 variant alleles [[http://www.cypalleles.ki.se](http://www.cypalleles.ki.se)]. Several of these variants encode an inactive protein or no enzyme product (e.g. **3*, **4*, **5*, **6*). Subjects with two nonfunctional alleles are classified as \u2018poor metabolizers\u2019 (PMs), while carriers of one or two functional alleles (**1*, **2*) are classified as \u2018extensive metabolizers\u2019 (EMs). Approximately 5\u201310% of the Caucasian population are PMs [[4](#b4)\u2013[6](#b6)]. Subjects with one nonfunctional and one functional allele can also be considered as \u2018intermediate metabolizers\u2019 (IMs), although this term also refers to a subject with one nonfunctional allele and one decreased activity allele or two decreased activity alleles (e.g. **10*, **41*). The clinical impact of the IM phenotype is unclear, probably as a result of diversity in genotypes and may depend on the drug used. \u2018Ultra-rapid metabolizers\u2019 (UMs) have >2 functional copies of the *CYP2D6* gene and exhibit extremely high enzyme activity. Many genotyping assays determine the duplication of any *CYP2D6* gene, including nonfunctional genes, leading to false positive UM assignment. In this way, genotyping will only detect 10\u201330% of CYP2D6 UMs [[7](#b7)].\n\n*CYP2D6***4* is the most common variant allele (allele frequency of 20%) in Caucasians and is the most frequent nonfunctional allele in the PM phenotype; over 75% of the PMs are carriers of this polymorphism [[4](#b4)].\n\nDue to absent CYP2D6-mediated metabolism, PMs have higher plasma concentrations of antidepressants metabolized by CYP2D6 than EMs [[8](#b8)] and are therefore more likely to suffer from dose-dependent adverse drug reactions (ADRs). Especially in patients taking TCAs, PMs may experience cardiotoxicity and other severe ADRs, because TCAs have a narrow therapeutic range. Severe ADRs require dose reductions or discontinuation of antidepressant therapy. In patients receiving a fixed dose of amitriptyline 75 mg twice a day, patients with one nonfunctional *CYP2D6* allele had a higher risk of adverse drug reactions than patients with two functional alleles (76.5% *vs.* 12.1%) [[9](#b9)]. Other studies showed an increased frequency of ADRs in CYP2D6 PMs using antidepressants primarily metabolized by CYP2D6, but these are of limited value due to the small number of patients [[10](#b10), [11](#b11)]. In contrast, the *CYP2D6* genotype had no effect on paroxetine and mirtazapine discontinuations and adverse events in an 8-week, double-blind randomized study on antidepressant intolerance [[12](#b12)]. Consequently, the actual influence of *CYP2D6* polymorphisms on adverse events and clinical outcomes remains unclear.\n\nTherefore, we performed a population-based cohort study to examine the influence of the *CYP2D6***4* polymorphism on intolerability of antidepressants by studying dose, frequency of switching to another antidepressant or discontinuation of therapy.\n\n## Methods\n\n### Setting\n\nThe Rotterdam Study is a prospective population-based cohort study that investigates the incidence and risk factors of cardiovascular, neurodegenerative, locomotor and ophthalmologic diseases in the elderly. From 1990 to 1993, all inhabitants of Ommoord, a district of the city of Rotterdam in the Netherlands, aged 55 years or over, were invited to participate. The rationale and design of this study have been described elsewhere [[13](#b13)]. The Medical Ethics Committee of the Erasmus Medical Center approved the study and written informed consent was obtained from all participants. The cohort encompasses 7983 individuals who were all interviewed and investigated at baseline. Since the start of the study, follow-up examinations were conducted periodically. In addition, the total cohort is continuously monitored for major morbidity and mortality through linkage with the records of the patient's general practioner. More than 99% of the participants have their drug prescriptions filled at seven regional pharmacies, which are all fully computerized. Complete data on drug use are available as of January 1, 1991. The pharmacy data include the Anatomical Therapeutical Chemical (ATC)-code, the dispensing date, the total amount of drug units per prescription, the prescribed daily number of units, and product name of the drugs.\n\n### Cohort definition\n\nThe study cohort consisted of all subjects in the Rotterdam Study, who received a first prescription of an antidepressant between April 1st 1991 and July 1st 2005, and for whom there were data on *CYP2D6* genotype available (*n* = 1198). The start date of April 1, 1991 was chosen to exclude patients who were treated with antidepressants in the preceding 3 months. Subjects were followed until one of the outcomes, death or the end of study period on July 1st 2005, whichever came first.\n\n### Outcome definition\n\nIn this study three types of outcomes were used: switching, discontinuation and dose. Switching was defined as a switch to any other antidepressant, irrespective of class, within 45 days after the start of the first prescription. A switch within 45 days was assumed to occur due to intolerance of the drug, since the efficacy of an antidepressant can only be assessed after at least 6 weeks of therapy. Secondly, we looked at discontinuation of antidepressant therapy within 45 days. Discontinuation of therapy was defined as no further prescriptions for that particular drug after the initial 45 days. Thirdly, the influence of the *CYP2D6* genotype on the mean antidepressant dose was analyzed. To compare doses of different antidepressants between genotypes the prescribed daily dose (PDD) was divided by the defined daily dose (DDD), according to the World Health Organization. For each prescription the mean PDD/DDD ratio was calculated for the tricyclic antidepressants (TCAs) amitriptyline, nortriptyline, imipramine, clomipramine, opipramol, doxepin, dosulepin, maprotiline and for the selective serotonin reuptake inhibitors (SSRIs) fluoxetine, paroxetine, fluvoxamine, citalopram, escitalopram and sertraline.\n\n### Covariates\n\nThe following baseline covariates were considered as potential confounders: age, gender, body mass index (BMI) and renal function. BMI was calculated by dividing weight (kg) by height (m^2^). Renal function was estimated using the formula of Cockroft & Gault [[14](#b14)]. In addition, the starting dose of an antidepressant was considered a determinant affecting the risk of switching and discontinuation.\n\n### Genotyping\n\nAt the baseline examination of the Rotterdam Study, blood was taken from which DNA was isolated. The *CYP2D6***4* (1846G > A) genotyping was done using Taqman allelic discrimination assays on the ABI Prism 9700 HT Sequence detection system. Primers and probes were designed by Applied Biosystems by their Assay-by-Design service. Polymerase chain reactions (PCR) were performed in a reaction volume of 2.0 \u03bcl, containing assay-specific primers, allele-specific Taqman MGB probes, Abgene Absolute QPCR Rox Mix and genomic DNA (1 ng). The thermal profile consisted of an initial denaturation step at 95\u00b0C for 15 min, followed by 40 cycles of denaturation at 92\u00b0C for 15 s and annealing and extension at 60\u00b0C for 1 min. Genotypes were scored by measuring allele-specific fluorescence using the SDS 2.2.2 software for allelic discrimination (Applied Biosystems).\n\nSubjects were defined as PM if they were homozygous for the **4* allele. In case of heterozygosity the subjects were defined as IMs. When the **4* allele was absent, subjects were classified as EMs. Our method was unable to discriminate between **4/*4* (PMs) and **4/*5* (PMs) individuals, since the gene deletion **5* will result in no PCR product. Likewise, **1/*5* individuals will be genotyped as **1/*1*. However, this does not affect the distribution of PMs and non-poor metabolizers.\n\n### Statistical analysis\n\nGenotype frequency was tested for deviations from Hardy\u2013Weinberg equilibrium by using a \u03c7^2^-test. Binary logistic regression analysis was used to analyze the association between *CYP2D6* genotype and switching and the association between genotype and discontinuation of therapy. Confounders were defined as covariates associated with the outcome at a *P* value of 0.1 in the univariate analysis and if they changed the point estimate by 10% or more in the multivariate model in addition to age and gender. Analyses were carried out in all antidepressant users, and separately for the different antidepressants classes (TCAs and SSRIs).\n\nTo compare the mean PDD/DDD ratio between EMs, IMs and PMs independent sample *t*-tests were used at consecutive prescriptions. In addition, repeated measurements analysis was performed on the mean PDD/DDD ratio between EMs, IMs and PMs in series of consecutive prescriptions to adjust for dependency of observations within each patient and to adjust for potential confounders. Logistic regression analysis and *t*-tests were performed with SPSS for Windows, version 11.0. Repeated measurement analysis was performed with SAS, version 8.2, using the Proc Mixed program.\n\n## Results\n\nThe baseline characteristics of the study population are shown in [Table 1](#tbl1). The mean age was approximately 69 years and 68% were women. Eight hundred and seven patients used TCAs, 833 used SSRIs and 213 patients used other antidepressants at any time during the study period. Of the TCAs amitriptyline was the most frequently used drug (68.3%), paroxetine was the most frequently used drug in the SSRI-group (46.8%) and mirtazapine was the most frequently used drug in the group of other antidepressants (34.3%). In [Table 2](#tbl2) the frequencies of antidepressants used and extent of CYP2D6 metabolism are given.\n\n### Table 1.\n\n| Variable | Number of patients (%) n = 1198 |\n| --- | --- |\n| Age, average (SD) | 69.4 (8.2) years |\n| Gender |  |\n| Male | 378 (31.6) |\n| Female | 820 (68.4) |\n| BMI (SD) n = 1155 | 26.5 (3.9) kg m\u22122 |\n| Serum creatinine (SD) n = 921 | 82.2 (20.1) \u00b5mol l\u22121 |\n| CYP2D6 genotype* |  |\n| *1/*1 | 777 (64.9) |\n| *1/*4 | 341 (28.5) |\n| *4/*4 | 80 (6.7) |\n\nTable 1 Caption: Baseline characteristics of the study population\n\n### Table 2.\n\n| Antidepressant | Number of patients (%) n = 1198 | Extent of CYP2D6 metabolism* |\n| --- | --- | --- |\n| TCA use\u2020 |  |  |\n| Amitriptyline | 551 (45.9) | ++ |\n| Maprotiline | 99 (8.2) | +++ |\n| Clomipramine | 79 (6.6) | ++ |\n| Nortriptyline | 35 (2.9) | +++ |\n| Imipramine | 29 (2.4) | ++ |\n| Dosulepin | 8 (0.7) | \u2013 |\n| Doxepin | 4 (0.3) | ++ |\n| Opipramol | 2 (0.2) | \u2013 |\n| SSRI use\u2020 |  |  |\n| Paroxetine | 390 (32.5) | +++ |\n| Fluvoxamine | 161 (13.4) | ++ |\n| Fluoxetine | 139 (11.6) | +++ |\n| Sertraline | 87 (7.3) | \u2013 |\n| Citalopram | 55 (4.6) | \u2013/+ |\n| Escitalopram | 1 (0.1) | \u2013 |\n| Other\u2020 |  |  |\n| Mirtazapine | 73 (6.1) | ++ |\n| Mianserine | 70 (5.8) | ++ |\n| Venlafaxine | 41 (3.4) | ++ |\n| Trazodon | 29 (2.4) | \u2013 |\n| Moclobemide | 9 (0.8) | \u2013 |\n| Nefazodon | 1 (0.1) | \u2013 |\n\nTable 2 Caption: Frequencies and types of antidepressants used during the study period (1991\u20132005) and the extent of CYP2D6 metabolism for each antidepressant\n\nGenotype distributions of *CYP2D6***4* are given in [Table 1](#tbl1). The allele frequency of the *CYP2D6***4* polymorphism in our population was 20.8%. We identified 777 patients (64.9%) with the wild type genotype (EMs), 341 patients (28.5%) were heterozygous (IMs), and 80 patients (6.7%) were homozygous for the **4* allele (PMs). Genotype frequencies significantly deviated from the Hardy\u2013Weinberg equilibrium.\n\nOnly approximately 4% of the antidepressant users switched to another antidepressant within 45 days. [Table 3](#tbl3) shows the association between *CYP2D6* genotype and switching. Overall PMs had a higher risk of switching to another antidepressant than EMs, although this difference was not statistically significant. In TCA users the risk of switching was significantly higher in PMs compared with EMs (OR = 5.77; 95% CI 1.59, 21.03; *P* = 0.01). This effect was not seen in SSRI users. An increased risk of discontinuation of therapy was seen in PMs compared with EMs (OR = 1.45; 95% CI 0.91, 2.32; *P* = 0.12), but this difference was not statistically significant ([Table 4](#tbl4)). This association was somewhat more explicit in TCA users (OR = 1.62; 95% CI 0.84, 3.12; *P* = 0.15) than in SSRI users (OR = 1.20; 95% CI 0.56, 2.57; *P* = 0.65).\n\n### Table 3.\n\n| CYP2D6 genotype | Number of switchers | ORadj* switching (95% CI) | P value |\n| --- | --- | --- | --- |\n| All antidepressants |  |  |  |\n| *1/*1 | 33 | ref |   |\n| *1/*4 | 13 | 0.90 (0.47, 1.73) | 0.74 |\n| *4/*4 | 6 | 1.80 (0.72, 4.48) | 0.20 |\n| TCAs |  |  |  |\n| *1/*1 | 11 | ref |   |\n| *1/*4 | 4 | 0.84 (0.26, 2.70) | 0.77 |\n| *4/*4 | 4 | 5.77 (1.59, 21.03) | 0.01 |\n| SSRIs |  |  |  |\n| *1/*1 | 19 | ref |   |\n| *1/*4 | 9 | 1.09 (0.48, 2.49) | 0.84 |\n| *4/*4 | 2 | 0.91 (0.20, 4.15) | 0.90 |\n\nTable 3 Caption: Association between CYP2D6 genotype and switching to any other antidepressant <45 days\n\n### Table 4.\n\n| CYP2D6 genotype | Number of discontinuations | ORadj* discontinuation (95% CI) | P value |\n| --- | --- | --- | --- |\n| All antidepressants |  |  |  |\n| *1/*1 | 285 | ref |   |\n| *1/*4 | 135 | 1.13 (0.87, 1.47) | 0.36 |\n| *4/*4 | 36 | 1.45 (0.91, 2.32) | 0.12 |\n| TCAs |  |  |  |\n| *1/*1 | 144 | ref |   |\n| *1/*4 | 74 | 1.33 (0.92, 1.90) | 0.13 |\n| *4/*4 | 19 | 1.62 (0.84, 3.12) | 0.15 |\n| SSRIs |  |  |  |\n| *1/*1 | 118 | ref |   |\n| *1/*4 | 51 | 0.96 (0.63, 1.45) | 0.83 |\n| *4/*4 | 13 | 1.20 (0.56, 2.57) | 0.65 |\n\nTable 4 Caption: Association between CYP2D6 genotype and discontinuation of antidepressive therapy <45 days\n\nThe change in mean dose (PDD/DDD ratio) over time for TCAs is given in [Figure 1](#fig01). The average TCA starting dose was 0.36 DDD. At the first prescription the mean doses did not significantly differ between *CYP2D6* genotypes. For all genotypes the prescribed daily dose increased over the first four prescriptions although this increase was smaller in PMs and IMs. At the third and fourth prescription the mean dose was significantly lower in PMs than in EMs (difference 0.11 DDD, *P* = 0.03). Additionally, we analyzed the difference in TCA doses between genotypes with a repeated measurements analysis. In PMs the adjusted difference in PDD/DDD ratio was 0.05 DDD compared with EMs (95% CI \u22120.07, 0.16, *P* = 0.46). The mean dose of the IMs was lower compared with EMs (difference 0.02 DDD, 95% CI \u22120.03, 0.08, *P* = 0.43). In the repeated measurements analyses we adjusted for age, gender and starting dose. Adjusting for renal function and BMI did not significantly affect the results.\n\n### Figure 1.\n\n![Figure 1](https://cdn.ncbi.nlm.nih.gov/pmc/blobs/994e/2291379/6001937e335a/bcp0065-0558-f1.jpg)\n\nChange in mean tricyclic antidepressant dose over time per genotype (*1/*1, (); *1/*4, (); *4/*4, ()). \u2227 For each prescription the mean prescribed daily dose (PDD)/defined daily dose (DDD) ratio was calculated. \u22a5 95% confidence interval of the mean PDD/DDD ratio of CYP2D6 PMs. *P value < 0.05\n\nFor SSRIs the effect of *CYP2D6* genotype on mean dose (PDD/DDD ratio) over time is given in [Figure 2](#fig02). The average starting dose was 0.84 DDD. The starting doses of EM, IM or PM patients did not significantly differ. In SSRI users the difference in mean dose between PMs and EMs was significant at the third prescription (difference 0.17 DDD; *P* = 0.02), but not significant for the following prescriptions. The curve of the IMs overlapped the EM mean dose to a large extent. With repeated measurements analysis the adjusted difference was 0.08 DDD (95% CI \u22120.02, 0.20; *P* = 0.11) between PMs and EMs and 0.13 DDD (95% CI \u22120.01, 0.24; *P* = 0.04) between PMs and IMs.\n\n### Figure 2.\n\n![Figure 2](https://cdn.ncbi.nlm.nih.gov/pmc/blobs/994e/2291379/cab3cea33f24/bcp0065-0558-f2.jpg)\n\nChange in mean SSRI dose over time per genotype (*1/*1, (); *1/*4, (); *4/*4, ()). \u2227 For each prescription the mean prescribed daily dose (PDD)/defined daily dose (DDD) ratio was calculated. \u22a5 95% confidence interval of the mean PDD/DDD ratio of CYP2D6 PMs. *P value < 0.05\n\n## Discussion\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,220p' /app/papers/PMC2291379.md\"}"
+      }
+    },
+    {
+      "step_id": 11,
+      "timestamp": "2026-02-18T07:59:05.108Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_0czUcrBJEWbAKslqd9HpVfQb",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_0czUcrBJEWbAKslqd9HpVfQb",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,120p' /app/term_banks/drugs.txt && echo '---' && sed -n '1,160p' /app/term_banks/phenotypes.txt"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_0czUcrBJEWbAKslqd9HpVfQb",
+            "content": "Chunk ID: 736974\nWall time: 0.0521 seconds\nProcess exited with code 0\nOriginal token count: 1232\nOutput:\n3,4-methylenedioxymethamphetamine\nabacavir\nabiraterone\nabt-751\nacamprosate\nace inhibitors, plain\nacenocoumarol\nacetaldehyde\nacetaminophen\nacetazolamide\nacetylcholine\nacetylcysteine\nadalimumab\nadefovir dipivoxil\nadrenergics, inhalants\nagomelatine\nalemtuzumab\nalendronate\nalfentanil\nalkylating agents\nallopurinol\nalprazolam\namantadine\namikacin\namiloride\naminoglycoside antibacterials\namiodarone\namisulpride\namitriptyline\namlodipine\namodiaquine\namoxicillin\namphetamine\namprenavir\nanalgesics\nanastrozole\nangiotensin ii\nangiotensin ii antagonists\nanthracyclines and related substances\nantibiotics\nanticholinergics\nantidepressants\nantiepileptics\nantihypertensives\nantihypertensives and diuretics in combination\nantiinflammatory agents, non-steroids\nantineoplastic agents\nantipsychotics\nantithymocyte globulin\nantithyroid preparations\nantivirals for treatment of hiv infections, combinations\napixaban\naripiprazole\nartemether\nartesunate\nasparaginase\naspirin\nataluren\natazanavir\natazanavir / ritonavir\natenolol\natomoxetine\natorvastatin\natrasentan\naxitinib\nazathioprine\nbenazepril\nbenzodiazepine derivatives\nberberine\nbeta blocking agents\nbeta blocking agents, selective\nbevacizumab\nbilirubin\nbisoprolol\nbisphosphonates\nbleomycin\nboceprevir\nbortezomib\nbotulinum toxin type a\nbrivaracetam\nbromperidol\nbucindolol\nbudesonide\nbufuralol\nbumetanide\nbuprenorphine\nbuprenorphine / naloxone\nbupropion\nbusulfan\nbutorphanol\ncaffeine\ncalcein\ncalcium\ncalcium channel blockers\ncandesartan\ncangrelor\ncannabinoids\ncapecitabine\ncaptopril\ncarbamazepine\ncarbimazole\ncarbocisteine\ncarboplatin\ncarisoprodol\ncarvedilol\ncatecholamines\ncavosonstat\ncefotaxime\nceftriaxone\ncelecoxib\ncephalexin\ncerivastatin\ncertolizumab pegol\ncetuximab\nchlorambucil\nchloramphenicol\nchlorocresol\nchloroquine\nchlorothiazide\nchlorproguanil\n---\nabortion, spontaneous\nacquired immunodeficiency syndrome\nacquired long qt syndrome (alqts)\nacute coronary syndrome\nacute lymphoblastic leukemia\nadenocarcinoma\nadrenocortical carcinoma\nadverse events\nagitation\nagranulocytosis\nalcohol abuse\nalcohol-related disorders\nalopecia\nalzheimer disease\namenorrhea\namplification of sexual behavior\namyotrophic lateral sclerosis\nanaphylaxis\nanemia\nangina pectoris\nangioedema\nanxiety disorders\napnea\narteriosclerosis\narthralgia\narthritis\narthritis, psoriatic\naspirin-induced asthma\nasthenia\nasthma\natrial fibrillation\nattention deficit disorder with hyperactivity\nautism\nautism spectrum disorder\nbasal cell carcinoma\nbeta-thalassemia and related diseases\nbipolar disorder\nbone density\nbone diseases\nbradycardia\nbrain diseases\nbrain neoplasms\nbreast neoplasms\nburkitt lymphoma\nbutyrylcholinesterase deficiency\ncarcinoma, squamous cell\ncardiac arrest\ncardiac rhythm disease\ncardiomyopathies\ncardiomyopathy, dilated\ncardiotoxicity\ncardiovascular disease\ncentral nervous system infectious disorder\ncerebrovascular disorders\nchoroidal neovascularization\nchronic hepatitis c virus infection\nchronic lung allograft dysfunction\nchronic myelogenous leukemia, bcr-abl1 positive\nchronic obstructive pulmonary disease\ncluster headache\ncns depression\ncocaine dependence\ncognitive disorder\ncolonic neoplasms\ncolorectal neoplasms\ncongenital abnormalities\nconstipation\ncoronary artery disease\ncoronary disease\ncough\ncrohn disease\ncystic fibrosis\ncystitis\ndeafness\ndeath\ndelirium\ndementia\ndepression\ndepressive disorder\ndermatitis\ndiabetes mellitus\ndiabetes mellitus, type 1\ndiabetes mellitus, type 2\ndiarrhea\ndiminished ability to concentrate\ndiscontinuation\ndisorder of facial skeleton\ndizziness\ndose reduction\ndrug hypersensitivity\ndrug interaction with drug\ndrug reaction with eosinophilia and systemic symptoms\ndrug resistance\ndrug toxicity\ndrug-induced liver injury\ndry mouth\ndyslipidaemia\ndyspepsia\ndysphoria\ndystonia\nedema\nendometrial neoplasms\neosinophilic esophagitis\nepilepsies, partial\nepilepsy\nepilepsy, idiopathic generalized\nerectile dysfunction\nerythema\nesophagitis\nessential hypertension\nexanthema\nfabry disease\nfamilial hypercholesterolemia\nfanconi renotubular syndrome\nfatigue\nfebrile neutropenia\nfractures, bone\nfungal infectious disease\ngastroesophageal reflux\ngastrointestinal neoplasms\ngastrointestinal stromal tumors\ngastrointestinal toxicity\nglioma\nglomerulonephritis, iga\ngout\ngraft vs host disease\ngraves disease\nhallucinations\nhand-foot syndrome\nhead and neck neoplasms\nheadache disorders\nhearing loss\nheart diseases\nheart failure\nheart transplantation\nheart valve replacement\nhelicobacter infections\nhematologic disorder\nhematologic neoplasms\nhematopoietic stem cell transplantation\nhemolysis\nhemolytic anemia\nhemorrhage\nheparin-induced thrombocytopenia\nhepatic veno-occlusive disease\nhepatitis b, chronic\nhepatitis c virus infection\nhepatocellular carcinoma\nheroin dependence\nhiv infectious disease\nhyperalgesia\nhyperbilirubinemia\nhypercholesterolemia\nhyperglycemia\nhyperlipidemias\nhyperlipoproteinemia type ii\nhyperprolactinemia\nhypersensitivity\nhypertension\nhypertensive nephrosclerosis\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,120p' /app/term_banks/drugs.txt && echo '---' && sed -n '1,160p' /app/term_banks/phenotypes.txt\"}"
+      }
+    },
+    {
+      "step_id": 12,
+      "timestamp": "2026-02-18T07:59:07.405Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_yEi0354tBUHLixTXPNO3xotl",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_yEi0354tBUHLixTXPNO3xotl",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '160,360p' /app/term_banks/phenotypes.txt"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_yEi0354tBUHLixTXPNO3xotl",
+            "content": "Chunk ID: 3f53e3\nWall time: 0.0568 seconds\nProcess exited with code 0\nOriginal token count: 965\nOutput:\nhypertensive nephrosclerosis\nhypertriglyceridemia\nhypertrophy, left ventricular\nhypoglycemia\nhyponatremia\nhypotensive disorder\nhypoventilation\ninfectious disease\ninfertility disorder\ninfertility, female\ninflammation\ninflammatory bowel diseases\ninsomnia\nirritable bowel syndrome\njuvenile rheumatoid arthritis\nkidney disorder\nkidney failure\nkidney neoplasms\nkidney transplantation\nlaparoscopic sleeve gastrectomy\nlead poisoning\nleprosy\nleukemia\nleukemia, lymphocytic, chronic, b-cell\nleukemia, myeloid\nleukemia, myeloid, acute\nleukopenia\nlewy body disease\nliver cancer\nliver cirrhosis\nliver failure, acute\nliver transplantation\nlong qt syndrome\nlow back pain\nlung neoplasms\nlung transplantation\nlupus erythematosus\nlupus nephritis\nlymphoid leukemia\nlymphoma\nlymphoma, b-cell\nlymphoma, large b-cell, diffuse\nlymphoma, t-cell\nlymphopenia\nmacular degeneration\nmaculopapular exanthema\nmajor adverse cardiac events (mace)\nmajor depressive disorder\nmalaria\nmalaria, falciparum\nmalignant hyperthermia\nmarijuana abuse\nmedulloblastoma\nmemory impairment\nmenopause\nmental disorders\nmesothelioma\nmetabolic syndrome\nmetastatic neoplasm\nmethamphetamine dependence\nmethemoglobinemia\nmigraine disorder\nmigraine with aura\nmigraine without aura\nmood disorder\nmucositis\nmultiple myeloma\nmultiple sclerosis\nmuscular diseases\nmyalgia\nmyasthenia gravis\nmyeloproliferative disorder\nmyelosuppression\nmyocardial infarction\nmyocardial ischemia\nmyotonia\nmyotonic disorders\nnarcolepsy\nnasopharyngeal neoplasms\nnausea\nneonatal abstinence syndrome\nneoplasm of esophagus\nneoplasms\nnephrolithiasis\nnephrosclerosis\nnephrotic syndrome\nnephrotoxicity\nneuroendocrine tumors\nneuromyelitis optica\nneuropathic pain\nneurotoxicity syndromes\nneutropenia\nnon-hodgkin lymphoma\nnon-small cell lung carcinoma\nobesity\nobsessive-compulsive disorder\nopen-angle glaucoma\nopioid-related disorders\norgan transplantation\nosteitis deformans\nosteonecrosis\nosteonecrosis of the jaw\nosteoporosis\nosteoporosis, postmenopausal\nosteosarcoma\nototoxicity\novarian hyperstimulation syndrome\novarian neoplasms\nover-anticoagulation\noverall survival\noverdose\npain\npain, postoperative\npancreatic neoplasms\npancreatitis\npancytopenia\npanic disorder\nparkinson disease\nparoxysmal nocturnal hemoglobinuria\npeptic ulcer disease\nperipheral nervous system diseases\nphysiological sexual disorder\nplatelet reactivity\npneumonitis\npolycystic ovary syndrome\npostoperative nausea and vomiting\npregnancy\npremature birth\nprimary central nervous system lymphoma\nprogression-free survival\nprostatic neoplasms\nprotein deficiency\nproteinuria\npruritus\npsoriasis\npsychomotor agitation\npsychotic disorder\npulmonary fibrosis\nrectal neoplasms\nrecurrence\nrenal cell carcinoma\nresidual neoplasm\nrespiratory insufficiency\nretinal diseases\nrhabdomyolysis\nrheumatoid arthritis\nsarcoma\nschizoaffective disorder\nschizophrenia\nsedation\nseizures\nsevere cutaneous adverse reactions\nshort qt syndrome 1\nshortened qt interval\nsickle cell anemia\nsleep apnea syndromes\nsleep disorders\nsmall cell carcinoma\nsmoking cessation\nsomnolence\nspondylitis, ankylosing\nstatin-related myopathy\nstevens-johnson syndrome\nstomach neoplasms\nstroke\nsubstance withdrawal syndrome\nsubstance-related disorders\nsuicidal ideation\nsuicide\nsustained virological response (svr)\nsystemic lupus erythematosus\ntachycardia\ntardive dyskinesia\ntemporomandibular joint dysfunction syndrome\ntesticular neoplasms\nthrombocytopenia\nthromboembolism\nthrombotic disease\ntime above therapeutic range\ntime in therapeutic range\ntime to therapeutic inr\ntobacco use disorder\ntonsillectomy\ntorsades de pointes\ntoxic epidermal necrolysis\ntoxic liver disease\ntransient ischemic attack\ntransplant rejection\ntransplantation\ntremor\ntuberculosis\nturner syndrome\nulcer\nulcerative colitis\nurinary bladder neoplasms\nurinary retention\nurticaria\nuterine cervical neoplasm\nvascular diseases\nvasculitis\nvenous thromboembolism\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '160,360p' /app/term_banks/phenotypes.txt\"}"
+      }
+    },
+    {
+      "step_id": 13,
+      "timestamp": "2026-02-18T07:59:08.974Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_tGAJev6w1b4LwblUitG82yyY",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_tGAJev6w1b4LwblUitG82yyY",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '360,720p' /app/term_banks/phenotypes.txt"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_tGAJev6w1b4LwblUitG82yyY",
+            "content": "Chunk ID: 91394d\nWall time: 0.0548 seconds\nProcess exited with code 0\nOriginal token count: 16\nOutput:\nvenous thromboembolism\nvenous thrombosis\nvomiting\nweight gain\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '360,720p' /app/term_banks/phenotypes.txt\"}"
+      }
+    },
+    {
+      "step_id": 14,
+      "timestamp": "2026-02-18T07:59:14.204Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_JHcjrTx24N6s7p4hCNPhTNC9",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_JHcjrTx24N6s7p4hCNPhTNC9",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "for f in /app/papers/*.md; do c=$(rg -c \"CYP2D6|\\b2D6\\b\" \"$f\"); printf \"%s\\t%s\\n\" \"$c\" \"$(basename \"$f\")\"; done | sort -nr"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_JHcjrTx24N6s7p4hCNPhTNC9",
+            "content": "Chunk ID: c64816\nWall time: 0.0522 seconds\nProcess exited with code 0\nOriginal token count: 47\nOutput:\n49\tPMC2291379.md\n18\tPMC3550197.md\n\tPMC8940650.md\n\tPMC8841435.md\n\tPMC4719145.md\n\tPMC4470685.md\n\tPMC4292894.md\n\tPMC3952719.md\n\tPMC2976713.md\n\tPMC12331468.md\n\tPMC11853772.md\n\tPMC11732454.md\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"for f in /app/papers/*.md; do c=$(rg -c \\\"CYP2D6|\\\\b2D6\\\\b\\\" \\\"$f\\\"); printf \\\"%s\\\\t%s\\\\n\\\" \\\"$c\\\" \\\"$(basename \\\"$f\\\")\\\"; done | sort -nr\"}"
+      }
+    },
+    {
+      "step_id": 15,
+      "timestamp": "2026-02-18T07:59:15.988Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_BLmQMDuIZtI8Hgocd7o1PDGF",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_BLmQMDuIZtI8Hgocd7o1PDGF",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,240p' /app/papers/PMC3550197.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_BLmQMDuIZtI8Hgocd7o1PDGF",
+            "content": "Chunk ID: d22e9e\nWall time: 0.0562 seconds\nProcess exited with code 0\nOriginal token count: 5500\nOutput:\n# Prolonged Toxicity after Amitriptyline Overdose in a Patient Deficient in CYP2D6 Activity\n\n## Metadata\n**Authors:** Jennifer Cohen Smith, Steven C Curry\n**Journal:** Journal of Medical Toxicology\n**Date:** 2011 May 26\n**DOI:** [10.1007/s13181-011-0158-2](https://doi.org/10.1007/s13181-011-0158-2)\n**PMID:** 21614669\n**PMCID:** PMC3550197\n**URL:** https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3550197/\n**PDF:** [https://pmc.ncbi.nlm.nih.gov/articles/PMC3550197/pdf/13181_2011_Article_158.pdf](https://pmc.ncbi.nlm.nih.gov/articles/PMC3550197/pdf/13181_2011_Article_158.pdf)\n\n## Abstract\n\n**Introduction:** \nAmitriptyline and its metabolite, nortriptyline, are metabolized, in part, by CYP2D6, a polymorphic enzyme. About 8% of Caucasians are deficient in CYP2D6 activity.\n\n**Case Report:** \nWe present the case of a comatose woman who intentionally overdosed on amitriptyline and displayed rising serum total tricyclic antidepressant concentrations for at least 6 days after admission. Serial immunoassay total tricyclic antidepressant concentrations in our patient showed gradual decline beginning day 7, although the patient did not regain normal mental status until day 12. Genotyping revealed the patient to be homozygous for the CYP2D6*4 allele, the most common explanation of CYP2D6 enzymatic deficiency among Caucasians. Patients taking tricyclic antidepressants who are homozygous for CYP2D6*4 demonstrate >3 times concentration\u2013time curve (AUCs) and prolonged elimination half-lives, especially of secondary amines such as nortriptyline.\n\n**Discussion:** \nWe believe this is the first report describing toxicokinetics after tricyclic antidepressant overdose in a CYP2D6-deficient patient.\n\nKeywords: Amitriptyline, Toxicokinetics, Pharmacokinetics, CYP2D6, Overdose\n\n### Introduction\n\nAmitriptyline and its metabolite, nortriptyline, are metabolized, in part, by CYP2D6, a polymorphic enzyme. About 8% of Caucasians are deficient in CYP2D6 activity.\n\n### Case Report\n\nWe present the case of a comatose woman who intentionally overdosed on amitriptyline and displayed rising serum total tricyclic antidepressant concentrations for at least 6 days after admission. Serial immunoassay total tricyclic antidepressant concentrations in our patient showed gradual decline beginning day 7, although the patient did not regain normal mental status until day 12. Genotyping revealed the patient to be homozygous for the CYP2D6*4 allele, the most common explanation of CYP2D6 enzymatic deficiency among Caucasians. Patients taking tricyclic antidepressants who are homozygous for CYP2D6*4 demonstrate >3 times concentration\u2013time curve (AUCs) and prolonged elimination half-lives, especially of secondary amines such as nortriptyline.\n\n### Discussion\n\nWe believe this is the first report describing toxicokinetics after tricyclic antidepressant overdose in a CYP2D6-deficient patient.\n\n## Introduction\n\nOverdose of amitriptyline and other tricyclic antidepressants is characterized, in part, by anticholinergic effects such as coma, respiratory depression and tachycardia, along with consequences of sodium channel blockade, including prolongation of the QRS complex and negative inotropy [[1](#CR1)]. Despite anticholinergic action, which can slow down gut motility, patients usually exhibit onset of coma and life-threatening cardiovascular events within a few hours of ingestion, and plasma drug concentrations usually peak within 24 h [[2](#CR2), [3](#CR3)].\n\nAmitriptyline and nortriptyline, its active metabolite, are metabolized by various cytochrome P450s, but especially by CYP2D6 and CYP2C19 [[4](#CR4), [5](#CR5)], with nortriptyline being mainly (>80%) metabolized by CYP2D6 [[6](#CR6)]. CYP2D6 is polymorphic, with about 8% of the Caucasian population demonstrating markedly slow or deficient activity [[6](#CR6)]. We report the clinical course and total tricyclic antidepressant concentrations (amitriptyline + nortriptyline) in a patient who overdosed on amitriptyline. Sustained elevation of TCA concentration and prolonged coma led us to test for CYP2D6 genotypes associated with impaired metabolism, and a deficiency was identified. We believe this to be the first case describing the clinical course and serial drug concentrations in an identified CYP2D6-deficient patient who overdosed on a tricyclic antidepressant.\n\n## Case Report\n\nA 55-year-old Caucasian woman was found unconscious and unresponsive with agonal respirations in her home by police after being alerted by friends. Several suicide notes were present that indicated the patient had taken 99 tablets of 25 mg amitriptyline and 46 tablets of 1 mg alprazolam. It was unclear what time the ingestion had taken place. At the scene, heart rate was 92 beats/min, blood pressure (BP) was 124/76 mm Hg, respiratory rate was 4 per minute (described as agonal), oxyhemoglobin fraction by pulse oximetry was 92% on room air, and fingerstick glucose concentration was 140 mg/dl. She underwent endotracheal intubation and ventilation before transport to an outlying facility.\n\nUpon arrival there, her heart rate was 106 beats/min, BP was 133/68 mm Hg, respirations were 12 per minute (assisted), and bladder temperature was 37.0\u00b0C. Pupils were mid-position and reactive. The neurological examination was nonfocal and unremarkable except for coma. Funduscopic examination was normal. The chest was clear and heart tones were normal. Abdomen and extremities were unremarkable, and axillae were dry. Initial electrocardiogram (ECG) demonstrated sinus rhythm with QRS duration of 130 ms. No gastrointestinal decontamination was performed. She was transferred to our institution.\n\nUpon arrival at our facility, about 6 h after being found, she remained comatose and continued to require mechanical ventilation. Her examination was unchanged with heart rate 80 beats/min, BP 122/59 mm Hg, respirations 12 (assisted), and a temperature of 36.2\u00b0C (bladder). Serum electrolytes, glucose, liver function studies, and creatinine were normal. A complete blood count and prothrombin time were within normal limits. An ECG revealed normal sinus rhythm with a QRS of 148 ms. She was given 100 mEq of NaHCO_3_ (IV) and the QRS narrowed slightly to 138 ms. Given the length of time after ingestion, we did not administer activated charcoal.\n\nLater on the day of admission, approximately 12 h after being found, the patient developed hypotension unresponsive to fluid challenges, with systolic blood pressures transiently in the 70\u2019s mm Hg. Heart rate was 80 and she remained in sinus rhythm with a QRS duration of 124 ms. Sodium bicarbonate 100 mEq IV push resulted in a rise in systolic blood pressure into the 100 s and minimal narrowing of the QRS interval. She was commenced on a sodium bicarbonate infusion at 25 mEq/h that was continued overnight and discontinued the following morning. Blood pressure remained above 100 mm Hg and stable, but the patient remained unresponsive without sedative administration.\n\nTwelve and one-half hours after being found, a serum total tricyclic antidepressant level measured by immunoassay (Thermo Fisher Scientific, Fremont, CA) was 1,568 \u03bcg/l. A comprehensive urine drug screen that included gas chromatography/mass spectrometry showed only amitriptyline, nortriptyline, and cotinine. A urine immunoassay screen for benzodiazepines was positive, but the gas chromatography/mass spectrometry screen we use is incapable of detecting alprazolam, even when present, although it will detect several other benzodiazepines, which were absent. A specific urine drug screen for beta blockers and a serum lithium level were both negative.\n\nOn hospital days 3 and 4 she remained comatose, and serum total tricyclic antidepressant concentrations were 1,618 and 1,675 \u03bcg/l, respectively (Fig. [1](#Fig1)). Six hours after the total serum tricyclic antidepressant concentration by immunoassay was 1,675 \u03bcg/l, a blood sample was drawn and gas chromatography/mass spectrometry showed the plasma amitriptyline concentration to be 780 \u03bcg/l and nortriptyline 768 \u03bcg/l (total = 1,548 \u03bcg/l). An MRI of the brain showed normal results.\n\n### Fig. 1.\n\n![Fig.\u00a01](https://cdn.ncbi.nlm.nih.gov/pmc/blobs/658d/3550197/7aec882051ed/13181_2011_158_Fig1_HTML.jpg)\n\n[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=3550197_13181_2011_158_Fig1_HTML.jpg)\n\nSerum total amitriptyline and nortriptyline concentrations by immunoassay are shown for each data point in \u03bcg/L (d days)\n\nBy hospital day 6, the patient was breathing spontaneously, opened her eyes, was making purposeful movements, and was following simple commands. Extubation was performed, but the patient was floridly anticholinergic with development of agitated delirium, picking behavior, and mumbling, nonsensical speech. She required endotracheal intubation once again, now for sedation and self-protection.\n\nThe peak serum total tricyclic antidepressant level was measured about 6.4 days after admission at 1,761 \u03bcg/l, at which time the patient had heart rates in the 110 s and a QRS duration of 106 ms. Total serum tricyclic antidepressant concentrations declined over the next several days (Fig. [1](#Fig1)), and successful extubation was accomplished on hospital day 12, at which time her mental status was normal. She was discharged to a psychiatric facility on hospital day 14.\n\nOn hospital day 6, blood was sent for CYP2D6 genotyping. Results returned showing she was homozygous for CYP2D6*4 alleles, a polymorphism associated with absent CYP2D6 activity [[6](#CR6)]. We discussed results and implications with the patient and her private physician.\n\n## Discussion\n\nIn patients with large tricyclic antidepressant overdoses, significant neurological and cardiac toxicity generally occur rapidly. Total serum tricyclic antidepressant levels peak within the first 24 h [[2](#CR2), [3](#CR3)]. CYP2D6 is partially responsible for metabolism of amitriptyline and responsible for more than 80% of nortriptyline\u2019s metabolism [[4](#CR4)\u2013[6](#CR6)]. The most common allele responsible for reduced or absent CYP2D6 activity in 5\u201310% of Caucasians is CYP2D6*4, with homozygous persons commonly lacking CYP2D6 activity [[7](#CR7)]. Amitriptyline displays between 30% and 60% bioavailability because of first-pass metabolism [[8](#CR8)], and patients taking tricyclic antidepressants who are deficient in CYP2D6 demonstrate several times greater increases in the area under the concentration\u2013time curve and prolonged elimination half-lives after therapeutic dosing compared to those with normal alleles [[6](#CR6), [9](#CR9)].\n\nPedersen and colleagues [[10](#CR10)] described serum tricyclic antidepressant and maprotiline concentrations in 29 overdose patients and also described peak levels at the time of admission or within a relatively short time. Two of his patients maintained both amitriptyline and nortriptyline concentrations at relatively steady concentrations for 3 to 4 days before they began to decline. No metabolism status of CYP2D6 was reported.\n\nOur patient experienced a prolonged rise in total drug concentration, and levels did not begin to decline until about 6.5 days of hospitalization. Deficiency of CYP2D6 most likely contributed to prolonged elevation of antidepressant levels in our patient. While nortriptyline toxicity has been described after therapeutic dosing in the face of CYP2D6 deficiency [[11](#CR11)], we could not locate previous reports describing toxicokinetics after amitriptyline overdose in a CYP2D6-deficient patient.\n\nTerminal elimination half-lives following overdose of tricyclic antidepressants in patients with unreported CYP2D6 metabolizing status have averaged 13\u201381 h [[2](#CR2), [3](#CR3), [9](#CR9)\u2013[11](#CR11)]. In our patient, the terminal elimination half-life of the total of amitriptyline and nortriptyline concentration was approximately 47.5 h, based on the last three serum concentrations from days 7 through 9. Elimination half-life of secondary amines, such as desipramine, has been reported to be increased about three times in CYP2D6-deficient metabolizers [[9](#CR9)].\n\nAlprazolam is mainly metabolized by CYP3A4 and exhibits an elimination half-life of nine to 16 h. Alprazolam is neither a significant inhibitor of CYP2D6 nor CYP2C19. While alprazolam may have contributed to our patient\u2019s initial coma, she was clearly anticholinergic upon extubation on day 6, findings not expected based on alprazolam\u2019s pharmacologic effects and pharmacokinetics [[12](#CR12)], but explained by documented persistently elevated antidepressant concentrations.\n\nThe serum total tricyclic immunoassay we used approximately quantifies tricyclic antidepressants and is calibrated using nortriptyline, with good cross-reactivity with amitriptyline. In our hands, total serum amitriptyline and nortriptyline concentrations are within 13% of those measured by chromatographic methods, and within-run variability and run-to-run variability coefficient of variations are both less than 1.7%, in keeping with results of amitriptyline and nortriptyline concentrations measured by gas chromatography/mass spectrometry in our patient. Benzodiazepines and cotinine, found in the urine of our patient, do not cross-react with this assay. Substances such as quetiapine, that do cross-react with the assay, were notably absent by comprehensive screening of urine. The immunoassay we used served to confirm the delayed rise and prolonged elevation of tricyclic antidepressants and provided an estimation of terminal elimination half-life, but did not provide as an exact measurement of total amitriptyline and nortriptyline as would result from serial chromatographic measurements. The sustained and prolonged rise in drug levels along with clinical evidence of continued toxicity made us suspect CYP2D6 deficiency, which we confirmed with genetic testing.\n\n## Conclusion\n\nOur patient, who was deficient in CYP2D6, experienced a delayed rise in total serum tricyclic antidepressant concentrations as well as prolonged intoxication.\n\n## References\n\n1. Kerr GW, McGuffie AC, Wilkie S. Tricyclic antidepressant overdose: a review. Emerg Med J. 2001;18(4):236\u2013241. doi: 10.1136/emj.18.4.236.  [DOI](https://doi.org/10.1136/emj.18.4.236) | [PMC free article](/articles/PMC1725608/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/11435353/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Emerg%20Med%20J&title=Tricyclic%20antidepressant%20overdose:%20a%20review&author=GW%20Kerr&author=AC%20McGuffie&author=S%20Wilkie&volume=18&issue=4&publication_year=2001&pages=236-241&pmid=11435353&doi=10.1136/emj.18.4.236&)\n\n2. Franssen EJF, Kunst PWA, Bet PM, et al. Toxicokinetics of nortriptyline and amitriptyline: two case reports. Ther Drug Monit. 2003;25:248\u2013251. doi: 10.1097/00007691-200304000-00018.  [DOI](https://doi.org/10.1097/00007691-200304000-00018) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/12657923/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Ther%20Drug%20Monit&title=Toxicokinetics%20of%20nortriptyline%20and%20amitriptyline:%20two%20case%20reports&author=EJF%20Franssen&author=PWA%20Kunst&author=PM%20Bet&volume=25&publication_year=2003&pages=248-251&pmid=12657923&doi=10.1097/00007691-200304000-00018&)\n\n3. Petit JM, Spiker DG, Ruwitch JF, Ziegler VE, Weiss AN, Biggs JT. Tricyclic antidepressant plasma levels and adverse effects after overdose. Clin Pharmacol Ther. 1977;21:47\u201351. doi: 10.1002/cpt197721147.  [DOI](https://doi.org/10.1002/cpt197721147) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/832448/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin%20Pharmacol%20Ther&title=Tricyclic%20antidepressant%20plasma%20levels%20and%20adverse%20effects%20after%20overdose&author=JM%20Petit&author=DG%20Spiker&author=JF%20Ruwitch&author=VE%20Ziegler&author=AN%20Weiss&volume=21&publication_year=1977&pages=47-51&pmid=832448&doi=10.1002/cpt197721147&)\n\n4. Olesen OV, Linnet K. Metabolism of the tricyclic antidepressant amitriptyline by cDNA-expressed human cytochrome P450 enzymes. Pharmacology. 1997;55(5):235\u2013243. doi: 10.1159/000139533.  [DOI](https://doi.org/10.1159/000139533) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/9399333/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Pharmacology&title=Metabolism%20of%20the%20tricyclic%20antidepressant%20amitriptyline%20by%20cDNA-expressed%20human%20cytochrome%20P450%20enzymes&author=OV%20Olesen&author=K%20Linnet&volume=55&issue=5&publication_year=1997&pages=235-243&pmid=9399333&doi=10.1159/000139533&)\n\n5. Olesen OV, Linnet K. Hydroxylation and demethylation of the tricyclic antidepressant nortriptyline by cDNA-expressed human cytochrome P450 enzymes. Drug Metab Dispos. 1997;25(6):740\u2013744.  [PubMed](https://pubmed.ncbi.nlm.nih.gov/9193876/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Drug%20Metab%20Dispos&title=Hydroxylation%20and%20demethylation%20of%20the%20tricyclic%20antidepressant%20nortriptyline%20by%20cDNA-expressed%20human%20cytochrome%20P450%20enzymes&author=OV%20Olesen&author=K%20Linnet&volume=25&issue=6&publication_year=1997&pages=740-744&pmid=9193876&)\n\n6. Gardiner SJ, Begg EJ. Pharmacogenetics, drug-metabolizing enzymes, and clinical practice. Pharmacol Rev. 2006;58:521\u2013590. doi: 10.1124/pr.58.3.6.  [DOI](https://doi.org/10.1124/pr.58.3.6) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/16968950/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Pharmacol%20Rev&title=Pharmacogenetics,%20drug-metabolizing%20enzymes,%20and%20clinical%20practice&author=SJ%20Gardiner&author=EJ%20Begg&volume=58&publication_year=2006&pages=521-590&pmid=16968950&doi=10.1124/pr.58.3.6&)\n\n7. Neafsey P, Ginsberg G, Hattis D, Johns DO, Guyton KZ, Sonawane B. Genetic polymorphism in cytochrome P450 2D6 (CYP2D6): population distribution of CYP2D6 activity. J Toxicol Environ Health B Crit Rev. 2009;12:362\u2013388. doi: 10.1080/10937400903158359.  [DOI](https://doi.org/10.1080/10937400903158359) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/20183526/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=J%20Toxicol%20Environ%20Health%20B%20Crit%20Rev&title=Genetic%20polymorphism%20in%20cytochrome%20P450%202D6%20(CYP2D6):%20population%20distribution%20of%20CYP2D6%20activity&author=P%20Neafsey&author=G%20Ginsberg&author=D%20Hattis&author=DO%20Johns&author=KZ%20Guyton&volume=12&publication_year=2009&pages=362-388&pmid=20183526&doi=10.1080/10937400903158359&)\n\n8. Schulz P, Turner-Tamiyasu K, Smith G, Glacomini KM, Blaschke TF. Amitriptyline disposition in young and elderly normal men. Clin Pharmacol Ther. 1983;33:360\u2013366. doi: 10.1038/clpt.1983.46.  [DOI](https://doi.org/10.1038/clpt.1983.46) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/6825390/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin%20Pharmacol%20Ther&title=Amitriptyline%20disposition%20in%20young%20and%20elderly%20normal%20men&author=P%20Schulz&author=K%20Turner-Tamiyasu&author=G%20Smith&author=KM%20Glacomini&author=TF%20Blaschke&volume=33&publication_year=1983&pages=360-366&pmid=6825390&doi=10.1038/clpt.1983.46&)\n\n9. Koyama E, Sohn D-R, Shin S-G, Chiba K, Shin J-G, Kim Y-H, et al. Metabolic disposition of imipramine in oriental subjects: relation to metoprolol a-hydroxylation and S-mephenytoin 4\u2032-hydroxylation phenotypes. J Pharmacol Exp Ther. 1994;271:860\u2013867.  [PubMed](https://pubmed.ncbi.nlm.nih.gov/7965806/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=J%20Pharmacol%20Exp%20Ther&title=Metabolic%20disposition%20of%20imipramine%20in%20oriental%20subjects:%20relation%20to%20metoprolol%20a-hydroxylation%20and%20S-mephenytoin%204%E2%80%B2-hydroxylation%20phenotypes&author=E%20Koyama&author=D-R%20Sohn&author=S-G%20Shin&author=K%20Chiba&author=J-G%20Shin&volume=271&publication_year=1994&pages=860-867&pmid=7965806&)\n\n10. Pedersen OL, Gram LF, Kristensen CB, Moller M, Thayssen P, et al. Overdosage of antidepressants: clinical and pharmacokinetic aspects. Eur J Clin Pharmacol. 1982;23:513\u2013521. doi: 10.1007/BF00637499.  [DOI](https://doi.org/10.1007/BF00637499) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/7160420/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Eur%20J%20Clin%20Pharmacol&title=Overdosage%20of%20antidepressants:%20clinical%20and%20pharmacokinetic%20aspects&author=OL%20Pedersen&author=LF%20Gram&author=CB%20Kristensen&author=M%20Moller&author=P%20Thayssen&volume=23&publication_year=1982&pages=513-521&pmid=7160420&doi=10.1007/BF00637499&)\n\n11. Bertilsson L, Mellstrom B, Sjoqvist F, Martensson B, Asberg M. Slow hydroxylation of nortriptyline and concomitant poor debrisoquin hydroxylation: clinical implications. Lancet. 1981;317:560\u2013561. doi: 10.1016/S0140-6736(81)92894-4.  [DOI](https://doi.org/10.1016/S0140-6736(81)92894-4) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/6111662/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Lancet&title=Slow%20hydroxylation%20of%20nortriptyline%20and%20concomitant%20poor%20debrisoquin%20hydroxylation:%20clinical%20implications&author=L%20Bertilsson&author=B%20Mellstrom&author=F%20Sjoqvist&author=B%20Martensson&author=M%20Asberg&volume=317&publication_year=1981&pages=560-561&pmid=6111662&doi=10.1016/S0140-6736(81)92894-4&)\n\n12. Greenblatt DJ, Wright CE. Clinical pharmacokinetics of alprazolam: therapeutic implications. Clin Pharmacokinet. 1993;24:453\u2013471. doi: 10.2165/00003088-199324060-00003.  [DOI](https://doi.org/10.2165/00003088-199324060-00003) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/8513649/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin%20Pharmacokinet&title=Clinical%20pharmacokinetics%20of%20alprazolam:%20therapeutic%20implications&author=DJ%20Greenblatt&author=CE%20Wright&volume=24&publication_year=1993&pages=453-471&pmid=8513649&doi=10.2165/00003088-199324060-00003&)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,240p' /app/papers/PMC3550197.md\"}"
+      }
+    },
+    {
+      "step_id": 16,
+      "timestamp": "2026-02-18T07:59:26.960Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_lG646E934YNhEnHVc8ZexZtX",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_lG646E934YNhEnHVc8ZexZtX",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"^amitriptyline$|^nortriptyline$|^paroxetine$|^venlafaxine$|^fluoxetine$|^fluvoxamine$|^imipramine$|^clomipramine$|^desipramine$|^atomoxetine$|^codeine$|^tramadol$|^dextromethorphan$|^metoprolol$|^risperidone$|^aripiprazole$\" /app/term_banks/drugs.txt"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_lG646E934YNhEnHVc8ZexZtX",
+            "content": "Chunk ID: 592444\nWall time: 0.0655 seconds\nProcess exited with code 0\nOriginal token count: 64\nOutput:\n29:amitriptyline\n53:aripiprazole\n62:atomoxetine\n134:clomipramine\n139:codeine\n167:desipramine\n175:dextromethorphan\n253:fluoxetine\n258:fluvoxamine\n304:imipramine\n389:metoprolol\n427:nortriptyline\n450:paroxetine\n516:risperidone\n613:tramadol\n634:venlafaxine\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"^amitriptyline$|^nortriptyline$|^paroxetine$|^venlafaxine$|^fluoxetine$|^fluvoxamine$|^imipramine$|^clomipramine$|^desipramine$|^atomoxetine$|^codeine$|^tramadol$|^dextromethorphan$|^metoprolol$|^risperidone$|^aripiprazole$\\\" /app/term_banks/drugs.txt\"}"
+      }
+    },
+    {
+      "step_id": 17,
+      "timestamp": "2026-02-18T07:59:35.025Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_GvrjVt8qenk78XGwNjAxkddj",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_GvrjVt8qenk78XGwNjAxkddj",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"amitriptyline|nortriptyline|imipramine|clomipramine|doxepin|paroxetine|fluvoxamine|fluoxetine|sertraline|citalopram|escitalopram|venlafaxine|trazodone|moclobemide|nefazodone|maprotiline\" /app/papers/PMC2291379.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_GvrjVt8qenk78XGwNjAxkddj",
+            "content": "Chunk ID: 7740b1\nWall time: 0.0517 seconds\nProcess exited with code 0\nOriginal token count: 1910\nOutput:\n77:Due to absent CYP2D6-mediated metabolism, PMs have higher plasma concentrations of antidepressants metabolized by CYP2D6 than EMs [[8](#b8)] and are therefore more likely to suffer from dose-dependent adverse drug reactions (ADRs). Especially in patients taking TCAs, PMs may experience cardiotoxicity and other severe ADRs, because TCAs have a narrow therapeutic range. Severe ADRs require dose reductions or discontinuation of antidepressant therapy. In patients receiving a fixed dose of amitriptyline 75 mg twice a day, patients with one nonfunctional *CYP2D6* allele had a higher risk of adverse drug reactions than patients with two functional alleles (76.5% *vs.* 12.1%) [[9](#b9)]. Other studies showed an increased frequency of ADRs in CYP2D6 PMs using antidepressants primarily metabolized by CYP2D6, but these are of limited value due to the small number of patients [[10](#b10), [11](#b11)]. In contrast, the *CYP2D6* genotype had no effect on paroxetine and mirtazapine discontinuations and adverse events in an 8-week, double-blind randomized study on antidepressant intolerance [[12](#b12)]. Consequently, the actual influence of *CYP2D6* polymorphisms on adverse events and clinical outcomes remains unclear.\n93:In this study three types of outcomes were used: switching, discontinuation and dose. Switching was defined as a switch to any other antidepressant, irrespective of class, within 45 days after the start of the first prescription. A switch within 45 days was assumed to occur due to intolerance of the drug, since the efficacy of an antidepressant can only be assessed after at least 6 weeks of therapy. Secondly, we looked at discontinuation of antidepressant therapy within 45 days. Discontinuation of therapy was defined as no further prescriptions for that particular drug after the initial 45 days. Thirdly, the influence of the *CYP2D6* genotype on the mean antidepressant dose was analyzed. To compare doses of different antidepressants between genotypes the prescribed daily dose (PDD) was divided by the defined daily dose (DDD), according to the World Health Organization. For each prescription the mean PDD/DDD ratio was calculated for the tricyclic antidepressants (TCAs) amitriptyline, nortriptyline, imipramine, clomipramine, opipramol, doxepin, dosulepin, maprotiline and for the selective serotonin reuptake inhibitors (SSRIs) fluoxetine, paroxetine, fluvoxamine, citalopram, escitalopram and sertraline.\n113:The baseline characteristics of the study population are shown in [Table 1](#tbl1). The mean age was approximately 69 years and 68% were women. Eight hundred and seven patients used TCAs, 833 used SSRIs and 213 patients used other antidepressants at any time during the study period. Of the TCAs amitriptyline was the most frequently used drug (68.3%), paroxetine was the most frequently used drug in the SSRI-group (46.8%) and mirtazapine was the most frequently used drug in the group of other antidepressants (34.3%). In [Table 2](#tbl2) the frequencies of antidepressants used and extent of CYP2D6 metabolism are given.\n151:| Escitalopram | 1 (0.1) | \u2013 |\n222:This study demonstrated that in users of TCA the risk of switching to any other antidepressant within 45 days is significantly higher in PMs than in EMs. These findings are in concordance with Mulder *et al.*[[15](#b15)] who found a HR of 3.50 (95% CI 1.52, 8.10) for switching to another drug in the same therapeutic class in PMs *vs.* EMs. In their study switching could be seen as an overall expression of unsatisfactory response to treatment including ineffectiveness and adverse drug reactions. We studied switching within 45 days of antidepressant use, since after a period of 6 weeks ineffectiveness could be the reason for switching instead of adverse drug reactions. The increased risk of switching to another antidepressant was not seen in SSRI users. Selection of SSRIs primarily metabolized by CYP2D6 (fluoxetine, paroxetine, fluvoxamine) did not alter these results. In contrast to TCAs, for which a narrow therapeutic range exists, no clear relationship between clinical effect and plasma concentration has been found for SSRIs. ADRs seemed not to be associated with high plasma concentrations of SSRIs [[16](#b16)]. Therefore, higher plasma concentrations of SSRIs in PMs would not lead to an increased frequency of switching. In IMs the risk of switching to any other antidepressant was not increased. Unlike PMs, in whom CYP2D6 enzyme activity is absent, patients heterozygous for the **4* allele have decreased enzyme activity. Plasma concentrations of antidepressants in these IMs would be slightly higher compared with EMs, but apparently did not lead to more switching. The clinical relevance of this genotype was less important than PMs. The low frequency of switching in our study (\u223c4%) may be the result of a carefully chosen low starting dose by general practitioners and psychiatrists diminishing the occurrence of ADRs or adjusting the initial dose. In our study a large proportion of amitriptyline users started on a low dose, probably also because this drug is not only used as antidepressant, but is also prescribed for the treatment of neuropathic pain [[17](#b17)]. As information on the exact indication was not available we have included all amitriptyline users in the study. We have repeated the analysis after exclusion of low dose amitriptyline users (<25 mg amitriptyline), but this did not alter our results. Due to the low frequency of switching in our cohort genotyping patients prior to the start of antidepressive therapy could only prevent a few patients from switching.\n228:In TCA users with genotype **1*/**4* (IMs) the optimum dose lay between EMs and PMs, while the mean SSRI dose of heterozygous patients overlapped with EMs. This difference could be explained by the amount of drug metabolized by CYP2D6. CYP2D6 is not the only cytochrome P450 enzyme involved in the metabolism of antidepressants. CYP2C19 plays a role in the demethylation of amitriptyline, imipramine, clomipramine, sertraline and citalopram, CYP1A2 and CYP3A4 contribute to a lesser extent [[19](#b19), [20](#b20)]. However, CYP2D6 exerts a higher influence on antidepressants metabolism than CYP2C19 [[21](#b21)]. Most tricyclic antidepressants are (partly) metabolized by CYP2D6, whereas some SSRIs are not metabolized by CYP2D6 (citalopram, escitalopram and sertraline). Our results indicate that the metabolism of TCAs depends more on CYP2D6 than that of SSRIs. Due to the low number of prescriptions for the newer SSRIs (non CYP2D6 substrates) we did not separate the SSRI group into substrates and non-substrates in our analysis.\n258:9. Steimer W, Zopf K, von Amelunxen S, Pfeiffer H, Bachofer J, Popp J, Messner B, Kissling W, Leucht S. Amitriptyline or not, that is the question: pharmacogenetic testing of CYP2D6 and CYP2C19 identifies patients with low or high risk for side effects in amitriptyline therapy. Clin Chem. 2005;51:376\u201385. doi: 10.1373/clinchem.2004.041327.  [DOI](https://doi.org/10.1373/clinchem.2004.041327) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/15590749/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin%20Chem&title=Amitriptyline%20or%20not,%20that%20is%20the%20question:%20pharmacogenetic%20testing%20of%20CYP2D6%20and%20CYP2C19%20identifies%20patients%20with%20low%20or%20high%20risk%20for%20side%20effects%20in%20amitriptyline%20therapy&author=W%20Steimer&author=K%20Zopf&author=S%20von%20Amelunxen&author=H%20Pfeiffer&author=J%20Bachofer&volume=51&publication_year=2005&pages=376-85&pmid=15590749&doi=10.1373/clinchem.2004.041327&)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"amitriptyline|nortriptyline|imipramine|clomipramine|doxepin|paroxetine|fluvoxamine|fluoxetine|sertraline|citalopram|escitalopram|venlafaxine|trazodone|moclobemide|nefazodone|maprotiline\\\" /app/papers/PMC2291379.md\"}"
+      }
+    },
+    {
+      "step_id": 18,
+      "timestamp": "2026-02-18T07:59:48.857Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_43WEc08PcWuQTh16538Yf8L3",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_43WEc08PcWuQTh16538Yf8L3",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"^opipramol$|^doxepin$|^dosulepin$|^maprotiline$|^mirtazapine$|^sertraline$|^citalopram$|^escitalopram$|^trazodon$|^trazodone$|^moclobemide$|^nefazodone$\" /app/term_banks/drugs.txt"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_43WEc08PcWuQTh16538Yf8L3",
+            "content": "Chunk ID: 20330d\nWall time: 0.0540 seconds\nProcess exited with code 0\nOriginal token count: 30\nOutput:\n128:citalopram\n202:doxepin\n225:escitalopram\n363:maprotiline\n398:mirtazapine\n413:nefazodone\n436:opipramol\n537:sertraline\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"^opipramol$|^doxepin$|^dosulepin$|^maprotiline$|^mirtazapine$|^sertraline$|^citalopram$|^escitalopram$|^trazodon$|^trazodone$|^moclobemide$|^nefazodone$\\\" /app/term_banks/drugs.txt\"}"
+      }
+    },
+    {
+      "step_id": 19,
+      "timestamp": "2026-02-18T08:00:11.588Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_cI28CfbcP3WofSSG8zdagHbL",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_cI28CfbcP3WofSSG8zdagHbL",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -ni \"cyp2d6|\\b2d6\\b|cytochrome p450 2d6\" /app/papers | wc -l"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_cI28CfbcP3WofSSG8zdagHbL",
+            "content": "Chunk ID: a5d262\nWall time: 0.0520 seconds\nProcess exited with code 0\nOriginal token count: 1\nOutput:\n67\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -ni \\\"cyp2d6|\\\\b2d6\\\\b|cytochrome p450 2d6\\\" /app/papers | wc -l\"}"
+      }
+    },
+    {
+      "step_id": 20,
+      "timestamp": "2026-02-18T08:00:13.478Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_wKMgAXQbi6VGJTeHMxJ1iLID",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_wKMgAXQbi6VGJTeHMxJ1iLID",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -ni \"cyp2d6|cytochrome p450 2d6|\\b2d6\\b\" /app/papers | cut -d: -f1 | sort -u"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_wKMgAXQbi6VGJTeHMxJ1iLID",
+            "content": "Chunk ID: ab622e\nWall time: 0.0520 seconds\nProcess exited with code 0\nOriginal token count: 13\nOutput:\n/app/papers/PMC2291379.md\n/app/papers/PMC3550197.md\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -ni \\\"cyp2d6|cytochrome p450 2d6|\\\\b2d6\\\\b\\\" /app/papers | cut -d: -f1 | sort -u\"}"
+      }
+    },
+    {
+      "step_id": 21,
+      "timestamp": "2026-02-18T08:00:24.660Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_I38s1yMuGBKNTfQdSpyC2ucD",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_I38s1yMuGBKNTfQdSpyC2ucD",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"^moclobemide$|^venlafaxine$|^mirtazapine$|^nefazodone$\" /app/term_banks/drugs.txt"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_I38s1yMuGBKNTfQdSpyC2ucD",
+            "content": "Chunk ID: 9095bf\nWall time: 0.0521 seconds\nProcess exited with code 0\nOriginal token count: 12\nOutput:\n398:mirtazapine\n413:nefazodone\n634:venlafaxine\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"^moclobemide$|^venlafaxine$|^mirtazapine$|^nefazodone$\\\" /app/term_banks/drugs.txt\"}"
+      }
+    },
+    {
+      "step_id": 22,
+      "timestamp": "2026-02-18T08:00:28.701Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_A0pzvgCKcmO5qsmMUkIllSCQ",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_A0pzvgCKcmO5qsmMUkIllSCQ",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '132,170p' /app/papers/PMC2291379.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_A0pzvgCKcmO5qsmMUkIllSCQ",
+            "content": "Chunk ID: d573f4\nWall time: 0.0532 seconds\nProcess exited with code 0\nOriginal token count: 603\nOutput:\n### Table 2.\n\n| Antidepressant | Number of patients (%) n = 1198 | Extent of CYP2D6 metabolism* |\n| --- | --- | --- |\n| TCA use\u2020 |  |  |\n| Amitriptyline | 551 (45.9) | ++ |\n| Maprotiline | 99 (8.2) | +++ |\n| Clomipramine | 79 (6.6) | ++ |\n| Nortriptyline | 35 (2.9) | +++ |\n| Imipramine | 29 (2.4) | ++ |\n| Dosulepin | 8 (0.7) | \u2013 |\n| Doxepin | 4 (0.3) | ++ |\n| Opipramol | 2 (0.2) | \u2013 |\n| SSRI use\u2020 |  |  |\n| Paroxetine | 390 (32.5) | +++ |\n| Fluvoxamine | 161 (13.4) | ++ |\n| Fluoxetine | 139 (11.6) | +++ |\n| Sertraline | 87 (7.3) | \u2013 |\n| Citalopram | 55 (4.6) | \u2013/+ |\n| Escitalopram | 1 (0.1) | \u2013 |\n| Other\u2020 |  |  |\n| Mirtazapine | 73 (6.1) | ++ |\n| Mianserine | 70 (5.8) | ++ |\n| Venlafaxine | 41 (3.4) | ++ |\n| Trazodon | 29 (2.4) | \u2013 |\n| Moclobemide | 9 (0.8) | \u2013 |\n| Nefazodon | 1 (0.1) | \u2013 |\n\nTable 2 Caption: Frequencies and types of antidepressants used during the study period (1991\u20132005) and the extent of CYP2D6 metabolism for each antidepressant\n\nGenotype distributions of *CYP2D6***4* are given in [Table 1](#tbl1). The allele frequency of the *CYP2D6***4* polymorphism in our population was 20.8%. We identified 777 patients (64.9%) with the wild type genotype (EMs), 341 patients (28.5%) were heterozygous (IMs), and 80 patients (6.7%) were homozygous for the **4* allele (PMs). Genotype frequencies significantly deviated from the Hardy\u2013Weinberg equilibrium.\n\nOnly approximately 4% of the antidepressant users switched to another antidepressant within 45 days. [Table 3](#tbl3) shows the association between *CYP2D6* genotype and switching. Overall PMs had a higher risk of switching to another antidepressant than EMs, although this difference was not statistically significant. In TCA users the risk of switching was significantly higher in PMs compared with EMs (OR = 5.77; 95% CI 1.59, 21.03; *P* = 0.01). This effect was not seen in SSRI users. An increased risk of discontinuation of therapy was seen in PMs compared with EMs (OR = 1.45; 95% CI 0.91, 2.32; *P* = 0.12), but this difference was not statistically significant ([Table 4](#tbl4)). This association was somewhat more explicit in TCA users (OR = 1.62; 95% CI 0.84, 3.12; *P* = 0.15) than in SSRI users (OR = 1.20; 95% CI 0.56, 2.57; *P* = 0.65).\n\n### Table 3.\n\n| CYP2D6 genotype | Number of switchers | ORadj* switching (95% CI) | P value |\n| --- | --- | --- | --- |\n| All antidepressants |  |  |  |\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '132,170p' /app/papers/PMC2291379.md\"}"
+      }
+    },
+    {
+      "step_id": 23,
+      "timestamp": "2026-02-18T08:00:34.293Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_4w30DKXW9WXMuVvIVl4kjVOt",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_4w30DKXW9WXMuVvIVl4kjVOt",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"^mianserine$\" /app/term_banks/drugs.txt"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_4w30DKXW9WXMuVvIVl4kjVOt",
+            "content": "Chunk ID: 481d4e\nWall time: 0.0528 seconds\nProcess exited with code 1\nOriginal token count: 0\nOutput:\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"^mianserine$\\\" /app/term_banks/drugs.txt\"}"
+      }
+    },
+    {
+      "step_id": 24,
+      "timestamp": "2026-02-18T08:00:45.100Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_IpNQqouOtP0TnKkorIqYjOb0",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_IpNQqouOtP0TnKkorIqYjOb0",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"adverse|toxicity|toxic|overdose|cardiotoxicity|tachycardia|coma|respiratory|qrs|arrhythm|bradycardia|qt|sedation|somnolence|discontinuation|dose|switching|side effect|intoler\" /app/papers/PMC2291379.md /app/papers/PMC3550197.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_IpNQqouOtP0TnKkorIqYjOb0",
+            "content": "Chunk ID: c2e0d6\nWall time: 0.0546 seconds\nProcess exited with code 0\nOriginal token count: 8683\nOutput:\n/app/papers/PMC2291379.md:1:# Influence of the CYP2D6*4 polymorphism on dose, switching and discontinuation of antidepressants\n/app/papers/PMC2291379.md:16:To study the effect of CYP2D6*4 on antidepressant dose, switching and discontinuation of therapy.\n/app/papers/PMC2291379.md:19:The study consisted of all subjects in the Rotterdam Study, who received a first antidepressant prescription between April 1st 1991 and July 1st 2005 and for whom data on CYP2D6 genotype were available. Binary logistic regression was performed to study the association between CYP2D6*4 and switching to any other antidepressant or discontinuation of therapy within 45 days. The difference in mean antidepressant dose was compared between CYP2D6 genotypes using t-tests and repeated measurements analyses.\n/app/papers/PMC2291379.md:22:In users of tricyclic antidepressants (TCAs) the risk of switching to another antidepressant was significantly higher in poor metabolizers (PMs:*4/*4) compared with extensive metabolizers (EMs:*1/*1), with an adjusted OR of 5.77 (95% CI 1.59, 21.03; P = 0.01). In SSRI users there was no significant difference (OR 0.91; 95% CI 0.20, 4.15; P = 0.90). Heterozygous patients did not have an increased risk of switching in both TCA and SSRI users. The mean TCA dose was significantly lower in PMs than in EMs at the third and fourth prescription (difference 0.11 DDD, P = 0.03). In SSRI users the difference in mean dose between PMs and EMs was significant at the third prescription (0.17 DDD; P = 0.02).\n/app/papers/PMC2291379.md:25:The risk of switching to another antidepressant in TCA users is higher in PMs than in EMs. The maintenance doses of antidepressants were significantly lower in PMs. However, the question whether genotyping prior to the start of antidepressant therapy contributes substantially to the optimization of pharmacotherapy, requires further study.\n/app/papers/PMC2291379.md:30:Reduced enzyme activity potentially leads to increased toxicity of antidepressants, but the relevance of genotyping for clinical practice is unclear. Most clinical studies suffer from small numbers of patients.\n/app/papers/PMC2291379.md:33:This large population-based cohort study in 1198 elderly Dutch patients examines the influence of the CYP2D6*4 polymorphism on intolerability of antidepressants.\n/app/papers/PMC2291379.md:35:The risk of switching to another antidepressant in tricyclic antidepressant users is higher in poor metabolizers (PMs), but not in SSRI users. PMs require a lower maintenance dose of antidepressants compared with extensive metabolizers (EMs).\n/app/papers/PMC2291379.md:37:Antidepressants were initiated in a relatively low dose, with gradual dose increments thereafter, reducing the risk of adverse drug reactions. Therefore, the question remains whether genotyping prior to the start of antidepressant therapy contributes substantially to the optimization of pharmacotherapy.\n/app/papers/PMC2291379.md:43:To study the effect of *CYP2D6***4* on antidepressant dose, switching and discontinuation of therapy.\n/app/papers/PMC2291379.md:47:The study consisted of all subjects in the Rotterdam Study, who received a first antidepressant prescription between April 1st 1991 and July 1st 2005 and for whom data on *CYP2D6* genotype were available. Binary logistic regression was performed to study the association between *CYP2D6***4* and switching to any other antidepressant or discontinuation of therapy within 45 days. The difference in mean antidepressant dose was compared between *CYP2D6* genotypes using *t*-tests and repeated measurements analyses.\n/app/papers/PMC2291379.md:51:In users of tricyclic antidepressants (TCAs) the risk of switching to another antidepressant was significantly higher in poor metabolizers (PMs:**4*/**4*) compared with extensive metabolizers (EMs:**1*/**1*), with an adjusted OR of 5.77 (95% CI 1.59, 21.03; *P* = 0.01). In SSRI users there was no significant difference (OR 0.91; 95% CI 0.20, 4.15; *P* = 0.90). Heterozygous patients did not have an increased risk of switching in both TCA and SSRI users. The mean TCA dose was significantly lower in PMs than in EMs at the third and fourth prescription (difference 0.11 DDD, *P* = 0.03). In SSRI users the difference in mean dose between PMs and EMs was significant at the third prescription (0.17 DDD; *P* = 0.02).\n/app/papers/PMC2291379.md:55:The risk of switching to another antidepressant in TCA users is higher in PMs than in EMs. The maintenance doses of antidepressants were significantly lower in PMs. However, the question whether genotyping prior to the start of antidepressant therapy contributes substantially to the optimization of pharmacotherapy, requires further study.\n/app/papers/PMC2291379.md:77:Due to absent CYP2D6-mediated metabolism, PMs have higher plasma concentrations of antidepressants metabolized by CYP2D6 than EMs [[8](#b8)] and are therefore more likely to suffer from dose-dependent adverse drug reactions (ADRs). Especially in patients taking TCAs, PMs may experience cardiotoxicity and other severe ADRs, because TCAs have a narrow therapeutic range. Severe ADRs require dose reductions or discontinuation of antidepressant therapy. In patients receiving a fixed dose of amitriptyline 75 mg twice a day, patients with one nonfunctional *CYP2D6* allele had a higher risk of adverse drug reactions than patients with two functional alleles (76.5% *vs.* 12.1%) [[9](#b9)]. Other studies showed an increased frequency of ADRs in CYP2D6 PMs using antidepressants primarily metabolized by CYP2D6, but these are of limited value due to the small number of patients [[10](#b10), [11](#b11)]. In contrast, the *CYP2D6* genotype had no effect on paroxetine and mirtazapine discontinuations and adverse events in an 8-week, double-blind randomized study on antidepressant intolerance [[12](#b12)]. Consequently, the actual influence of *CYP2D6* polymorphisms on adverse events and clinical outcomes remains unclear.\n/app/papers/PMC2291379.md:79:Therefore, we performed a population-based cohort study to examine the influence of the *CYP2D6***4* polymorphism on intolerability of antidepressants by studying dose, frequency of switching to another antidepressant or discontinuation of therapy.\n/app/papers/PMC2291379.md:93:In this study three types of outcomes were used: switching, discontinuation and dose. Switching was defined as a switch to any other antidepressant, irrespective of class, within 45 days after the start of the first prescription. A switch within 45 days was assumed to occur due to intolerance of the drug, since the efficacy of an antidepressant can only be assessed after at least 6 weeks of therapy. Secondly, we looked at discontinuation of antidepressant therapy within 45 days. Discontinuation of therapy was defined as no further prescriptions for that particular drug after the initial 45 days. Thirdly, the influence of the *CYP2D6* genotype on the mean antidepressant dose was analyzed. To compare doses of different antidepressants between genotypes the prescribed daily dose (PDD) was divided by the defined daily dose (DDD), according to the World Health Organization. For each prescription the mean PDD/DDD ratio was calculated for the tricyclic antidepressants (TCAs) amitriptyline, nortriptyline, imipramine, clomipramine, opipramol, doxepin, dosulepin, maprotiline and for the selective serotonin reuptake inhibitors (SSRIs) fluoxetine, paroxetine, fluvoxamine, citalopram, escitalopram and sertraline.\n/app/papers/PMC2291379.md:97:The following baseline covariates were considered as potential confounders: age, gender, body mass index (BMI) and renal function. BMI was calculated by dividing weight (kg) by height (m^2^). Renal function was estimated using the formula of Cockroft & Gault [[14](#b14)]. In addition, the starting dose of an antidepressant was considered a determinant affecting the risk of switching and discontinuation.\n/app/papers/PMC2291379.md:107:Genotype frequency was tested for deviations from Hardy\u2013Weinberg equilibrium by using a \u03c7^2^-test. Binary logistic regression analysis was used to analyze the association between *CYP2D6* genotype and switching and the association between genotype and discontinuation of therapy. Confounders were defined as covariates associated with the outcome at a *P* value of 0.1 in the univariate analysis and if they changed the point estimate by 10% or more in the multivariate model in addition to age and gender. Analyses were carried out in all antidepressant users, and separately for the different antidepressants classes (TCAs and SSRIs).\n/app/papers/PMC2291379.md:164:Only approximately 4% of the antidepressant users switched to another antidepressant within 45 days. [Table 3](#tbl3) shows the association between *CYP2D6* genotype and switching. Overall PMs had a higher risk of switching to another antidepressant than EMs, although this difference was not statistically significant. In TCA users the risk of switching was significantly higher in PMs compared with EMs (OR = 5.77; 95% CI 1.59, 21.03; *P* = 0.01). This effect was not seen in SSRI users. An increased risk of discontinuation of therapy was seen in PMs compared with EMs (OR = 1.45; 95% CI 0.91, 2.32; *P* = 0.12), but this difference was not statistically significant ([Table 4](#tbl4)). This association was somewhat more explicit in TCA users (OR = 1.62; 95% CI 0.84, 3.12; *P* = 0.15) than in SSRI users (OR = 1.20; 95% CI 0.56, 2.57; *P* = 0.65).\n/app/papers/PMC2291379.md:168:| CYP2D6 genotype | Number of switchers | ORadj* switching (95% CI) | P value |\n/app/papers/PMC2291379.md:183:Table 3 Caption: Association between CYP2D6 genotype and switching to any other antidepressant <45 days\n/app/papers/PMC2291379.md:187:| CYP2D6 genotype | Number of discontinuations | ORadj* discontinuation (95% CI) | P value |\n/app/papers/PMC2291379.md:202:Table 4 Caption: Association between CYP2D6 genotype and discontinuation of antidepressive therapy <45 days\n/app/papers/PMC2291379.md:204:The change in mean dose (PDD/DDD ratio) over time for TCAs is given in [Figure 1](#fig01). The average TCA starting dose was 0.36 DDD. At the first prescription the mean doses did not significantly differ between *CYP2D6* genotypes. For all genotypes the prescribed daily dose increased over the first four prescriptions although this increase was smaller in PMs and IMs. At the third and fourth prescription the mean dose was significantly lower in PMs than in EMs (difference 0.11 DDD, *P* = 0.03). Additionally, we analyzed the difference in TCA doses between genotypes with a repeated measurements analysis. In PMs the adjusted difference in PDD/DDD ratio was 0.05 DDD compared with EMs (95% CI \u22120.07, 0.16, *P* = 0.46). The mean dose of the IMs was lower compared with EMs (difference 0.02 DDD, 95% CI \u22120.03, 0.08, *P* = 0.43). In the repeated measurements analyses we adjusted for age, gender and starting dose. Adjusting for renal function and BMI did not significantly affect the results.\n/app/papers/PMC2291379.md:210:Change in mean tricyclic antidepressant dose over time per genotype (*1/*1, (); *1/*4, (); *4/*4, ()). \u2227 For each prescription the mean prescribed daily dose (PDD)/defined daily dose (DDD) ratio was calculated. \u22a5 95% confidence interval of the mean PDD/DDD ratio of CYP2D6 PMs. *P value < 0.05\n/app/papers/PMC2291379.md:212:For SSRIs the effect of *CYP2D6* genotype on mean dose (PDD/DDD ratio) over time is given in [Figure 2](#fig02). The average starting dose was 0.84 DDD. The starting doses of EM, IM or PM patients did not significantly differ. In SSRI users the difference in mean dose between PMs and EMs was significant at the third prescription (difference 0.17 DDD; *P* = 0.02), but not significant for the following prescriptions. The curve of the IMs overlapped the EM mean dose to a large extent. With repeated measurements analysis the adjusted difference was 0.08 DDD (95% CI \u22120.02, 0.20; *P* = 0.11) between PMs and EMs and 0.13 DDD (95% CI \u22120.01, 0.24; *P* = 0.04) between PMs and IMs.\n/app/papers/PMC2291379.md:218:Change in mean SSRI dose over time per genotype (*1/*1, (); *1/*4, (); *4/*4, ()). \u2227 For each prescription the mean prescribed daily dose (PDD)/defined daily dose (DDD) ratio was calculated. \u22a5 95% confidence interval of the mean PDD/DDD ratio of CYP2D6 PMs. *P value < 0.05\n/app/papers/PMC2291379.md:222:This study demonstrated that in users of TCA the risk of switching to any other antidepressant within 45 days is significantly higher in PMs than in EMs. These findings are in concordance with Mulder *et al.*[[15](#b15)] who found a HR of 3.50 (95% CI 1.52, 8.10) for switching to another drug in the same therapeutic class in PMs *vs.* EMs. In their study switching could be seen as an overall expression of unsatisfactory response to treatment including ineffectiveness and adverse drug reactions. We studied switching within 45 days of antidepressant use, since after a period of 6 weeks ineffectiveness could be the reason for switching instead of adverse drug reactions. The increased risk of switching to another antidepressant was not seen in SSRI users. Selection of SSRIs primarily metabolized by CYP2D6 (fluoxetine, paroxetine, fluvoxamine) did not alter these results. In contrast to TCAs, for which a narrow therapeutic range exists, no clear relationship between clinical effect and plasma concentration has been found for SSRIs. ADRs seemed not to be associated with high plasma concentrations of SSRIs [[16](#b16)]. Therefore, higher plasma concentrations of SSRIs in PMs would not lead to an increased frequency of switching. In IMs the risk of switching to any other antidepressant was not increased. Unlike PMs, in whom CYP2D6 enzyme activity is absent, patients heterozygous for the **4* allele have decreased enzyme activity. Plasma concentrations of antidepressants in these IMs would be slightly higher compared with EMs, but apparently did not lead to more switching. The clinical relevance of this genotype was less important than PMs. The low frequency of switching in our study (\u223c4%) may be the result of a carefully chosen low starting dose by general practitioners and psychiatrists diminishing the occurrence of ADRs or adjusting the initial dose. In our study a large proportion of amitriptyline users started on a low dose, probably also because this drug is not only used as antidepressant, but is also prescribed for the treatment of neuropathic pain [[17](#b17)]. As information on the exact indication was not available we have included all amitriptyline users in the study. We have repeated the analysis after exclusion of low dose amitriptyline users (<25 mg amitriptyline), but this did not alter our results. Due to the low frequency of switching in our cohort genotyping patients prior to the start of antidepressive therapy could only prevent a few patients from switching.\n/app/papers/PMC2291379.md:224:Discontinuation of antidepressant therapy was also studied, but was not associated with *CYP2D6* genotype. Over 30% of our patients stopped their antidepressive medication within 45 days. Reasons for discontinuation of initial therapy are ADRs, non-compliance, lack of improvement and patient's belief about depression and antidepressants, with non-compliance being the most frequent reason [[18](#b18)].\n/app/papers/PMC2291379.md:226:After titrating the dose of an antidepressant to an optimal level of effectiveness with minimum ADRs, the mean antidepressant dose was significantly lower in PMs than in EMs. The absolute dose difference between PMs and EMs was smaller than 0.10 DDD, corresponding to 2\u201315 mg depending on the drug. This small difference in mean dose has limited impact on clinical outcome.\n/app/papers/PMC2291379.md:228:In TCA users with genotype **1*/**4* (IMs) the optimum dose lay between EMs and PMs, while the mean SSRI dose of heterozygous patients overlapped with EMs. This difference could be explained by the amount of drug metabolized by CYP2D6. CYP2D6 is not the only cytochrome P450 enzyme involved in the metabolism of antidepressants. CYP2C19 plays a role in the demethylation of amitriptyline, imipramine, clomipramine, sertraline and citalopram, CYP1A2 and CYP3A4 contribute to a lesser extent [[19](#b19), [20](#b20)]. However, CYP2D6 exerts a higher influence on antidepressants metabolism than CYP2C19 [[21](#b21)]. Most tricyclic antidepressants are (partly) metabolized by CYP2D6, whereas some SSRIs are not metabolized by CYP2D6 (citalopram, escitalopram and sertraline). Our results indicate that the metabolism of TCAs depends more on CYP2D6 than that of SSRIs. Due to the low number of prescriptions for the newer SSRIs (non CYP2D6 substrates) we did not separate the SSRI group into substrates and non-substrates in our analysis.\n/app/papers/PMC2291379.md:234:Information bias is not likely, since data on genotype and prescription data were collected prospectively without prior knowledge of the study hypothesis. We assessed potential confounding factors such as age, gender, BMI, renal function and starting dose in the multivariate analyses, but no association was found between CYP2D6 and BMI, renal function and starting antidepressant dose. Elderly subjects frequently use multiple drugs, due to comorbidity. Potentially, this could lead to ADRs due to drug\u2013drug interactions. However, we assumed that comedication of CYP2D6 inhibitors did not confound our results, because comedication is prescribed independent of *CYP2D6* genotype.\n/app/papers/PMC2291379.md:236:Our observational study demonstrated that CYP2D6 PM genotype is associated with an increased risk of switching to another antidepressant within the first 6 weeks of TCA pharmacotherapy and showed that PMs required a lower maintenance dose compared with EMs. Our data showed that starting doses of antidepressants prescribed to the elderly general population are carefully low and are titrated to the optimum dose, reducing the risk of adverse drug reactions. Therefore, although this study demonstrated that the *CYP2D6* polymorphism is associated with antidepressant use the question remains whether genotyping prior to the start of antidepressant therapy contributes substantially to the optimi*z*ation of pharmacotherapy.\n/app/papers/PMC2291379.md:244:2. Evans WE, McLeod HL. Pharmacogenomics-drug disposition, drug targets, and side effects. N Engl J Med. 2003;348:538\u201349. doi: 10.1056/NEJMra020526.  [DOI](https://doi.org/10.1056/NEJMra020526) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/12571262/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=N%20Engl%20J%20Med&title=Pharmacogenomics-drug%20disposition,%20drug%20targets,%20and%20side%20effects&author=WE%20Evans&author=HL%20McLeod&volume=348&publication_year=2003&pages=538-49&pmid=12571262&doi=10.1056/NEJMra020526&)\n/app/papers/PMC2291379.md:258:9. Steimer W, Zopf K, von Amelunxen S, Pfeiffer H, Bachofer J, Popp J, Messner B, Kissling W, Leucht S. Amitriptyline or not, that is the question: pharmacogenetic testing of CYP2D6 and CYP2C19 identifies patients with low or high risk for side effects in amitriptyline therapy. Clin Chem. 2005;51:376\u201385. doi: 10.1373/clinchem.2004.041327.  [DOI](https://doi.org/10.1373/clinchem.2004.041327) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/15590749/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin%20Chem&title=Amitriptyline%20or%20not,%20that%20is%20the%20question:%20pharmacogenetic%20testing%20of%20CYP2D6%20and%20CYP2C19%20identifies%20patients%20with%20low%20or%20high%20risk%20for%20side%20effects%20in%20amitriptyline%20therapy&author=W%20Steimer&author=K%20Zopf&author=S%20von%20Amelunxen&author=H%20Pfeiffer&author=J%20Bachofer&volume=51&publication_year=2005&pages=376-85&pmid=15590749&doi=10.1373/clinchem.2004.041327&)\n/app/papers/PMC2291379.md:262:11. Rau T, Wohlleben G, Wuttke H, Thuerauf N, Lunkenheimer J, Lanczik M, Eschenhagen T. CYP2D6 genotype: impact on adverse effects and nonresponse during treatment with antidepressants-a pilot study. Clin Pharmacol Ther. 2004;75:386\u201393. doi: 10.1016/j.clpt.2003.12.015.  [DOI](https://doi.org/10.1016/j.clpt.2003.12.015) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/15116051/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin%20Pharmacol%20Ther&title=CYP2D6%20genotype:%20impact%20on%20adverse%20effects%20and%20nonresponse%20during%20treatment%20with%20antidepressants-a%20pilot%20study&author=T%20Rau&author=G%20Wohlleben&author=H%20Wuttke&author=N%20Thuerauf&author=J%20Lunkenheimer&volume=75&publication_year=2004&pages=386-93&pmid=15116051&doi=10.1016/j.clpt.2003.12.015&)\n/app/papers/PMC2291379.md:264:12. Murphy GM, Kremer C, Rodrigues HE, Schatzberg AF. Pharmacogenetics of antidepressant medication intolerance. Am J Psychiatry. 2003;160:1830\u20135. doi: 10.1176/appi.ajp.160.10.1830.  [DOI](https://doi.org/10.1176/appi.ajp.160.10.1830) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/14514498/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Am%20J%20Psychiatry&title=Pharmacogenetics%20of%20antidepressant%20medication%20intolerance&author=GM%20Murphy&author=C%20Kremer&author=HE%20Rodrigues&author=AF%20Schatzberg&volume=160&publication_year=2003&pages=1830-5&pmid=14514498&doi=10.1176/appi.ajp.160.10.1830&)\n/app/papers/PMC2291379.md:278:19. Kirchheiner J, Brosen K, Dahl ML, Gram LF, Kasper S, Roots I, Soqvist F, Spina E, Brockmoller J. CYP2D6 and CYP2C19 genotype-based dose recommendations for antidepressants: a first step towards subpopulation-specific dosages. Acta Psychiatr Scand. 2001;104:173\u201392. doi: 10.1034/j.1600-0447.2001.00299.x.  [DOI](https://doi.org/10.1034/j.1600-0447.2001.00299.x) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/11531654/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Acta%20Psychiatr%20Scand&title=CYP2D6%20and%20CYP2C19%20genotype-based%20dose%20recommendations%20for%20antidepressants:%20a%20first%20step%20towards%20subpopulation-specific%20dosages&author=J%20Kirchheiner&author=K%20Brosen&author=ML%20Dahl&author=LF%20Gram&author=S%20Kasper&volume=104&publication_year=2001&pages=173-92&pmid=11531654&doi=10.1034/j.1600-0447.2001.00299.x&)\n/app/papers/PMC3550197.md:1:# Prolonged Toxicity after Amitriptyline Overdose in a Patient Deficient in CYP2D6 Activity\n/app/papers/PMC3550197.md:19:We present the case of a comatose woman who intentionally overdosed on amitriptyline and displayed rising serum total tricyclic antidepressant concentrations for at least 6 days after admission. Serial immunoassay total tricyclic antidepressant concentrations in our patient showed gradual decline beginning day 7, although the patient did not regain normal mental status until day 12. Genotyping revealed the patient to be homozygous for the CYP2D6*4 allele, the most common explanation of CYP2D6 enzymatic deficiency among Caucasians. Patients taking tricyclic antidepressants who are homozygous for CYP2D6*4 demonstrate >3 times concentration\u2013time curve (AUCs) and prolonged elimination half-lives, especially of secondary amines such as nortriptyline.\n/app/papers/PMC3550197.md:22:We believe this is the first report describing toxicokinetics after tricyclic antidepressant overdose in a CYP2D6-deficient patient.\n/app/papers/PMC3550197.md:24:Keywords: Amitriptyline, Toxicokinetics, Pharmacokinetics, CYP2D6, Overdose\n/app/papers/PMC3550197.md:32:We present the case of a comatose woman who intentionally overdosed on amitriptyline and displayed rising serum total tricyclic antidepressant concentrations for at least 6 days after admission. Serial immunoassay total tricyclic antidepressant concentrations in our patient showed gradual decline beginning day 7, although the patient did not regain normal mental status until day 12. Genotyping revealed the patient to be homozygous for the CYP2D6*4 allele, the most common explanation of CYP2D6 enzymatic deficiency among Caucasians. Patients taking tricyclic antidepressants who are homozygous for CYP2D6*4 demonstrate >3 times concentration\u2013time curve (AUCs) and prolonged elimination half-lives, especially of secondary amines such as nortriptyline.\n/app/papers/PMC3550197.md:36:We believe this is the first report describing toxicokinetics after tricyclic antidepressant overdose in a CYP2D6-deficient patient.\n/app/papers/PMC3550197.md:40:Overdose of amitriptyline and other tricyclic antidepressants is characterized, in part, by anticholinergic effects such as coma, respiratory depression and tachycardia, along with consequences of sodium channel blockade, including prolongation of the QRS complex and negative inotropy [[1](#CR1)]. Despite anticholinergic action, which can slow down gut motility, patients usually exhibit onset of coma and life-threatening cardiovascular events within a few hours of ingestion, and plasma drug concentrations usually peak within 24 h [[2](#CR2), [3](#CR3)].\n/app/papers/PMC3550197.md:42:Amitriptyline and nortriptyline, its active metabolite, are metabolized by various cytochrome P450s, but especially by CYP2D6 and CYP2C19 [[4](#CR4), [5](#CR5)], with nortriptyline being mainly (>80%) metabolized by CYP2D6 [[6](#CR6)]. CYP2D6 is polymorphic, with about 8% of the Caucasian population demonstrating markedly slow or deficient activity [[6](#CR6)]. We report the clinical course and total tricyclic antidepressant concentrations (amitriptyline + nortriptyline) in a patient who overdosed on amitriptyline. Sustained elevation of TCA concentration and prolonged coma led us to test for CYP2D6 genotypes associated with impaired metabolism, and a deficiency was identified. We believe this to be the first case describing the clinical course and serial drug concentrations in an identified CYP2D6-deficient patient who overdosed on a tricyclic antidepressant.\n/app/papers/PMC3550197.md:46:A 55-year-old Caucasian woman was found unconscious and unresponsive with agonal respirations in her home by police after being alerted by friends. Several suicide notes were present that indicated the patient had taken 99 tablets of 25 mg amitriptyline and 46 tablets of 1 mg alprazolam. It was unclear what time the ingestion had taken place. At the scene, heart rate was 92 beats/min, blood pressure (BP) was 124/76 mm Hg, respiratory rate was 4 per minute (described as agonal), oxyhemoglobin fraction by pulse oximetry was 92% on room air, and fingerstick glucose concentration was 140 mg/dl. She underwent endotracheal intubation and ventilation before transport to an outlying facility.\n/app/papers/PMC3550197.md:48:Upon arrival there, her heart rate was 106 beats/min, BP was 133/68 mm Hg, respirations were 12 per minute (assisted), and bladder temperature was 37.0\u00b0C. Pupils were mid-position and reactive. The neurological examination was nonfocal and unremarkable except for coma. Funduscopic examination was normal. The chest was clear and heart tones were normal. Abdomen and extremities were unremarkable, and axillae were dry. Initial electrocardiogram (ECG) demonstrated sinus rhythm with QRS duration of 130 ms. No gastrointestinal decontamination was performed. She was transferred to our institution.\n/app/papers/PMC3550197.md:50:Upon arrival at our facility, about 6 h after being found, she remained comatose and continued to require mechanical ventilation. Her examination was unchanged with heart rate 80 beats/min, BP 122/59 mm Hg, respirations 12 (assisted), and a temperature of 36.2\u00b0C (bladder). Serum electrolytes, glucose, liver function studies, and creatinine were normal. A complete blood count and prothrombin time were within normal limits. An ECG revealed normal sinus rhythm with a QRS of 148 ms. She was given 100 mEq of NaHCO_3_ (IV) and the QRS narrowed slightly to 138 ms. Given the length of time after ingestion, we did not administer activated charcoal.\n/app/papers/PMC3550197.md:56:On hospital days 3 and 4 she remained comatose, and serum total tricyclic antidepressant concentrations were 1,618 and 1,675 \u03bcg/l, respectively (Fig. [1](#Fig1)). Six hours after the total serum tricyclic antidepressant concentration by immunoassay was 1,675 \u03bcg/l, a blood sample was drawn and gas chromatography/mass spectrometry showed the plasma amitriptyline concentration to be 780 \u03bcg/l and nortriptyline 768 \u03bcg/l (total = 1,548 \u03bcg/l). An MRI of the brain showed normal results.\n/app/papers/PMC3550197.md:66:By hospital day 6, the patient was breathing spontaneously, opened her eyes, was making purposeful movements, and was following simple commands. Extubation was performed, but the patient was floridly anticholinergic with development of agitated delirium, picking behavior, and mumbling, nonsensical speech. She required endotracheal intubation once again, now for sedation and self-protection.\n/app/papers/PMC3550197.md:74:In patients with large tricyclic antidepressant overdoses, significant neurological and cardiac toxicity generally occur rapidly. Total serum tricyclic antidepressant levels peak within the first 24 h [[2](#CR2), [3](#CR3)]. CYP2D6 is partially responsible for metabolism of amitriptyline and responsible for more than 80% of nortriptyline\u2019s metabolism [[4](#CR4)\u2013[6](#CR6)]. The most common allele responsible for reduced or absent CYP2D6 activity in 5\u201310% of Caucasians is CYP2D6*4, with homozygous persons commonly lacking CYP2D6 activity [[7](#CR7)]. Amitriptyline displays between 30% and 60% bioavailability because of first-pass metabolism [[8](#CR8)], and patients taking tricyclic antidepressants who are deficient in CYP2D6 demonstrate several times greater increases in the area under the concentration\u2013time curve and prolonged elimination half-lives after therapeutic dosing compared to those with normal alleles [[6](#CR6), [9](#CR9)].\n/app/papers/PMC3550197.md:76:Pedersen and colleagues [[10](#CR10)] described serum tricyclic antidepressant and maprotiline concentrations in 29 overdose patients and also described peak levels at the time of admission or within a relatively short time. Two of his patients maintained both amitriptyline and nortriptyline concentrations at relatively steady concentrations for 3 to 4 days before they began to decline. No metabolism status of CYP2D6 was reported.\n/app/papers/PMC3550197.md:78:Our patient experienced a prolonged rise in total drug concentration, and levels did not begin to decline until about 6.5 days of hospitalization. Deficiency of CYP2D6 most likely contributed to prolonged elevation of antidepressant levels in our patient. While nortriptyline toxicity has been described after therapeutic dosing in the face of CYP2D6 deficiency [[11](#CR11)], we could not locate previous reports describing toxicokinetics after amitriptyline overdose in a CYP2D6-deficient patient.\n/app/papers/PMC3550197.md:80:Terminal elimination half-lives following overdose of tricyclic antidepressants in patients with unreported CYP2D6 metabolizing status have averaged 13\u201381 h [[2](#CR2), [3](#CR3), [9](#CR9)\u2013[11](#CR11)]. In our patient, the terminal elimination half-life of the total of amitriptyline and nortriptyline concentration was approximately 47.5 h, based on the last three serum concentrations from days 7 through 9. Elimination half-life of secondary amines, such as desipramine, has been reported to be increased about three times in CYP2D6-deficient metabolizers [[9](#CR9)].\n/app/papers/PMC3550197.md:82:Alprazolam is mainly metabolized by CYP3A4 and exhibits an elimination half-life of nine to 16 h. Alprazolam is neither a significant inhibitor of CYP2D6 nor CYP2C19. While alprazolam may have contributed to our patient\u2019s initial coma, she was clearly anticholinergic upon extubation on day 6, findings not expected based on alprazolam\u2019s pharmacologic effects and pharmacokinetics [[12](#CR12)], but explained by documented persistently elevated antidepressant concentrations.\n/app/papers/PMC3550197.md:84:The serum total tricyclic immunoassay we used approximately quantifies tricyclic antidepressants and is calibrated using nortriptyline, with good cross-reactivity with amitriptyline. In our hands, total serum amitriptyline and nortriptyline concentrations are within 13% of those measured by chromatographic methods, and within-run variability and run-to-run variability coefficient of variations are both less than 1.7%, in keeping with results of amitriptyline and nortriptyline concentrations measured by gas chromatography/mass spectrometry in our patient. Benzodiazepines and cotinine, found in the urine of our patient, do not cross-react with this assay. Substances such as quetiapine, that do cross-react with the assay, were notably absent by comprehensive screening of urine. The immunoassay we used served to confirm the delayed rise and prolonged elevation of tricyclic antidepressants and provided an estimation of terminal elimination half-life, but did not provide as an exact measurement of total amitriptyline and nortriptyline as would result from serial chromatographic measurements. The sustained and prolonged rise in drug levels along with clinical evidence of continued toxicity made us suspect CYP2D6 deficiency, which we confirmed with genetic testing.\n/app/papers/PMC3550197.md:88:Our patient, who was deficient in CYP2D6, experienced a delayed rise in total serum tricyclic antidepressant concentrations as well as prolonged intoxication.\n/app/papers/PMC3550197.md:92:1. Kerr GW, McGuffie AC, Wilkie S. Tricyclic antidepressant overdose: a review. Emerg Med J. 2001;18(4):236\u2013241. doi: 10.1136/emj.18.4.236.  [DOI](https://doi.org/10.1136/emj.18.4.236) | [PMC free article](/articles/PMC1725608/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/11435353/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Emerg%20Med%20J&title=Tricyclic%20antidepressant%20overdose:%20a%20review&author=GW%20Kerr&author=AC%20McGuffie&author=S%20Wilkie&volume=18&issue=4&publication_year=2001&pages=236-241&pmid=11435353&doi=10.1136/emj.18.4.236&)\n/app/papers/PMC3550197.md:96:3. Petit JM, Spiker DG, Ruwitch JF, Ziegler VE, Weiss AN, Biggs JT. Tricyclic antidepressant plasma levels and adverse effects after overdose. Clin Pharmacol Ther. 1977;21:47\u201351. doi: 10.1002/cpt197721147.  [DOI](https://doi.org/10.1002/cpt197721147) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/832448/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin%20Pharmacol%20Ther&title=Tricyclic%20antidepressant%20plasma%20levels%20and%20adverse%20effects%20after%20overdose&author=JM%20Petit&author=DG%20Spiker&author=JF%20Ruwitch&author=VE%20Ziegler&author=AN%20Weiss&volume=21&publication_year=1977&pages=47-51&pmid=832448&doi=10.1002/cpt197721147&)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"adverse|toxicity|toxic|overdose|cardiotoxicity|tachycardia|coma|respiratory|qrs|arrhythm|bradycardia|qt|sedation|somnolence|discontinuation|dose|switching|side effect|intoler\\\" /app/papers/PMC2291379.md /app/papers/PMC3550197.md\"}"
+      }
+    },
+    {
+      "step_id": 25,
+      "timestamp": "2026-02-18T08:00:55.078Z",
+      "source": "user",
+      "message": "Warning: apply_patch was requested via exec_command. Use the apply_patch tool instead of exec_command."
+    },
+    {
+      "step_id": 26,
+      "timestamp": "2026-02-18T08:00:55.074Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_LSoerijRmSOwQhemLLoAqGG3",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_LSoerijRmSOwQhemLLoAqGG3",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "applypatch << 'PATCH'\n*** Begin Patch\n*** Add File: /app/answers.json\n+{\n+  \"drugs\": [\n+    \"amitriptyline\",\n+    \"maprotiline\",\n+    \"clomipramine\",\n+    \"nortriptyline\",\n+    \"imipramine\",\n+    \"doxepin\",\n+    \"paroxetine\",\n+    \"fluvoxamine\",\n+    \"fluoxetine\",\n+    \"mirtazapine\",\n+    \"venlafaxine\"\n+  ],\n+  \"phenotypes\": [\n+    \"adverse events\",\n+    \"cardiotoxicity\",\n+    \"discontinuation\",\n+    \"dose reduction\",\n+    \"drug toxicity\",\n+    \"overdose\",\n+    \"cns depression\",\n+    \"respiratory insufficiency\",\n+    \"tachycardia\"\n+  ],\n+  \"relevant_paper_count\": 2\n+}\n+\n*** End Patch\nPATCH"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_LSoerijRmSOwQhemLLoAqGG3",
+            "content": "Success. Updated the following files:\nA /app/answers.json\n"
+          }
+        ]
+      },
+      "extra": {
+        "tool_metadata": {
+          "exit_code": 0,
+          "duration_seconds": 0.0
+        },
+        "raw_arguments": "{\"cmd\":\"applypatch << 'PATCH'\\n*** Begin Patch\\n*** Add File: /app/answers.json\\n+{\\n+  \\\"drugs\\\": [\\n+    \\\"amitriptyline\\\",\\n+    \\\"maprotiline\\\",\\n+    \\\"clomipramine\\\",\\n+    \\\"nortriptyline\\\",\\n+    \\\"imipramine\\\",\\n+    \\\"doxepin\\\",\\n+    \\\"paroxetine\\\",\\n+    \\\"fluvoxamine\\\",\\n+    \\\"fluoxetine\\\",\\n+    \\\"mirtazapine\\\",\\n+    \\\"venlafaxine\\\"\\n+  ],\\n+  \\\"phenotypes\\\": [\\n+    \\\"adverse events\\\",\\n+    \\\"cardiotoxicity\\\",\\n+    \\\"discontinuation\\\",\\n+    \\\"dose reduction\\\",\\n+    \\\"drug toxicity\\\",\\n+    \\\"overdose\\\",\\n+    \\\"cns depression\\\",\\n+    \\\"respiratory insufficiency\\\",\\n+    \\\"tachycardia\\\"\\n+  ],\\n+  \\\"relevant_paper_count\\\": 2\\n+}\\n+\\n*** End Patch\\nPATCH\"}"
+      }
+    },
+    {
+      "step_id": 27,
+      "timestamp": "2026-02-18T08:01:07.762Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "I\u2019ll update the plan to mark scanning complete and proceed to extract entities, count relevant papers, and write answers.json using the proper patch tool."
+    },
+    {
+      "step_id": 28,
+      "timestamp": "2026-02-18T08:01:10.764Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_AgJ4rOyn3gF4SJRVlkdg5hav",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_AgJ4rOyn3gF4SJRVlkdg5hav",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "completed",
+                "step": "Load term banks (drugs, phenotypes)"
+              },
+              {
+                "status": "completed",
+                "step": "Scan papers for CYP2D6 variants"
+              },
+              {
+                "status": "in_progress",
+                "step": "Extract matching drugs/phenotypes"
+              },
+              {
+                "status": "pending",
+                "step": "Count relevant papers"
+              },
+              {
+                "status": "pending",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_AgJ4rOyn3gF4SJRVlkdg5hav",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"completed\",\"step\":\"Load term banks (drugs, phenotypes)\"},{\"status\":\"completed\",\"step\":\"Scan papers for CYP2D6 variants\"},{\"status\":\"in_progress\",\"step\":\"Extract matching drugs/phenotypes\"},{\"status\":\"pending\",\"step\":\"Count relevant papers\"},{\"status\":\"pending\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 29,
+      "timestamp": "2026-02-18T08:01:16.441Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_UYAObd2NzAIU8odHzsPk3fBG",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_UYAObd2NzAIU8odHzsPk3fBG",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"\\bcoma\\b|\\bbradycardia\\b|\\barrhythm|qrs|qt prolongation|qt|somnolence|sedation|nausea|vomiting|dizziness|respiratory depression|withdrawal|apnea|bradycardia|tachycardia\" /app/term_banks/phenotypes.txt"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_UYAObd2NzAIU8odHzsPk3fBG",
+            "content": "Chunk ID: 0c92b4\nWall time: 0.0524 seconds\nProcess exited with code 0\nOriginal token count: 78\nOutput:\n3:acquired long qt syndrome (alqts)\n23:apnea\n40:bradycardia\n88:dizziness\n192:long qt syndrome\n239:nausea\n285:postoperative nausea and vomiting\n309:sedation\n312:short qt syndrome 1\n313:shortened qt interval\n315:sleep apnea syndromes\n319:somnolence\n325:substance withdrawal syndrome\n331:tachycardia\n362:vomiting\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"\\\\bcoma\\\\b|\\\\bbradycardia\\\\b|\\\\barrhythm|qrs|qt prolongation|qt|somnolence|sedation|nausea|vomiting|dizziness|respiratory depression|withdrawal|apnea|bradycardia|tachycardia\\\" /app/term_banks/phenotypes.txt\"}"
+      }
+    },
+    {
+      "step_id": 30,
+      "timestamp": "2026-02-18T08:01:54.629Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_ZYsmFxBYKKxZR3HrJAxxDKyr",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_ZYsmFxBYKKxZR3HrJAxxDKyr",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"^dosulepin$|^opipramol$|^maprotiline$\" /app/term_banks/drugs.txt"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_ZYsmFxBYKKxZR3HrJAxxDKyr",
+            "content": "Chunk ID: 066a51\nWall time: 0.0520 seconds\nProcess exited with code 0\nOriginal token count: 8\nOutput:\n363:maprotiline\n436:opipramol\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"^dosulepin$|^opipramol$|^maprotiline$\\\" /app/term_banks/drugs.txt\"}"
+      }
+    },
+    {
+      "step_id": 31,
+      "timestamp": "2026-02-18T08:02:32.131Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_5lFzwcOhliZ2d5FamwaLaNgs",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_5lFzwcOhliZ2d5FamwaLaNgs",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"CYP2D6\\*[0-9A-Za-zxN]+\" /app/papers"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_5lFzwcOhliZ2d5FamwaLaNgs",
+            "content": "Chunk ID: 67f937\nWall time: 0.0520 seconds\nProcess exited with code 0\nOriginal token count: 1230\nOutput:\n/app/papers/PMC3550197.md:19:We present the case of a comatose woman who intentionally overdosed on amitriptyline and displayed rising serum total tricyclic antidepressant concentrations for at least 6 days after admission. Serial immunoassay total tricyclic antidepressant concentrations in our patient showed gradual decline beginning day 7, although the patient did not regain normal mental status until day 12. Genotyping revealed the patient to be homozygous for the CYP2D6*4 allele, the most common explanation of CYP2D6 enzymatic deficiency among Caucasians. Patients taking tricyclic antidepressants who are homozygous for CYP2D6*4 demonstrate >3 times concentration\u2013time curve (AUCs) and prolonged elimination half-lives, especially of secondary amines such as nortriptyline.\n/app/papers/PMC3550197.md:32:We present the case of a comatose woman who intentionally overdosed on amitriptyline and displayed rising serum total tricyclic antidepressant concentrations for at least 6 days after admission. Serial immunoassay total tricyclic antidepressant concentrations in our patient showed gradual decline beginning day 7, although the patient did not regain normal mental status until day 12. Genotyping revealed the patient to be homozygous for the CYP2D6*4 allele, the most common explanation of CYP2D6 enzymatic deficiency among Caucasians. Patients taking tricyclic antidepressants who are homozygous for CYP2D6*4 demonstrate >3 times concentration\u2013time curve (AUCs) and prolonged elimination half-lives, especially of secondary amines such as nortriptyline.\n/app/papers/PMC3550197.md:70:On hospital day 6, blood was sent for CYP2D6 genotyping. Results returned showing she was homozygous for CYP2D6*4 alleles, a polymorphism associated with absent CYP2D6 activity [[6](#CR6)]. We discussed results and implications with the patient and her private physician.\n/app/papers/PMC3550197.md:74:In patients with large tricyclic antidepressant overdoses, significant neurological and cardiac toxicity generally occur rapidly. Total serum tricyclic antidepressant levels peak within the first 24 h [[2](#CR2), [3](#CR3)]. CYP2D6 is partially responsible for metabolism of amitriptyline and responsible for more than 80% of nortriptyline\u2019s metabolism [[4](#CR4)\u2013[6](#CR6)]. The most common allele responsible for reduced or absent CYP2D6 activity in 5\u201310% of Caucasians is CYP2D6*4, with homozygous persons commonly lacking CYP2D6 activity [[7](#CR7)]. Amitriptyline displays between 30% and 60% bioavailability because of first-pass metabolism [[8](#CR8)], and patients taking tricyclic antidepressants who are deficient in CYP2D6 demonstrate several times greater increases in the area under the concentration\u2013time curve and prolonged elimination half-lives after therapeutic dosing compared to those with normal alleles [[6](#CR6), [9](#CR9)].\n/app/papers/PMC2291379.md:1:# Influence of the CYP2D6*4 polymorphism on dose, switching and discontinuation of antidepressants\n/app/papers/PMC2291379.md:16:To study the effect of CYP2D6*4 on antidepressant dose, switching and discontinuation of therapy.\n/app/papers/PMC2291379.md:19:The study consisted of all subjects in the Rotterdam Study, who received a first antidepressant prescription between April 1st 1991 and July 1st 2005 and for whom data on CYP2D6 genotype were available. Binary logistic regression was performed to study the association between CYP2D6*4 and switching to any other antidepressant or discontinuation of therapy within 45 days. The difference in mean antidepressant dose was compared between CYP2D6 genotypes using t-tests and repeated measurements analyses.\n/app/papers/PMC2291379.md:28:Most antidepressants are metabolized by CYP2D6. The variant allele CYP2D6*4 is the main polymorphism resulting in reduced enzyme activity in Caucasians.\n/app/papers/PMC2291379.md:33:This large population-based cohort study in 1198 elderly Dutch patients examines the influence of the CYP2D6*4 polymorphism on intolerability of antidepressants.\n/app/papers/PMC2291379.md:254:7. Lovlie R, Daly AK, Matre GE, Molven A, Steen VM. Polymorphisms in CYP2D6 duplication-negative individuals with the ultrarapid metabolizer phenotype: a role for the CYP2D6*35 allele in ultrarapid metabolism? Pharmacogenetics. 2001;11:45\u201355. doi: 10.1097/00008571-200102000-00006.  [DOI](https://doi.org/10.1097/00008571-200102000-00006) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/11207030/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Pharmacogenetics&title=Polymorphisms%20in%20CYP2D6%20duplication-negative%20individuals%20with%20the%20ultrarapid%20metabolizer%20phenotype:%20a%20role%20for%20the%20CYP2D6*35%20allele%20in%20ultrarapid%20metabolism?&author=R%20Lovlie&author=AK%20Daly&author=GE%20Matre&author=A%20Molven&author=VM%20Steen&volume=11&publication_year=2001&pages=45-55&pmid=11207030&doi=10.1097/00008571-200102000-00006&)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"CYP2D6\\\\*[0-9A-Za-zxN]+\\\" /app/papers\"}"
+      }
+    },
+    {
+      "step_id": 32,
+      "timestamp": "2026-02-18T08:02:42.068Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "I\u2019m going to write the extracted results to /app/answers.json using the patch tool."
+    },
+    {
+      "step_id": 33,
+      "timestamp": "2026-02-18T08:02:42.718Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_En1fedDoiVwGX1YSpzbw5lJp",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_En1fedDoiVwGX1YSpzbw5lJp",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "completed",
+                "step": "Load term banks (drugs, phenotypes)"
+              },
+              {
+                "status": "completed",
+                "step": "Scan papers for CYP2D6 variants"
+              },
+              {
+                "status": "completed",
+                "step": "Extract matching drugs/phenotypes"
+              },
+              {
+                "status": "in_progress",
+                "step": "Count relevant papers"
+              },
+              {
+                "status": "pending",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_En1fedDoiVwGX1YSpzbw5lJp",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"completed\",\"step\":\"Load term banks (drugs, phenotypes)\"},{\"status\":\"completed\",\"step\":\"Scan papers for CYP2D6 variants\"},{\"status\":\"completed\",\"step\":\"Extract matching drugs/phenotypes\"},{\"status\":\"in_progress\",\"step\":\"Count relevant papers\"},{\"status\":\"pending\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 34,
+      "timestamp": "2026-02-18T08:02:44.977Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_IsTIYv8OKgqlQPhl0B6XiIn1",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_IsTIYv8OKgqlQPhl0B6XiIn1",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"CYP2D6\\\\*[0-9A-Za-zxN]+\" /app/papers | cut -d: -f1 | sort -u | wc -l"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_IsTIYv8OKgqlQPhl0B6XiIn1",
+            "content": "Chunk ID: f82816\nWall time: 0.0514 seconds\nProcess exited with code 0\nOriginal token count: 1\nOutput:\n2\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"CYP2D6\\\\\\\\*[0-9A-Za-zxN]+\\\" /app/papers | cut -d: -f1 | sort -u | wc -l\"}"
+      }
+    },
+    {
+      "step_id": 35,
+      "timestamp": "2026-02-18T08:02:47.354Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_cyUEf9RIuKGIXNvbg36SPph8",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_cyUEf9RIuKGIXNvbg36SPph8",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "completed",
+                "step": "Load term banks (drugs, phenotypes)"
+              },
+              {
+                "status": "completed",
+                "step": "Scan papers for CYP2D6 variants"
+              },
+              {
+                "status": "completed",
+                "step": "Extract matching drugs/phenotypes"
+              },
+              {
+                "status": "completed",
+                "step": "Count relevant papers"
+              },
+              {
+                "status": "in_progress",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_cyUEf9RIuKGIXNvbg36SPph8",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"completed\",\"step\":\"Load term banks (drugs, phenotypes)\"},{\"status\":\"completed\",\"step\":\"Scan papers for CYP2D6 variants\"},{\"status\":\"completed\",\"step\":\"Extract matching drugs/phenotypes\"},{\"status\":\"completed\",\"step\":\"Count relevant papers\"},{\"status\":\"in_progress\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 36,
+      "timestamp": "2026-02-18T08:02:52.461Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_zUBX1z876QcbKqY9ciajAJHk",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_zUBX1z876QcbKqY9ciajAJHk",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "cat /app/answers.json"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_zUBX1z876QcbKqY9ciajAJHk",
+            "content": "Chunk ID: ec6b7e\nWall time: 0.0532 seconds\nProcess exited with code 0\nOriginal token count: 120\nOutput:\n{\n  \"drugs\": [\n    \"amitriptyline\",\n    \"maprotiline\",\n    \"clomipramine\",\n    \"nortriptyline\",\n    \"imipramine\",\n    \"doxepin\",\n    \"paroxetine\",\n    \"fluvoxamine\",\n    \"fluoxetine\",\n    \"mirtazapine\",\n    \"venlafaxine\"\n  ],\n  \"phenotypes\": [\n    \"adverse events\",\n    \"cardiotoxicity\",\n    \"discontinuation\",\n    \"dose reduction\",\n    \"drug toxicity\",\n    \"overdose\",\n    \"cns depression\",\n    \"respiratory insufficiency\",\n    \"tachycardia\"\n  ],\n  \"relevant_paper_count\": 2\n}\n\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"cat /app/answers.json\"}"
+      }
+    },
+    {
+      "step_id": 37,
+      "timestamp": "2026-02-18T08:02:56.106Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_4gOnRYK9FVi6jDXqSgzzMaOj",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_4gOnRYK9FVi6jDXqSgzzMaOj",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "completed",
+                "step": "Load term banks (drugs, phenotypes)"
+              },
+              {
+                "status": "completed",
+                "step": "Scan papers for CYP2D6 variants"
+              },
+              {
+                "status": "completed",
+                "step": "Extract matching drugs/phenotypes"
+              },
+              {
+                "status": "completed",
+                "step": "Count relevant papers"
+              },
+              {
+                "status": "completed",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_4gOnRYK9FVi6jDXqSgzzMaOj",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"completed\",\"step\":\"Load term banks (drugs, phenotypes)\"},{\"status\":\"completed\",\"step\":\"Scan papers for CYP2D6 variants\"},{\"status\":\"completed\",\"step\":\"Extract matching drugs/phenotypes\"},{\"status\":\"completed\",\"step\":\"Count relevant papers\"},{\"status\":\"completed\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 38,
+      "timestamp": "2026-02-18T08:02:59.048Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "All set. I extracted entities from the two relevant CYP2D6*4 toxicity papers (PMC2291379, PMC3550197) and wrote the results to /app/answers.json.\n\n- Drugs: amitriptyline, nortriptyline, imipramine, clomipramine, doxepin, maprotiline, paroxetine, fluoxetine, fluvoxamine, mirtazapine, venlafaxine\n- Phenotypes: adverse events, cardiotoxicity, discontinuation, dose reduction, drug toxicity, overdose, cns depression, respiratory insufficiency, tachycardia\n- Relevant paper count: 2\n\nIf you want me to narrow drugs only to those with demonstrated increased toxicity in PMs (e.g., TCAs) or adjust phenotypes to be stricter, I can refine further."
+    }
+  ],
+  "final_metrics": {
+    "total_prompt_tokens": 885896,
+    "total_completion_tokens": 15002,
+    "total_cached_tokens": 825984,
+    "total_steps": 38,
+    "extra": {
+      "reasoning_output_tokens": 11776,
+      "total_tokens": 900898,
+      "last_token_usage": {
+        "input_tokens": 41619,
+        "cached_input_tokens": 41472,
+        "output_tokens": 181,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 41800
+      }
+    }
+  }
+}

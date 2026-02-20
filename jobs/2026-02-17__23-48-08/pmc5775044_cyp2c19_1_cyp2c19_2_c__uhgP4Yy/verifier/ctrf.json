@@ -1,0 +1,50 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 3,
+            "passed": 2,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771403231.535235,
+            "stop": 1771403231.5699937
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_drugs_recall",
+                "status": "passed",
+                "duration": 0.0002823329996317625,
+                "start": 1771403231.5644698,
+                "stop": 1771403231.5648851,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_phenotypes_recall",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0002426250002827146,
+                "start": 1771403231.5649784,
+                "stop": 1771403231.5696466,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'drugs': ['clopidogrel', 'omeprazole', 'esomeprazole', 'prasugrel', 'ticagrelor', 'cangrelor', ...], 'phenotypes': ['...rdiac events (mace)', 'myocardial infarction', 'stroke', 'transient ischemic attack', ...], 'relevant_paper_count': 15}\n\n    def test_phenotypes_recall(answers):\n        \"\"\"Check that all expected phenotypes are found (recall).\"\"\"\n        got = normalize(answers.get(\"phenotypes\", []))\n        expected = set(EXPECTED_PHENOTYPES)\n        missing = expected - got\n>       assert not missing, (\n            f\"Missing phenotypes: {missing}. Got: {sorted(got)}\"\n        )\nE       AssertionError: Missing phenotypes: {'acute coronary syndrome', 'cardiovascular disease'}. Got: ['drug resistance', 'epilepsy', 'hemorrhage', 'major adverse cardiac events (mace)', 'myocardial infarction', 'platelet reactivity', 'recurrence', 'seizures', 'stroke', 'transient ischemic attack']\nE       assert not {'acute coronary syndrome', 'cardiovascular disease'}\n\n/tests/test_outputs.py:39: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_relevant_paper_count",
+                "status": "passed",
+                "duration": 0.0001312080003117444,
+                "start": 1771403231.569732,
+                "stop": 1771403231.5699155,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}
