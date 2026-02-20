@@ -5,8 +5,10 @@ from parametric knowledge alone (no papers provided). For each gene-drug-variant
 combination, the agent must predict the clinical recommendation, its
 classification strength, and key implications.
 
-Scoring is based on 3 deterministic tests: action category match,
-classification match, and key term recall.
+Scoring uses a hybrid approach:
+  - Classification strength: deterministic exact match
+  - Action correctness, recommendation completeness, implication accuracy:
+    strict LLM-as-judge evaluation (Claude Sonnet, threshold >= 4/5)
 
 Generate:
     python cpic_zero_context/generate_dataset.py
@@ -51,6 +53,7 @@ allow_internet = true
 mcp_servers = []
 
 [verifier.env]
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}"
 
 [solution.env]
 """
@@ -74,6 +77,7 @@ source $HOME/.local/bin/env
 uvx \\
   --with pytest==8.4.1 \\
   --with pytest-json-ctrf==0.3.5 \\
+  --with anthropic==0.52.0 \\
   pytest --ctrf /logs/verifier/ctrf.json /tests/test_outputs.py -rA
 
 # Write the fraction of passed tests as the reward
@@ -88,88 +92,74 @@ pathlib.Path("/logs/verifier/reward.txt").write_text(str(reward))
 PYEOF
 """
 
-# ── Action category mapping ────────────────────────────────────────────
+# ── LLM Judge prompt ──────────────────────────────────────────────────
 
-ACTION_CATEGORIES = {
-    "avoid": [
-        "contraindicated",
-        "not recommended",
-        "is not recommended",
-        "avoid",
-        "do not use",
-    ],
-    "standard_dosing": [
-        "per standard dosing",
-        "standard dosing guidelines",
-        "at standard doses",
-        "standard dose",
-        "label-recommended",
-    ],
-    "dose_reduction": [
-        "reduce dose",
-        "reduced dose",
-        "decrease dose",
-        "decreased dose",
-        "lower dose",
-        "reduce starting dose",
-        "50% reduction",
-        "50% of standard",
-        "dose decrease",
-        "dose reduction",
-    ],
-    "dose_increase": [
-        "increase dose",
-        "increased dose",
-        "higher dose",
-        "dose increase",
-        "titrate to higher",
-    ],
-    "alternative": [
-        "alternative",
-        "consider other",
-        "use an alternative",
-        "select alternative",
-        "consider alternative",
-    ],
-    "monitor": [
-        "monitor",
-        "caution",
-        "with therapeutic drug monitoring",
-    ],
-}
+JUDGE_PROMPT_TEMPLATE = """\
+You are a STRICT pharmacogenomics evaluation judge. You are comparing an AI \
+agent's clinical recommendation against the official CPIC guideline. \
+Be rigorous — clinical details matter and vague or incomplete answers should \
+score low. Do NOT give the benefit of the doubt.
 
+## Ground Truth (CPIC Guideline)
+- **Drug:** {drug}
+- **Gene:** {gene}
+- **Patient Genotype:** {variant}
+- **CPIC Recommendation:** {expected_rec}
+- **Classification Strength:** {expected_class}
+- **CPIC Implication:** {expected_impl}
 
-def classify_action(recommendation: str) -> str:
-    """Map a CPIC recommendation to an action category using keyword matching."""
-    rec_lower = recommendation.lower()
-    for category, keywords in ACTION_CATEGORIES.items():
-        for kw in keywords:
-            if kw in rec_lower:
-                return category
-    return "other"
+## Agent's Answer
+- **Recommendation:** {agent_rec}
+- **Classification:** {agent_class}
+- **Implication:** {agent_impl}
 
+## Evaluation Criteria
 
-def extract_key_terms(recommendation: str) -> list[str]:
-    """Extract clinically significant phrases from a recommendation."""
-    rec_lower = recommendation.lower()
-    terms = []
-    # Check against all action category keywords
-    for keywords in ACTION_CATEGORIES.values():
-        for kw in keywords:
-            if kw in rec_lower:
-                terms.append(kw)
-    # Also extract drug-specific phrases
-    # Look for specific dosing phrases like "50%", percentage mentions
-    pct = re.findall(r"\d+%", recommendation)
-    terms.extend(pct)
-    # Deduplicate while preserving order
-    seen = set()
-    unique = []
-    for t in terms:
-        if t not in seen:
-            seen.add(t)
-            unique.append(t)
-    return unique
+Score EACH dimension on a 1-5 scale. Be strict: a score of 5 means \
+essentially perfect, 4 means correct with only trivial omissions. \
+Anything missing a clinically meaningful detail should be 3 or below.
+
+1. **action_correctness**: Does the agent recommend the SAME clinical action?
+   - 5: Exact same action (e.g., both say "avoid", both say "reduce dose by 50%")
+   - 4: Same core action with only trivial wording differences
+   - 3: Right direction but missing critical qualifiers (e.g., "reduce dose" \
+when guideline says "reduce dose by 50%" — the percentage matters)
+   - 2: Partially overlapping but meaningfully different action
+   - 1: Wrong action (e.g., "use standard dose" vs "avoid")
+
+2. **recommendation_completeness**: Does the agent capture ALL clinically \
+significant details from the CPIC recommendation?
+   - 5: All specific details present (dosing percentages, monitoring \
+requirements, alternative drug suggestions, caveats)
+   - 4: All major details present, at most one minor detail missing
+   - 3: Core action correct but missing important specifics (e.g., omits TDM \
+requirement, omits specific dose adjustment percentage)
+   - 2: Vague or generic — gives broad direction without actionable detail
+   - 1: Missing or wrong details
+
+3. **implication_accuracy**: Does the agent's stated implication correctly \
+describe the pharmacogenomic phenotype for this genotype?
+   - 5: Correctly identifies the metabolizer status/phenotype and its clinical \
+consequence (e.g., "poor metabolizer — reduced conversion to active metabolite")
+   - 4: Correct phenotype with minor imprecision in clinical consequence
+   - 3: Partially correct (e.g., right metabolizer status but wrong or missing \
+clinical consequence, or vice versa)
+   - 2: Vague or generic implication not specific to this genotype
+   - 1: Wrong phenotype or wrong clinical consequence
+
+4. **safety**: Is the recommendation safe for the patient?
+   - 5: Fully safe, matches guideline
+   - 4: Safe with minor omissions (e.g., missing a secondary monitoring note)
+   - 3: Mostly safe but missing important caveats (e.g., omits critical \
+drug interaction warning or contraindication)
+   - 2: Could lead to suboptimal care
+   - 1: Potentially dangerous (e.g., recommending standard dose when drug \
+should be avoided)
+
+Respond with ONLY a JSON object. No markdown fences, no explanation:
+{{"action_correctness": <1-5>, "recommendation_completeness": <1-5>, \
+"implication_accuracy": <1-5>, "safety": <1-5>, "rationale": "<1-2 sentences>"}}\
+"""
 
 
 # ── Data loading ───────────────────────────────────────────────────────
@@ -228,7 +218,12 @@ def load_data() -> list[dict]:
         except json.JSONDecodeError:
             implications = {}
 
-        action = classify_action(vr["recommendation"])
+        # Build a flat implication string from the implications dict
+        impl_parts = []
+        for gene_name, impl_text in implications.items():
+            if impl_text and impl_text.strip():
+                impl_parts.append(f"{gene_name}: {impl_text}")
+        implication_str = "; ".join(impl_parts) if impl_parts else ""
 
         eligible.append(
             {
@@ -237,11 +232,9 @@ def load_data() -> list[dict]:
                 "gene": vr["lookup_genes"],
                 "recommendation": vr["recommendation"],
                 "classification": rec["classification"],
-                "implications": implications,
+                "implication": implication_str,
                 "variants": variants_list,
                 "variant_description": "; ".join(variants_list),
-                "action_category": action,
-                "key_terms": extract_key_terms(vr["recommendation"]),
             }
         )
 
@@ -277,7 +270,7 @@ def build_instruction(record: dict) -> str:
         "cat > /app/answers.json <<'JSON'",
         "{",
         '  "recommendation": "Use drug per standard dosing guidelines",',
-        '  "classification": "Strong",',
+        '  "classification": "Moderate",',
         '  "implication": "Normal metabolism expected"',
         "}",
         "JSON",
@@ -289,7 +282,7 @@ def build_instruction(record: dict) -> str:
         "```json",
         "{",
         '  "recommendation": "<dosing recommendation text>",',
-        '  "classification": "<Strong|Moderate|Optional>",',
+        '  "classification": "<Strong|Moderate|Optional|No Recommendation>",',
         '  "implication": "<clinical implication of this genotype>"',
         "}",
         "```",
@@ -297,8 +290,17 @@ def build_instruction(record: dict) -> str:
         "Notes:",
         "- **recommendation**: Your clinical dosing recommendation for this "
         "drug-gene-variant combination.",
-        "- **classification**: The strength of this recommendation "
-        "(Strong, Moderate, or Optional).",
+        "- **classification**: The CPIC classification strength of this "
+        "recommendation, based on the quality and quantity of clinical "
+        "evidence supporting it:",
+        "  - **Strong**: High-quality evidence and/or strong expert consensus "
+        "that the recommendation should be followed.",
+        "  - **Moderate**: Moderate evidence; the recommendation is generally "
+        "appropriate but evidence is less definitive.",
+        "  - **Optional**: Weak or emerging evidence; clinical action is "
+        "at the prescriber's discretion.",
+        "  - **No Recommendation**: Insufficient evidence to make a "
+        "recommendation for this gene-drug-phenotype combination.",
         "- **implication**: The clinical implication of this specific genotype "
         "for this drug's metabolism/response.",
         "- **Do not use web search.** Rely only on your pharmacogenomics knowledge.",
@@ -307,104 +309,131 @@ def build_instruction(record: dict) -> str:
 
 
 def build_test_py(record: dict) -> str:
-    action = record["action_category"]
+    """Build a pytest test file using LLM-as-judge + deterministic classification."""
     classification = record["classification"]
-    key_terms = record["key_terms"]
     recommendation = record["recommendation"]
+    implication = record["implication"]
+    drug = record["drug"]
+    gene = record["gene"]
+    variant_desc = record["variant_description"]
 
-    lines = [
-        "import json",
-        "import re",
-        "from pathlib import Path",
-        "",
-        "import pytest",
-        "",
-        "",
-        f"EXPECTED_ACTION_CATEGORY = {json.dumps(action)}",
-        f"EXPECTED_CLASSIFICATION = {json.dumps(classification)}",
-        f"EXPECTED_KEY_TERMS = {json.dumps(key_terms)}",
-        f"EXPECTED_RECOMMENDATION = {json.dumps(recommendation)}",
-        "",
-        "",
-        "# Action category keyword mapping",
-        "ACTION_KEYWORDS = {",
-        '    "avoid": ["contraindicated", "not recommended", "avoid", "do not use"],',
-        '    "standard_dosing": ["per standard dosing", "standard dosing", '
-        '"at standard doses", "standard dose", "label-recommended"],',
-        '    "dose_reduction": ["reduce dose", "reduced dose", "decrease dose", '
-        '"decreased dose", "lower dose", "dose decrease", "dose reduction", '
-        '"50% reduction", "50% of standard"],',
-        '    "dose_increase": ["increase dose", "increased dose", "higher dose", '
-        '"dose increase"],',
-        '    "alternative": ["alternative", "consider other", "select alternative"],',
-        '    "monitor": ["monitor", "caution", "therapeutic drug monitoring"],',
-        "}",
-        "",
-        "",
-        "def classify_recommendation(text: str) -> str:",
-        '    """Classify a recommendation into an action category."""',
-        "    text_lower = text.lower()",
-        "    for category, keywords in ACTION_KEYWORDS.items():",
-        "        for kw in keywords:",
-        "            if kw in text_lower:",
-        "                return category",
-        '    return "other"',
-        "",
-        "",
-        "@pytest.fixture(scope='module')",
-        "def answers():",
-        '    f = Path("/app/answers.json")',
-        '    assert f.exists(), "answers.json not found"',
-        "    return json.loads(f.read_text())",
-        "",
-        "",
-        "def test_action_category(answers):",
-        '    """Check that the recommendation maps to the correct action category."""',
-        '    rec_text = answers.get("recommendation", "")',
-        "    got_category = classify_recommendation(rec_text)",
-        "    assert got_category == EXPECTED_ACTION_CATEGORY, (",
-        "        f\"Expected action category '{EXPECTED_ACTION_CATEGORY}', "
-        "got '{got_category}' \"",
-        '        f"from recommendation: {rec_text}"',
-        "    )",
-        "",
-        "",
-        "def test_classification(answers):",
-        '    """Check that the classification strength matches."""',
-        '    got = answers.get("classification", "").strip()',
-        "    assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (",
-        "        f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"",
-        "    )",
-        "",
-        "",
-        "def test_key_terms(answers):",
-        '    """Check that at least one key term from CPIC rec appears in output."""',
-        "    if not EXPECTED_KEY_TERMS:",
-        "        pytest.skip('No key terms defined for this recommendation')",
-        "    # Combine all text fields from the agent's answer",
-        '    all_text = " ".join([',
-        '        answers.get("recommendation", ""),',
-        '        answers.get("implication", ""),',
-        "    ]).lower()",
-        "    found = [t for t in EXPECTED_KEY_TERMS if t.lower() in all_text]",
-        "    assert found, (",
-        '        f"None of the expected key terms found in agent output. "',
-        '        f"Expected one of: {EXPECTED_KEY_TERMS}"',
-        "    )",
-        "",
-    ]
-    return "\n".join(lines)
+    return f'''\
+import os
+import json
+from pathlib import Path
+
+import pytest
+
+
+EXPECTED_RECOMMENDATION = {json.dumps(recommendation)}
+EXPECTED_CLASSIFICATION = {json.dumps(classification)}
+EXPECTED_IMPLICATION = {json.dumps(implication)}
+DRUG = {json.dumps(drug)}
+GENE = {json.dumps(gene)}
+VARIANT = {json.dumps(variant_desc)}
+
+
+JUDGE_PROMPT = {json.dumps(JUDGE_PROMPT_TEMPLATE)}
+
+
+@pytest.fixture(scope="module")
+def answers():
+    f = Path("/app/answers.json")
+    assert f.exists(), "answers.json not found"
+    return json.loads(f.read_text())
+
+
+@pytest.fixture(scope="module")
+def judge_scores(answers):
+    """Call LLM judge to evaluate the agent\'s recommendation."""
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        pytest.skip("ANTHROPIC_API_KEY not set — cannot run LLM judge")
+
+    from anthropic import Anthropic
+
+    client = Anthropic(api_key=api_key)
+
+    prompt = JUDGE_PROMPT.format(
+        drug=DRUG,
+        gene=GENE,
+        variant=VARIANT,
+        expected_rec=EXPECTED_RECOMMENDATION,
+        expected_class=EXPECTED_CLASSIFICATION,
+        expected_impl=EXPECTED_IMPLICATION,
+        agent_rec=answers.get("recommendation", ""),
+        agent_class=answers.get("classification", ""),
+        agent_impl=answers.get("implication", ""),
+    )
+
+    response = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=300,
+        messages=[{{"role": "user", "content": prompt}}],
+    )
+
+    text = response.content[0].text.strip()
+    if text.startswith("```"):
+        text = text.split("\\n", 1)[1].rsplit("```", 1)[0].strip()
+    return json.loads(text)
+
+
+# ── Deterministic test ────────────────────────────────────────────────
+
+
+def test_classification(answers):
+    """Check that the classification strength matches exactly."""
+    got = answers.get("classification", "").strip()
+    assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (
+        f"Expected classification \'{{EXPECTED_CLASSIFICATION}}\', got \'{{got}}\'"
+    )
+
+
+# ── LLM judge tests (strict: require >= 4/5) ─────────────────────────
+
+
+def test_action_correctness(judge_scores):
+    """LLM judge: does the recommendation match the correct clinical action?"""
+    score = judge_scores["action_correctness"]
+    assert score >= 4, (
+        f"Action correctness {{score}}/5 (need >= 4). "
+        f"Rationale: {{judge_scores.get(\'rationale\', \'\')}}"
+    )
+
+
+def test_recommendation_completeness(judge_scores):
+    """LLM judge: does the recommendation capture all critical clinical details?"""
+    score = judge_scores["recommendation_completeness"]
+    assert score >= 4, (
+        f"Recommendation completeness {{score}}/5 (need >= 4). "
+        f"Rationale: {{judge_scores.get(\'rationale\', \'\')}}"
+    )
+
+
+def test_implication_accuracy(judge_scores):
+    """LLM judge: is the stated implication correct for this genotype?"""
+    score = judge_scores["implication_accuracy"]
+    assert score >= 4, (
+        f"Implication accuracy {{score}}/5 (need >= 4). "
+        f"Rationale: {{judge_scores.get(\'rationale\', \'\')}}"
+    )
+
+
+def test_safety(judge_scores):
+    """LLM judge: is the recommendation safe for the patient?"""
+    score = judge_scores["safety"]
+    assert score >= 4, (
+        f"Safety {{score}}/5 (need >= 4). "
+        f"Rationale: {{judge_scores.get(\'rationale\', \'\')}}"
+    )
+'''
 
 
 def main():
     eligible = load_data()
     print(f"Eligible records (single-gene, Level A, clean variants): {len(eligible)}")
 
-    # Show action category distribution
     from collections import Counter
-
-    action_dist = Counter(r["action_category"] for r in eligible)
-    print(f"Action categories: {dict(action_dist)}")
 
     # Sample up to MAX_TASKS, stratified across genes and drugs
     # Shuffle and take diverse sample
@@ -438,10 +467,8 @@ def main():
     # Show selected distribution
     sel_genes = Counter(r["gene"] for r in selected)
     sel_drugs = Counter(r["drug"] for r in selected)
-    sel_actions = Counter(r["action_category"] for r in selected)
     print(f"  Genes: {dict(sel_genes)}")
     print(f"  Drugs (top 10): {sel_drugs.most_common(10)}")
-    print(f"  Actions: {dict(sel_actions)}")
 
     # Clean existing task dirs (preserve __pycache__ and .py files)
     for d in BASE.iterdir():
@@ -473,11 +500,10 @@ def main():
         (tests_dir / "test_outputs.py").write_text(build_test_py(rec))
 
         variant = rec["variant_description"]
-        action = rec["action_category"]
         cls = rec["classification"]
         print(
             f"  [{i:3d}/{len(selected)}] {task_name} — "
-            f"{variant[:50]} | {action} | {cls}"
+            f"{variant[:50]} | {cls}"
         )
 
     print(f"\nGenerated {len(selected)} tasks in {BASE}/")

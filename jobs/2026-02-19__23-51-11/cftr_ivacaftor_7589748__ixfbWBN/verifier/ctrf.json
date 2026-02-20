@@ -1,0 +1,62 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 2,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771574535.350713,
+            "stop": 1771574539.4590702
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0005716250000205036,
+                "start": 1771574535.3796663,
+                "stop": 1771574535.386145,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Strong', 'implication': 'CFTR variants in the ivacaftor non-responsive category do not produce suf... elexacaftor/tezacaftor/ivacaftor if applicable to the specific mutation) or manage with standard supportive CF care.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Moderate', got 'Strong'\nE       assert 'strong' == 'moderate'\nE         \nE         - moderate\nE         + strong\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "passed",
+                "duration": 4.068735043000174,
+                "start": 1771574535.38627,
+                "stop": 1771574539.4552925,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00041720800004441116,
+                "start": 1771574539.4557881,
+                "stop": 1771574539.4584882,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 4, 'implication_accuracy': 5, 'rationale': 'The agent correctly recommends against ivacaftor bu...iveness, though the classification strength differs from CPIC (Strong vs Moderate).', 'recommendation_completeness': 3}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly recommends against ivacaftor but adds non-CPIC guidance about combination therapy. The implication accurately describes the mechanistic basis for non-responsiveness, though the classification strength differs from CPIC (Strong vs Moderate).\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00023208300001442694,
+                "start": 1771574539.4586327,
+                "stop": 1771574539.4589403,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

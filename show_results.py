@@ -227,7 +227,7 @@ def format_summary_qa_comparison(expected: dict, agent: dict | None, lines: list
 
 
 def _is_cpic_prediction_task(result: dict) -> bool:
-    """Check if this is a CPIC prediction task (action category/classification)."""
+    """Check if this is a CPIC prediction task (keyword-based or LLM judge)."""
     task_dir = _get_task_dir(result)
     if not task_dir:
         return False
@@ -235,7 +235,7 @@ def _is_cpic_prediction_task(result: dict) -> bool:
     if not test_file.exists():
         return False
     content = test_file.read_text()
-    return "EXPECTED_ACTION_CATEGORY" in content
+    return "EXPECTED_ACTION_CATEGORY" in content or "EXPECTED_RECOMMENDATION" in content
 
 
 def extract_cpic_expected(result: dict) -> dict | None:
@@ -249,6 +249,8 @@ def extract_cpic_expected(result: dict) -> dict | None:
     content = test_file.read_text()
 
     expected = {}
+
+    # Support both old keyword-based and new LLM-judge formats
     m = re.search(r'EXPECTED_ACTION_CATEGORY\s*=\s*"([^"]*)"', content)
     if m:
         expected["action_category"] = m.group(1)
@@ -267,6 +269,14 @@ def extract_cpic_expected(result: dict) -> dict | None:
     m = re.search(r'EXPECTED_RECOMMENDATION\s*=\s*"((?:[^"\\]|\\.)*)"', content)
     if m:
         expected["recommendation"] = m.group(1)
+
+    m = re.search(r'EXPECTED_IMPLICATION\s*=\s*"((?:[^"\\]|\\.)*)"', content)
+    if m:
+        expected["implication"] = m.group(1)
+
+    # Detect LLM judge format
+    if "JUDGE_PROMPT" in content:
+        expected["uses_llm_judge"] = True
 
     return expected if expected else None
 
@@ -351,38 +361,58 @@ def format_cpic_comparison(expected: dict, agent: dict | None, lines: list[str])
         lines.append("        (no agent answers extracted)")
         return
 
-    # Action category
-    exp_action = expected.get("action_category", "?")
     agent_rec = agent.get("recommendation", "")
-    got_action = _classify_recommendation(agent_rec)
-    action_icon = "✓" if got_action == exp_action else "✗"
-    lines.append(
-        f"        Action {action_icon}: agent={got_action} expected={exp_action}"
-    )
 
-    # Classification
+    # Classification (always shown)
     exp_cls = expected.get("classification", "?")
     got_cls = agent.get("classification", "?").strip()
     cls_icon = "✓" if got_cls.lower() == exp_cls.lower() else "✗"
     lines.append(f"        Class  {cls_icon}: agent={got_cls} expected={exp_cls}")
 
-    # Key terms
-    exp_terms = expected.get("key_terms", [])
-    if exp_terms:
-        all_text = " ".join(
-            [agent.get("recommendation", ""), agent.get("implication", "")]
-        ).lower()
-        found = [t for t in exp_terms if t.lower() in all_text]
-        terms_icon = "✓" if found else "✗"
+    if expected.get("uses_llm_judge"):
+        # LLM judge format — scores come from the test results (reward),
+        # so just show the classification and the texts for comparison
+        exp_rec = expected.get("recommendation", "")
+        if exp_rec:
+            display = exp_rec[:80] + ("..." if len(exp_rec) > 80 else "")
+            lines.append(f"        Expected: {display}")
+        if agent_rec:
+            display = agent_rec[:80] + ("..." if len(agent_rec) > 80 else "")
+            lines.append(f"        Agent:    {display}")
+        exp_impl = expected.get("implication", "")
+        agent_impl = agent.get("implication", "")
+        if exp_impl or agent_impl:
+            lines.append(
+                f"        Impl exp: {(exp_impl or '?')[:70]}"
+            )
+            lines.append(
+                f"        Impl got: {(agent_impl or '?')[:70]}"
+            )
+        lines.append("        (action/completeness/implication scored by LLM judge)")
+    else:
+        # Legacy keyword-based format
+        exp_action = expected.get("action_category", "?")
+        got_action = _classify_recommendation(agent_rec)
+        action_icon = "✓" if got_action == exp_action else "✗"
         lines.append(
-            f"        Terms  {terms_icon}: {len(found)}/{len(exp_terms)} matched"
-            + (f"  found: {found}" if found else f"  expected: {exp_terms}")
+            f"        Action {action_icon}: agent={got_action} expected={exp_action}"
         )
 
-    # Show agent's recommendation text (truncated)
-    if agent_rec:
-        display = agent_rec[:80] + ("..." if len(agent_rec) > 80 else "")
-        lines.append(f"        Rec: {display}")
+        exp_terms = expected.get("key_terms", [])
+        if exp_terms:
+            all_text = " ".join(
+                [agent.get("recommendation", ""), agent.get("implication", "")]
+            ).lower()
+            found = [t for t in exp_terms if t.lower() in all_text]
+            terms_icon = "✓" if found else "✗"
+            lines.append(
+                f"        Terms  {terms_icon}: {len(found)}/{len(exp_terms)} matched"
+                + (f"  found: {found}" if found else f"  expected: {exp_terms}")
+            )
+
+        if agent_rec:
+            display = agent_rec[:80] + ("..." if len(agent_rec) > 80 else "")
+            lines.append(f"        Rec: {display}")
 
 
 def extract_agent_answers(trial_dir: Path) -> dict[str, str]:

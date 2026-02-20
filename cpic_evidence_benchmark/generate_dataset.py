@@ -18,6 +18,7 @@ Run:
     python main.py -p cpic_evidence_benchmark -a claude-code -n 3 -l 50
 """
 
+import csv
 import json
 import re
 import shutil
@@ -31,6 +32,7 @@ BASE = Path(__file__).parent
 PROJECT_ROOT = BASE.parent
 MARKDOWN_DIR = PROJECT_ROOT / "data" / "cpic_markdown" / "markdown"
 ABSTRACT_DIR = PROJECT_ROOT / "data" / "cpic_abstracts"
+DATA_DIR = PROJECT_ROOT / "data" / "cpic_data"
 DATASET_PATH = PROJECT_ROOT / "cpic_reproduction" / "cpic_paper_dataset.jsonl"
 
 # ── Target guidelines ─────────────────────────────────────────────────
@@ -100,6 +102,76 @@ PYEOF
 """
 
 
+# ── LLM Judge prompt (shared with cpic_zero_context) ─────────────────
+
+JUDGE_PROMPT_TEMPLATE = """\
+You are a STRICT pharmacogenomics evaluation judge. You are comparing an AI \
+agent's clinical recommendation against the official CPIC guideline. \
+Be rigorous — clinical details matter and vague or incomplete answers should \
+score low. Do NOT give the benefit of the doubt.
+
+## Ground Truth (CPIC Guideline)
+- **Drug:** {drug}
+- **Gene:** {gene}
+- **Patient Genotype:** {variant}
+- **CPIC Recommendation:** {expected_rec}
+- **Classification Strength:** {expected_class}
+- **CPIC Implication:** {expected_impl}
+
+## Agent's Answer
+- **Recommendation:** {agent_rec}
+- **Classification:** {agent_class}
+- **Implication:** {agent_impl}
+
+## Evaluation Criteria
+
+Score EACH dimension on a 1-5 scale. Be strict: a score of 5 means \
+essentially perfect, 4 means correct with only trivial omissions. \
+Anything missing a clinically meaningful detail should be 3 or below.
+
+1. **action_correctness**: Does the agent recommend the SAME clinical action?
+   - 5: Exact same action (e.g., both say "avoid", both say "reduce dose by 50%")
+   - 4: Same core action with only trivial wording differences
+   - 3: Right direction but missing critical qualifiers (e.g., "reduce dose" \
+when guideline says "reduce dose by 50%" — the percentage matters)
+   - 2: Partially overlapping but meaningfully different action
+   - 1: Wrong action (e.g., "use standard dose" vs "avoid")
+
+2. **recommendation_completeness**: Does the agent capture ALL clinically \
+significant details from the CPIC recommendation?
+   - 5: All specific details present (dosing percentages, monitoring \
+requirements, alternative drug suggestions, caveats)
+   - 4: All major details present, at most one minor detail missing
+   - 3: Core action correct but missing important specifics (e.g., omits TDM \
+requirement, omits specific dose adjustment percentage)
+   - 2: Vague or generic — gives broad direction without actionable detail
+   - 1: Missing or wrong details
+
+3. **implication_accuracy**: Does the agent's stated implication correctly \
+describe the pharmacogenomic phenotype for this genotype?
+   - 5: Correctly identifies the metabolizer status/phenotype and its clinical \
+consequence (e.g., "poor metabolizer — reduced conversion to active metabolite")
+   - 4: Correct phenotype with minor imprecision in clinical consequence
+   - 3: Partially correct (e.g., right metabolizer status but wrong or missing \
+clinical consequence, or vice versa)
+   - 2: Vague or generic implication not specific to this genotype
+   - 1: Wrong phenotype or wrong clinical consequence
+
+4. **safety**: Is the recommendation safe for the patient?
+   - 5: Fully safe, matches guideline
+   - 4: Safe with minor omissions (e.g., missing a secondary monitoring note)
+   - 3: Mostly safe but missing important caveats (e.g., omits critical \
+drug interaction warning or contraindication)
+   - 2: Could lead to suboptimal care
+   - 1: Potentially dangerous (e.g., recommending standard dose when drug \
+should be avoided)
+
+Respond with ONLY a JSON object. No markdown fences, no explanation:
+{{"action_correctness": <1-5>, "recommendation_completeness": <1-5>, \
+"implication_accuracy": <1-5>, "safety": <1-5>, "rationale": "<1-2 sentences>"}}\
+"""
+
+
 def build_dockerfile(paper_filenames: list[str]) -> str:
     """Build Dockerfile that copies papers into /app/papers/."""
     lines = [
@@ -127,185 +199,181 @@ def build_instruction(record: dict) -> str:
         "Research papers relevant to this gene-drug combination are available "
         "in `/app/papers/`. Read these papers to inform your recommendation.",
         "",
-        "Based on the evidence in these papers, provide a clinical dosing "
+        "Based on the evidence in these papers, provide a clinical "
         "recommendation for this drug-gene-variant combination.",
         "",
         "---",
         "",
-        "You must write your recommendation to `/app/recommendation.txt` "
-        "(a real file on disk). Printing it in chat is not sufficient.",
+        "You must write your answers to `/app/answers.json` "
+        "(a real file on disk). Printing JSON in chat is not sufficient.",
+        "After writing the file, verify it exists and contains valid JSON.",
         "",
-        "Your recommendation should be a concise clinical dosing recommendation "
-        "(1-3 sentences). It should specify:",
-        "- What action to take (e.g., use standard dose, reduce dose, avoid drug, "
-        "use alternative)",
-        "- Any specific dosing adjustments (e.g., 50% dose reduction)",
-        "- Any monitoring or follow-up needed",
-        "",
-        "For example:",
+        "For example, you may use a shell heredoc to write the file:",
+        "```bash",
+        "cat > /app/answers.json <<'JSON'",
+        "{",
+        '  "recommendation": "Use drug per standard dosing guidelines",',
+        '  "classification": "Moderate",',
+        '  "implication": "Normal metabolism expected"',
+        "}",
+        "JSON",
+        "python3 -c 'import json; json.load(open(\"/app/answers.json\"))'",
         "```",
-        "Reduce starting dose by 50% followed by titration of dose based on "
-        "toxicity or therapeutic drug monitoring.",
+        "",
+        "The JSON object must have the following structure:",
+        "",
+        "```json",
+        "{",
+        '  "recommendation": "<dosing recommendation text>",',
+        '  "classification": "<Strong|Moderate|Optional|No Recommendation>",',
+        '  "implication": "<clinical implication of this genotype>"',
+        "}",
         "```",
         "",
         "Notes:",
+        "- **recommendation**: Your clinical dosing recommendation for this "
+        "drug-gene-variant combination.",
+        "- **classification**: The CPIC classification strength of this "
+        "recommendation, based on the quality and quantity of clinical "
+        "evidence supporting it:",
+        "  - **Strong**: High-quality evidence and/or strong expert consensus "
+        "that the recommendation should be followed.",
+        "  - **Moderate**: Moderate evidence; the recommendation is generally "
+        "appropriate but evidence is less definitive.",
+        "  - **Optional**: Weak or emerging evidence; clinical action is "
+        "at the prescriber's discretion.",
+        "  - **No Recommendation**: Insufficient evidence to make a "
+        "recommendation for this gene-drug-phenotype combination.",
+        "- **implication**: The clinical implication of this specific genotype "
+        "for this drug's metabolism/response.",
         "- Read the research papers in /app/papers/ before answering.",
-        "- Do not use web search. Base your answer on the provided evidence.",
-        "- Write only the recommendation text — no JSON, no extra formatting.",
+        "- **Do not use web search.** Base your answer on the provided evidence.",
     ]
     return "\n".join(lines)
 
 
 def build_test_py(record: dict) -> str:
-    """Build test file that uses LLM-as-judge to evaluate the recommendation."""
-    recommendation = record["recommendation"]
+    """Build a pytest test file using LLM-as-judge + deterministic classification.
+
+    Aligned with cpic_zero_context scoring: 5 tests total.
+    """
     classification = record["classification"]
+    recommendation = record["recommendation"]
+    implication = record.get("implication", "")
     drug = record["drug"]
     gene = record["gene"]
     variant_desc = record["variant_description"]
 
-    # Build constants header, then append static code body
-    header = "\n".join(
-        [
-            "import os",
-            "import json",
-            "from pathlib import Path",
-            "",
-            "import pytest",
-            "",
-            f"EXPECTED_RECOMMENDATION = {json.dumps(recommendation)}",
-            f"EXPECTED_CLASSIFICATION = {json.dumps(classification)}",
-            f"DRUG = {json.dumps(drug)}",
-            f"GENE = {json.dumps(gene)}",
-            f"VARIANT = {json.dumps(variant_desc)}",
-            "",
-        ]
-    )
+    return f'''\
+import os
+import json
+from pathlib import Path
 
-    # Static code body — written as a raw string to avoid f-string issues
-    body = '''
+import pytest
 
-JUDGE_PROMPT_TEMPLATE = """You are evaluating a pharmacogenomics clinical recommendation.
 
-## Ground Truth (CPIC Guideline)
-- **Drug:** {drug}
-- **Gene:** {gene}
-- **Patient Genotype:** {variant}
-- **Recommendation:** {expected_rec}
-- **Classification Strength:** {expected_class}
+EXPECTED_RECOMMENDATION = {json.dumps(recommendation)}
+EXPECTED_CLASSIFICATION = {json.dumps(classification)}
+EXPECTED_IMPLICATION = {json.dumps(implication)}
+DRUG = {json.dumps(drug)}
+GENE = {json.dumps(gene)}
+VARIANT = {json.dumps(variant_desc)}
 
-## Agent's Recommendation
-{agent_rec}
 
-## Evaluation Criteria
-
-Score EACH of the following dimensions on a scale of 1-5:
-
-1. **action_match**: Does the agent recommend the same clinical action as the ground truth?
-   (e.g., both say "avoid", both say "reduce dose by 50%", both say "use standard dosing")
-   - 5: Exact same action
-   - 4: Same general action with minor differences in wording
-   - 3: Similar but with meaningful differences (e.g., "reduce dose" vs "reduce dose by 50%")
-   - 2: Partially correct (gets the direction right but misses key details)
-   - 1: Wrong action (e.g., "standard dosing" when should be "avoid")
-
-2. **specificity**: Does the agent provide the same level of clinical detail?
-   (dosing percentages, monitoring recommendations, alternative suggestions)
-   - 5: All key details present
-   - 4: Most key details present
-   - 3: Some details present
-   - 2: Vague or missing most details
-   - 1: No useful clinical detail
-
-3. **safety**: Is the recommendation safe for the patient?
-   - 5: Fully safe, matches guideline
-   - 4: Safe with minor omissions
-   - 3: Mostly safe but missing important caveats
-   - 2: Could lead to suboptimal care
-   - 1: Potentially dangerous (e.g., recommending standard dose when drug should be avoided)
-
-Respond with ONLY a JSON object (no markdown, no explanation):
-{{"action_match": <1-5>, "specificity": <1-5>, "safety": <1-5>, "brief_rationale": "<1 sentence>"}}"""
+JUDGE_PROMPT = {json.dumps(JUDGE_PROMPT_TEMPLATE)}
 
 
 @pytest.fixture(scope="module")
-def agent_recommendation():
-    f = Path("/app/recommendation.txt")
-    assert f.exists(), "recommendation.txt not found at /app/recommendation.txt"
-    text = f.read_text().strip()
-    assert len(text) > 0, "recommendation.txt is empty"
-    return text
+def answers():
+    f = Path("/app/answers.json")
+    assert f.exists(), "answers.json not found"
+    return json.loads(f.read_text())
 
 
 @pytest.fixture(scope="module")
-def judge_result(agent_recommendation):
-    """Call LLM judge to evaluate the agent's recommendation."""
+def judge_scores(answers):
+    """Call LLM judge to evaluate the agent\'s recommendation."""
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     if not api_key:
-        pytest.skip("ANTHROPIC_API_KEY not set - cannot run LLM judge")
+        pytest.skip("ANTHROPIC_API_KEY not set — cannot run LLM judge")
 
     from anthropic import Anthropic
 
     client = Anthropic(api_key=api_key)
 
-    prompt = JUDGE_PROMPT_TEMPLATE.format(
+    prompt = JUDGE_PROMPT.format(
         drug=DRUG,
         gene=GENE,
         variant=VARIANT,
         expected_rec=EXPECTED_RECOMMENDATION,
         expected_class=EXPECTED_CLASSIFICATION,
-        agent_rec=agent_recommendation,
+        expected_impl=EXPECTED_IMPLICATION,
+        agent_rec=answers.get("recommendation", ""),
+        agent_class=answers.get("classification", ""),
+        agent_impl=answers.get("implication", ""),
     )
 
     response = client.messages.create(
         model="claude-sonnet-4-20250514",
-        max_tokens=256,
-        messages=[{"role": "user", "content": prompt}],
+        max_tokens=300,
+        messages=[{{"role": "user", "content": prompt}}],
     )
 
     text = response.content[0].text.strip()
-    # Parse JSON from response (handle potential markdown wrapping)
     if text.startswith("```"):
         text = text.split("\\n", 1)[1].rsplit("```", 1)[0].strip()
     return json.loads(text)
 
 
-def test_recommendation_file_exists(agent_recommendation):
-    """Check that the agent wrote a recommendation file."""
-    assert len(agent_recommendation) > 10, (
-        f"Recommendation too short ({len(agent_recommendation)} chars): "
-        f"{agent_recommendation}"
+# ── Deterministic test ────────────────────────────────────────────────
+
+
+def test_classification(answers):
+    """Check that the classification strength matches exactly."""
+    got = answers.get("classification", "").strip()
+    assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (
+        f"Expected classification \'{{EXPECTED_CLASSIFICATION}}\', got \'{{got}}\'"
     )
 
 
-def test_action_match(judge_result):
+# ── LLM judge tests (strict: require >= 4/5) ─────────────────────────
+
+
+def test_action_correctness(judge_scores):
     """LLM judge: does the recommendation match the correct clinical action?"""
-    score = judge_result["action_match"]
+    score = judge_scores["action_correctness"]
     assert score >= 4, (
-        f"Action match score {score}/5 (need >= 4). "
-        f"Rationale: {judge_result.get('brief_rationale', '')}"
+        f"Action correctness {{score}}/5 (need >= 4). "
+        f"Rationale: {{judge_scores.get(\'rationale\', \'\')}}"
     )
 
 
-def test_specificity(judge_result):
-    """LLM judge: does the recommendation include sufficient clinical detail?"""
-    score = judge_result["specificity"]
-    assert score >= 3, (
-        f"Specificity score {score}/5 (need >= 3). "
-        f"Rationale: {judge_result.get('brief_rationale', '')}"
+def test_recommendation_completeness(judge_scores):
+    """LLM judge: does the recommendation capture all critical clinical details?"""
+    score = judge_scores["recommendation_completeness"]
+    assert score >= 4, (
+        f"Recommendation completeness {{score}}/5 (need >= 4). "
+        f"Rationale: {{judge_scores.get(\'rationale\', \'\')}}"
     )
 
 
-def test_safety(judge_result):
+def test_implication_accuracy(judge_scores):
+    """LLM judge: is the stated implication correct for this genotype?"""
+    score = judge_scores["implication_accuracy"]
+    assert score >= 4, (
+        f"Implication accuracy {{score}}/5 (need >= 4). "
+        f"Rationale: {{judge_scores.get(\'rationale\', \'\')}}"
+    )
+
+
+def test_safety(judge_scores):
     """LLM judge: is the recommendation safe for the patient?"""
-    score = judge_result["safety"]
+    score = judge_scores["safety"]
     assert score >= 4, (
-        f"Safety score {score}/5 (need >= 4). "
-        f"Rationale: {judge_result.get('brief_rationale', '')}"
+        f"Safety {{score}}/5 (need >= 4). "
+        f"Rationale: {{judge_scores.get(\'rationale\', \'\')}}"
     )
 '''
-
-    return header + body
 
 
 # ── Abstract fetching ────────────────────────────────────────────────
@@ -444,6 +512,14 @@ def load_target_records() -> list[dict]:
         if line.strip()
     ]
 
+    # Load implications from CPIC recommendation table
+    cpic_recs = {}
+    rec_tsv = DATA_DIR / "recommendation.tsv"
+    if rec_tsv.exists():
+        with open(rec_tsv, encoding="utf-8") as f:
+            for row in csv.DictReader(f, delimiter="\t"):
+                cpic_recs[row["id"]] = row
+
     selected = []
     for target in TARGET_GUIDELINES:
         gene = target["gene"]
@@ -453,6 +529,21 @@ def load_target_records() -> list[dict]:
             for r in all_recs
             if r["gene"] == gene and match_str in r["guideline"].lower()
         ]
+        # Enrich with implications from CPIC data
+        for rec in guideline_recs:
+            cpic_row = cpic_recs.get(str(rec["rec_id"]))
+            if cpic_row:
+                try:
+                    implications = json.loads(cpic_row.get("implications", "{}"))
+                except json.JSONDecodeError:
+                    implications = {}
+                impl_parts = []
+                for gene_name, impl_text in implications.items():
+                    if impl_text and impl_text.strip():
+                        impl_parts.append(f"{gene_name}: {impl_text}")
+                rec["implication"] = "; ".join(impl_parts) if impl_parts else ""
+            else:
+                rec["implication"] = ""
         print(f"  {gene}: {len(guideline_recs)} recommendations")
         selected.extend(guideline_recs)
 

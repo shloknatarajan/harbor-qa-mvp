@@ -1,12 +1,13 @@
 """Load environment variables and run Harbor CLI agent on a local dataset.
 
 Example usage:
-    python main.py                                          # run mvp_dataset (default)
-    python main.py -p mvp_pgx -a claude-code -n 1           # run mvp_pgx dataset
-    python main.py -p pgx_drug_qa -a claude-code -n 1       # run pgx_drug_qa (100 PMCIDs)
-    python main.py -p summary_qa -a claude-code -n 1        # run summary_qa (summary annotations)
-    python main.py -p mvp_dataset -a claude-code -n 2       # run 2 attempts
-    python main.py -p pgx_drug_qa -a codex -m o3-mini -n 1  # run pgx_drug_qa with codex
+    python main.py                                                            # run chained-questions (default)
+    python main.py -p cpic_zero_context -a claude-code -n 3 -l 5             # CPIC zero-context (100 tasks)
+    python main.py -p cpic_zero_context_condensed -a claude-code -n 3 -l 5   # CPIC zero-context condensed (72 tasks)
+    python main.py -p cpic_evidence_benchmark -a claude-code -n 3 -l 5       # CPIC evidence benchmark (106 tasks)
+    python main.py -p cpic_evidence_benchmark_condensed -a claude-code -n 3 -l 5  # CPIC evidence condensed (27 tasks)
+    python main.py -p pgx_drug_qa -a claude-code -n 1                        # PGx drug QA
+    python main.py -p summary_qa -a claude-code -n 1                         # summary QA
 
 Chain-aware usage (chained-questions dataset):
     python main.py -c 5                                               # run first 5 complete chains
@@ -20,19 +21,10 @@ Chain-aware usage (chained-questions dataset):
 
     The chain dataset is always data/chained-questions. Pass -p to override.
 
-Non-chain filtering (passed through to harbor directly):
-    python main.py -p pgx_drug_qa -a claude-code -l 5                 # first 5 tasks only
-    python main.py -p pgx_drug_qa -a claude-code -x pmc10298263       # exclude task(s)
-
-Chain results are grouped in show_results.py:
-  - A chain passes only if ALL questions pass.
-  - Statistics include first-failure position and per-question accuracy.
-
 Filtering tasks:
-    python main.py -p pgx_drug_qa -a claude-code -l 5                       # first 5 tasks only
-    python main.py -p pgx_drug_qa -a claude-code -t pmc10298263             # specific task(s)
-    python main.py -p pgx_drug_qa -a claude-code -x pmc10298263             # exclude task(s)
-    python main.py -p pgx_drug_qa -a claude-code -t "pmc103*" -l 3          # glob + limit
+    python main.py -p cpic_zero_context -a claude-code -l 5                  # first 5 tasks only
+    python main.py -p cpic_zero_context -a claude-code -t "dpyd*"            # glob pattern
+    python main.py -p cpic_zero_context -a claude-code -x "mt_rnr1*"         # exclude tasks
 """
 
 import re

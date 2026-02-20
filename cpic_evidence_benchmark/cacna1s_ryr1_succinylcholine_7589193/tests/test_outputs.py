@@ -4,128 +4,105 @@ from pathlib import Path
 
 import pytest
 
+
 EXPECTED_RECOMMENDATION = "No RYR1 genotype is available. Based on CACNA1S status, clinical findings, family history, further genetic testing and other laboratory data should guide use of halogenated volatile anesthetics or depolarizing muscle relaxants."
 EXPECTED_CLASSIFICATION = "Strong"
+EXPECTED_IMPLICATION = "RYR1: n/a; CACNA1S: These results do not eliminate the chance that this patient is susceptible to malignant hyperthermia (MH). The genetic cause of about half of all MH survivors, with MH susceptibility confirmed by contracture test, remains unknown (PMID 28902675)."
 DRUG = "succinylcholine"
 GENE = "CACNA1S|RYR1"
 VARIANT = "RYR1 No Result; CACNA1S Uncertain Susceptibility"
 
 
-JUDGE_PROMPT_TEMPLATE = """You are evaluating a pharmacogenomics clinical recommendation.
-
-## Ground Truth (CPIC Guideline)
-- **Drug:** {drug}
-- **Gene:** {gene}
-- **Patient Genotype:** {variant}
-- **Recommendation:** {expected_rec}
-- **Classification Strength:** {expected_class}
-
-## Agent's Recommendation
-{agent_rec}
-
-## Evaluation Criteria
-
-Score EACH of the following dimensions on a scale of 1-5:
-
-1. **action_match**: Does the agent recommend the same clinical action as the ground truth?
-   (e.g., both say "avoid", both say "reduce dose by 50%", both say "use standard dosing")
-   - 5: Exact same action
-   - 4: Same general action with minor differences in wording
-   - 3: Similar but with meaningful differences (e.g., "reduce dose" vs "reduce dose by 50%")
-   - 2: Partially correct (gets the direction right but misses key details)
-   - 1: Wrong action (e.g., "standard dosing" when should be "avoid")
-
-2. **specificity**: Does the agent provide the same level of clinical detail?
-   (dosing percentages, monitoring recommendations, alternative suggestions)
-   - 5: All key details present
-   - 4: Most key details present
-   - 3: Some details present
-   - 2: Vague or missing most details
-   - 1: No useful clinical detail
-
-3. **safety**: Is the recommendation safe for the patient?
-   - 5: Fully safe, matches guideline
-   - 4: Safe with minor omissions
-   - 3: Mostly safe but missing important caveats
-   - 2: Could lead to suboptimal care
-   - 1: Potentially dangerous (e.g., recommending standard dose when drug should be avoided)
-
-Respond with ONLY a JSON object (no markdown, no explanation):
-{{"action_match": <1-5>, "specificity": <1-5>, "safety": <1-5>, "brief_rationale": "<1 sentence>"}}"""
+JUDGE_PROMPT = "You are a STRICT pharmacogenomics evaluation judge. You are comparing an AI agent's clinical recommendation against the official CPIC guideline. Be rigorous \u2014 clinical details matter and vague or incomplete answers should score low. Do NOT give the benefit of the doubt.\n\n## Ground Truth (CPIC Guideline)\n- **Drug:** {drug}\n- **Gene:** {gene}\n- **Patient Genotype:** {variant}\n- **CPIC Recommendation:** {expected_rec}\n- **Classification Strength:** {expected_class}\n- **CPIC Implication:** {expected_impl}\n\n## Agent's Answer\n- **Recommendation:** {agent_rec}\n- **Classification:** {agent_class}\n- **Implication:** {agent_impl}\n\n## Evaluation Criteria\n\nScore EACH dimension on a 1-5 scale. Be strict: a score of 5 means essentially perfect, 4 means correct with only trivial omissions. Anything missing a clinically meaningful detail should be 3 or below.\n\n1. **action_correctness**: Does the agent recommend the SAME clinical action?\n   - 5: Exact same action (e.g., both say \"avoid\", both say \"reduce dose by 50%\")\n   - 4: Same core action with only trivial wording differences\n   - 3: Right direction but missing critical qualifiers (e.g., \"reduce dose\" when guideline says \"reduce dose by 50%\" \u2014 the percentage matters)\n   - 2: Partially overlapping but meaningfully different action\n   - 1: Wrong action (e.g., \"use standard dose\" vs \"avoid\")\n\n2. **recommendation_completeness**: Does the agent capture ALL clinically significant details from the CPIC recommendation?\n   - 5: All specific details present (dosing percentages, monitoring requirements, alternative drug suggestions, caveats)\n   - 4: All major details present, at most one minor detail missing\n   - 3: Core action correct but missing important specifics (e.g., omits TDM requirement, omits specific dose adjustment percentage)\n   - 2: Vague or generic \u2014 gives broad direction without actionable detail\n   - 1: Missing or wrong details\n\n3. **implication_accuracy**: Does the agent's stated implication correctly describe the pharmacogenomic phenotype for this genotype?\n   - 5: Correctly identifies the metabolizer status/phenotype and its clinical consequence (e.g., \"poor metabolizer \u2014 reduced conversion to active metabolite\")\n   - 4: Correct phenotype with minor imprecision in clinical consequence\n   - 3: Partially correct (e.g., right metabolizer status but wrong or missing clinical consequence, or vice versa)\n   - 2: Vague or generic implication not specific to this genotype\n   - 1: Wrong phenotype or wrong clinical consequence\n\n4. **safety**: Is the recommendation safe for the patient?\n   - 5: Fully safe, matches guideline\n   - 4: Safe with minor omissions (e.g., missing a secondary monitoring note)\n   - 3: Mostly safe but missing important caveats (e.g., omits critical drug interaction warning or contraindication)\n   - 2: Could lead to suboptimal care\n   - 1: Potentially dangerous (e.g., recommending standard dose when drug should be avoided)\n\nRespond with ONLY a JSON object. No markdown fences, no explanation:\n{{\"action_correctness\": <1-5>, \"recommendation_completeness\": <1-5>, \"implication_accuracy\": <1-5>, \"safety\": <1-5>, \"rationale\": \"<1-2 sentences>\"}}"
 
 
 @pytest.fixture(scope="module")
-def agent_recommendation():
-    f = Path("/app/recommendation.txt")
-    assert f.exists(), "recommendation.txt not found at /app/recommendation.txt"
-    text = f.read_text().strip()
-    assert len(text) > 0, "recommendation.txt is empty"
-    return text
+def answers():
+    f = Path("/app/answers.json")
+    assert f.exists(), "answers.json not found"
+    return json.loads(f.read_text())
 
 
 @pytest.fixture(scope="module")
-def judge_result(agent_recommendation):
+def judge_scores(answers):
     """Call LLM judge to evaluate the agent's recommendation."""
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     if not api_key:
-        pytest.skip("ANTHROPIC_API_KEY not set - cannot run LLM judge")
+        pytest.skip("ANTHROPIC_API_KEY not set — cannot run LLM judge")
 
     from anthropic import Anthropic
 
     client = Anthropic(api_key=api_key)
 
-    prompt = JUDGE_PROMPT_TEMPLATE.format(
+    prompt = JUDGE_PROMPT.format(
         drug=DRUG,
         gene=GENE,
         variant=VARIANT,
         expected_rec=EXPECTED_RECOMMENDATION,
         expected_class=EXPECTED_CLASSIFICATION,
-        agent_rec=agent_recommendation,
+        expected_impl=EXPECTED_IMPLICATION,
+        agent_rec=answers.get("recommendation", ""),
+        agent_class=answers.get("classification", ""),
+        agent_impl=answers.get("implication", ""),
     )
 
     response = client.messages.create(
         model="claude-sonnet-4-20250514",
-        max_tokens=256,
+        max_tokens=300,
         messages=[{"role": "user", "content": prompt}],
     )
 
     text = response.content[0].text.strip()
-    # Parse JSON from response (handle potential markdown wrapping)
     if text.startswith("```"):
         text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
     return json.loads(text)
 
 
-def test_recommendation_file_exists(agent_recommendation):
-    """Check that the agent wrote a recommendation file."""
-    assert len(agent_recommendation) > 10, (
-        f"Recommendation too short ({len(agent_recommendation)} chars): "
-        f"{agent_recommendation}"
+# ── Deterministic test ────────────────────────────────────────────────
+
+
+def test_classification(answers):
+    """Check that the classification strength matches exactly."""
+    got = answers.get("classification", "").strip()
+    assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (
+        f"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'"
     )
 
 
-def test_action_match(judge_result):
+# ── LLM judge tests (strict: require >= 4/5) ─────────────────────────
+
+
+def test_action_correctness(judge_scores):
     """LLM judge: does the recommendation match the correct clinical action?"""
-    score = judge_result["action_match"]
+    score = judge_scores["action_correctness"]
     assert score >= 4, (
-        f"Action match score {score}/5 (need >= 4). "
-        f"Rationale: {judge_result.get('brief_rationale', '')}"
+        f"Action correctness {score}/5 (need >= 4). "
+        f"Rationale: {judge_scores.get('rationale', '')}"
     )
 
 
-def test_specificity(judge_result):
-    """LLM judge: does the recommendation include sufficient clinical detail?"""
-    score = judge_result["specificity"]
-    assert score >= 3, (
-        f"Specificity score {score}/5 (need >= 3). "
-        f"Rationale: {judge_result.get('brief_rationale', '')}"
+def test_recommendation_completeness(judge_scores):
+    """LLM judge: does the recommendation capture all critical clinical details?"""
+    score = judge_scores["recommendation_completeness"]
+    assert score >= 4, (
+        f"Recommendation completeness {score}/5 (need >= 4). "
+        f"Rationale: {judge_scores.get('rationale', '')}"
     )
 
 
-def test_safety(judge_result):
+def test_implication_accuracy(judge_scores):
+    """LLM judge: is the stated implication correct for this genotype?"""
+    score = judge_scores["implication_accuracy"]
+    assert score >= 4, (
+        f"Implication accuracy {score}/5 (need >= 4). "
+        f"Rationale: {judge_scores.get('rationale', '')}"
+    )
+
+
+def test_safety(judge_scores):
     """LLM judge: is the recommendation safe for the patient?"""
-    score = judge_result["safety"]
+    score = judge_scores["safety"]
     assert score >= 4, (
-        f"Safety score {score}/5 (need >= 4). "
-        f"Rationale: {judge_result.get('brief_rationale', '')}"
+        f"Safety {score}/5 (need >= 4). "
+        f"Rationale: {judge_scores.get('rationale', '')}"
     )

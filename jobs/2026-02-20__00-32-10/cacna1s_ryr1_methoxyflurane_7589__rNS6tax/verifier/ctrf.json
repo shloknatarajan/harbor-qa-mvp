@@ -1,0 +1,77 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 1,
+            "failed": 4,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771577372.2646494,
+            "stop": 1771577376.3553443
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0004282920003788604,
+                "start": 1771577372.2878835,
+                "stop": 1771577372.2935312,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Moderate', 'implication': 'The patient carries variants of uncertain significance (VUS) in both RY... patient and family about uncertain MH risk and advise them to disclose this genotype to future anesthesia providers.\"}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Strong', got 'Moderate'\nE       assert 'moderate' == 'strong'\nE         \nE         - strong\nE         + moderate\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4.053071584999998,
+                "start": 1771577372.293702,
+                "stop": 1771577376.3497658,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': 'The agent provides overly specific precautionary ac...rescriptive than the guideline warrants for uncertain susceptibility variants.', 'recommendation_completeness': 2, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 2/5 (need >= 4). Rationale: The agent provides overly specific precautionary actions and alternative recommendations that go beyond the CPIC guideline's broader directive to use clinical findings, family history, and further testing to guide decisions. While safe, the recommendation is more prescriptive than the guideline warrants for uncertain susceptibility variants.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0004457929999261978,
+                "start": 1771577376.3501754,
+                "stop": 1771577376.3523457,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': 'The agent provides overly specific precautionary ac...rescriptive than the guideline warrants for uncertain susceptibility variants.', 'recommendation_completeness': 2, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent provides overly specific precautionary actions and alternative recommendations that go beyond the CPIC guideline's broader directive to use clinical findings, family history, and further testing to guide decisions. While safe, the recommendation is more prescriptive than the guideline warrants for uncertain susceptibility variants.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00026304199991500354,
+                "start": 1771577376.3525367,
+                "stop": 1771577376.3529427,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0003320009998333262,
+                "start": 1771577376.353089,
+                "stop": 1771577376.355171,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': 'The agent provides overly specific precautionary ac...rescriptive than the guideline warrants for uncertain susceptibility variants.', 'recommendation_completeness': 2, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent provides overly specific precautionary actions and alternative recommendations that go beyond the CPIC guideline's broader directive to use clinical findings, family history, and further testing to guide decisions. While safe, the recommendation is more prescriptive than the guideline warrants for uncertain susceptibility variants.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

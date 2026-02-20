@@ -1,0 +1,65 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 1,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771574715.7208512,
+            "stop": 1771574719.5004084
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.000554501000124219,
+                "start": 1771574715.7469537,
+                "stop": 1771574715.7534122,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Strong', 'implication': 'A CYP2C9 activity score of 0.5 (Intermediate Metabolizer; typically a *2/...e dose. Monitor closely for celecoxib-related adverse effects (GI toxicity, fluid retention, cardiovascular effects).'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Moderate', got 'Strong'\nE       assert 'strong' == 'moderate'\nE         \nE         - moderate\nE         + strong\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "passed",
+                "duration": 3.736472085000173,
+                "start": 1771574715.7536373,
+                "stop": 1771574719.4913685,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0009169579999479538,
+                "start": 1771574719.4924035,
+                "stop": 1771574719.4973354,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 4, 'implication_accuracy': 2, 'rationale': 'The agent correctly recommends 25-50% dose reductio... CYP2C9 0.5 as intermediate metabolizer when it represents poor metabolizer status.', 'recommendation_completeness': 3}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly recommends 25-50% dose reduction and monitoring but misses key details like the 8-day steady state requirement, maximum dose limits, and alternative therapy options. The agent incorrectly classifies CYP2C9 0.5 as intermediate metabolizer when it represents poor metabolizer status.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00048016699997788237,
+                "start": 1771574719.497548,
+                "stop": 1771574719.500115,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 4, 'implication_accuracy': 2, 'rationale': 'The agent correctly recommends 25-50% dose reductio... CYP2C9 0.5 as intermediate metabolizer when it represents poor metabolizer status.', 'recommendation_completeness': 3}\n\n    def test_implication_accuracy(judge_scores):\n        \"\"\"LLM judge: is the stated implication correct for this genotype?\"\"\"\n        score = judge_scores[\"implication_accuracy\"]\n>       assert score >= 4, (\n            f\"Implication accuracy {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Implication accuracy 2/5 (need >= 4). Rationale: The agent correctly recommends 25-50% dose reduction and monitoring but misses key details like the 8-day steady state requirement, maximum dose limits, and alternative therapy options. The agent incorrectly classifies CYP2C9 0.5 as intermediate metabolizer when it represents poor metabolizer status.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:96: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

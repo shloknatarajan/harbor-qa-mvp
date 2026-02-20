@@ -1,0 +1,74 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771577485.87284,
+            "stop": 1771577489.9810236
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.0003037909998511168,
+                "start": 1771577485.8966596,
+                "stop": 1771577485.897095,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4.060185918999878,
+                "start": 1771577485.8971992,
+                "stop": 1771577489.977676,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 5, 'rationale': \"The agent correctly identifies contraindication but...y accurate regarding the poor metabolizer phenotype and clinical consequences.\", 'recommendation_completeness': 3, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 3/5 (need >= 4). Rationale: The agent correctly identifies contraindication but undermines the CPIC's clear 'avoid use' recommendation by providing detailed dosing instructions as an alternative, which contradicts the strong guideline to avoid fluorouracil entirely in complete DPD deficiency. The implication is perfectly accurate regarding the poor metabolizer phenotype and clinical consequences.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.000286958000060622,
+                "start": 1771577489.9779184,
+                "stop": 1771577489.9793754,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 5, 'rationale': \"The agent correctly identifies contraindication but...y accurate regarding the poor metabolizer phenotype and clinical consequences.\", 'recommendation_completeness': 3, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly identifies contraindication but undermines the CPIC's clear 'avoid use' recommendation by providing detailed dosing instructions as an alternative, which contradicts the strong guideline to avoid fluorouracil entirely in complete DPD deficiency. The implication is perfectly accurate regarding the poor metabolizer phenotype and clinical consequences.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00014204099989001406,
+                "start": 1771577489.9794855,
+                "stop": 1771577489.9796839,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0002603330001420545,
+                "start": 1771577489.9797559,
+                "stop": 1771577489.980938,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 5, 'rationale': \"The agent correctly identifies contraindication but...y accurate regarding the poor metabolizer phenotype and clinical consequences.\", 'recommendation_completeness': 3, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent correctly identifies contraindication but undermines the CPIC's clear 'avoid use' recommendation by providing detailed dosing instructions as an alternative, which contradicts the strong guideline to avoid fluorouracil entirely in complete DPD deficiency. The implication is perfectly accurate regarding the poor metabolizer phenotype and clinical consequences.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

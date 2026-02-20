@@ -1,0 +1,62 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 2,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771574049.88404,
+            "stop": 1771574055.3034878
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.0003893340000047374,
+                "start": 1771574049.9109218,
+                "stop": 1771574049.9114563,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 5.3634741280000355,
+                "start": 1771574049.9115696,
+                "stop": 1771574055.2996871,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 5, 'rationale': \"The agent correctly identifies the phenotype and cl...osing instructions for potential use, which undermines the primary clinical action.\", 'recommendation_completeness': 2}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 2/5 (need >= 4). Rationale: The agent correctly identifies the phenotype and clinical consequences, but contradicts the CPIC guideline's clear 'avoid' recommendation by providing detailed dosing instructions for potential use, which undermines the primary clinical action.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0007877070000290587,
+                "start": 1771574055.3002524,
+                "stop": 1771574055.3026824,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 5, 'rationale': \"The agent correctly identifies the phenotype and cl...osing instructions for potential use, which undermines the primary clinical action.\", 'recommendation_completeness': 2}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent correctly identifies the phenotype and clinical consequences, but contradicts the CPIC guideline's clear 'avoid' recommendation by providing detailed dosing instructions for potential use, which undermines the primary clinical action.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00028962499999352076,
+                "start": 1771574055.3028955,
+                "stop": 1771574055.3032787,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

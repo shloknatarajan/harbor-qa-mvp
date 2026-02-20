@@ -1,0 +1,62 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 2,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771574139.1036713,
+            "stop": 1771574143.4062374
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.00034220799994955087,
+                "start": 1771574139.127318,
+                "stop": 1771574139.1277807,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4.249163417999966,
+                "start": 1771574139.1278818,
+                "stop": 1771574143.3998253,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': 'The agent provides specific clinical actions (avoid...ial first step of measuring G6PD enzyme activity before making treatment decisions.', 'recommendation_completeness': 2}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 2/5 (need >= 4). Rationale: The agent provides specific clinical actions (avoid systemic use, monitoring parameters) that go beyond the CPIC guideline's core recommendation to measure enzyme activity first, making it partially overlapping but meaningfully different. The implication correctly identifies variable enzyme activity and hemolysis risk but the recommendation lacks the essential first step of measuring G6PD enzyme activity before making treatment decisions.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0007769989999815152,
+                "start": 1771574143.4003186,
+                "stop": 1771574143.4032867,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': 'The agent provides specific clinical actions (avoid...ial first step of measuring G6PD enzyme activity before making treatment decisions.', 'recommendation_completeness': 2}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent provides specific clinical actions (avoid systemic use, monitoring parameters) that go beyond the CPIC guideline's core recommendation to measure enzyme activity first, making it partially overlapping but meaningfully different. The implication correctly identifies variable enzyme activity and hemolysis risk but the recommendation lacks the essential first step of measuring G6PD enzyme activity before making treatment decisions.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.0008999170000265622,
+                "start": 1771574143.4038131,
+                "stop": 1771574143.4049866,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

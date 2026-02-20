@@ -1,0 +1,74 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771576801.2934787,
+            "stop": 1771576804.4393687
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.0003990419999695405,
+                "start": 1771576801.3206072,
+                "stop": 1771576801.321156,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.0864372930000172,
+                "start": 1771576801.3212526,
+                "stop": 1771576804.434329,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 5, 'rationale': 'The agent contradicts the CPIC guideline by suggest...eates a significant safety concern for a patient with complete DPD deficiency.', 'recommendation_completeness': 2, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 2/5 (need >= 4). Rationale: The agent contradicts the CPIC guideline by suggesting dose reduction as an option when the guideline clearly states to avoid use entirely, which creates a significant safety concern for a patient with complete DPD deficiency.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.000439167000024554,
+                "start": 1771576804.434711,
+                "stop": 1771576804.4369464,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 5, 'rationale': 'The agent contradicts the CPIC guideline by suggest...eates a significant safety concern for a patient with complete DPD deficiency.', 'recommendation_completeness': 2, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent contradicts the CPIC guideline by suggesting dose reduction as an option when the guideline clearly states to avoid use entirely, which creates a significant safety concern for a patient with complete DPD deficiency.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00021770899996909066,
+                "start": 1771576804.4370887,
+                "stop": 1771576804.437396,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00028929100005825603,
+                "start": 1771576804.437508,
+                "stop": 1771576804.439187,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 5, 'rationale': 'The agent contradicts the CPIC guideline by suggest...eates a significant safety concern for a patient with complete DPD deficiency.', 'recommendation_completeness': 2, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 2/5 (need >= 4). Rationale: The agent contradicts the CPIC guideline by suggesting dose reduction as an option when the guideline clearly states to avoid use entirely, which creates a significant safety concern for a patient with complete DPD deficiency.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

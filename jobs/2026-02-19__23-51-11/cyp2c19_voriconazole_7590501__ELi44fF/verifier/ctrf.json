@@ -1,0 +1,62 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 2,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771574388.5396936,
+            "stop": 1771574393.090356
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0005415000000539294,
+                "start": 1771574388.568455,
+                "stop": 1771574388.5748973,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Strong', 'implication': 'CYP2C19 Likely Poor Metabolizers have markedly reduced or absent CYP2C19 ...dosing) and implement therapeutic drug monitoring (TDM) with a target trough of 1\u20135.5 mg/L to minimize toxicity risk.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Moderate', got 'Strong'\nE       assert 'strong' == 'moderate'\nE         \nE         - moderate\nE         + strong\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "passed",
+                "duration": 4.511006126999973,
+                "start": 1771574388.575039,
+                "stop": 1771574393.0865114,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00041849900003398943,
+                "start": 1771574393.0871234,
+                "stop": 1771574393.0898294,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 4, 'implication_accuracy': 5, 'rationale': \"The agent correctly recommends avoiding voriconazol...ccurately describes poor metabolizer phenotype with detailed clinical consequences.\", 'recommendation_completeness': 3}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly recommends avoiding voriconazole with appropriate alternatives and dose reduction with TDM if necessary, but provides a specific 50% dose reduction when the guideline only states 'preferably lower than standard dosage' and incorrectly classifies the recommendation strength as 'Strong' instead of 'Moderate'. The implication accurately describes poor metabolizer phenotype with detailed clinical consequences.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00018837499999335705,
+                "start": 1771574393.089936,
+                "stop": 1771574393.090193,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

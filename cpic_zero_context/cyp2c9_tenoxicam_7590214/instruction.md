@@ -16,7 +16,7 @@ For example, you may use a shell heredoc to write the file:
 cat > /app/answers.json <<'JSON'
 {
   "recommendation": "Use drug per standard dosing guidelines",
-  "classification": "Strong",
+  "classification": "Moderate",
   "implication": "Normal metabolism expected"
 }
 JSON
@@ -28,13 +28,17 @@ The JSON object must have the following structure:
 ```json
 {
   "recommendation": "<dosing recommendation text>",
-  "classification": "<Strong|Moderate|Optional>",
+  "classification": "<Strong|Moderate|Optional|No Recommendation>",
   "implication": "<clinical implication of this genotype>"
 }
 ```
 
 Notes:
 - **recommendation**: Your clinical dosing recommendation for this drug-gene-variant combination.
-- **classification**: The strength of this recommendation (Strong, Moderate, or Optional).
+- **classification**: The CPIC classification strength of this recommendation, based on the quality and quantity of clinical evidence supporting it:
+  - **Strong**: High-quality evidence and/or strong expert consensus that the recommendation should be followed.
+  - **Moderate**: Moderate evidence; the recommendation is generally appropriate but evidence is less definitive.
+  - **Optional**: Weak or emerging evidence; clinical action is at the prescriber's discretion.
+  - **No Recommendation**: Insufficient evidence to make a recommendation for this gene-drug-phenotype combination.
 - **implication**: The clinical implication of this specific genotype for this drug's metabolism/response.
 - **Do not use web search.** Rely only on your pharmacogenomics knowledge.

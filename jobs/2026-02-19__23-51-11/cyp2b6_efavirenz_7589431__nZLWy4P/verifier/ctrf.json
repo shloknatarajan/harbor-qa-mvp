@@ -1,0 +1,65 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 1,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771574591.3711207,
+            "stop": 1771574595.1315506
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.000573456999973132,
+                "start": 1771574591.3961482,
+                "stop": 1771574591.4023027,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Moderate', 'implication': 'CYP2B6 Rapid Metabolizer phenotype results in accelerated efavirenz met... monitoring (TDM) is recommended to verify adequate plasma concentrations and minimize the risk of virologic failure.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Strong', got 'Moderate'\nE       assert 'moderate' == 'strong'\nE         \nE         - strong\nE         + moderate\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.7133016260000886,
+                "start": 1771574591.4024122,
+                "stop": 1771574595.1250994,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 4, 'rationale': 'The agent recommends avoiding efavirenz or using TD...d lower concentrations but the recommendation contradicts the strong CPIC guidance.', 'recommendation_completeness': 2}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 1/5 (need >= 4). Rationale: The agent recommends avoiding efavirenz or using TDM, while CPIC clearly states to initiate with standard dosing - this is completely opposite clinical actions. The implication correctly identifies rapid metabolism and lower concentrations but the recommendation contradicts the strong CPIC guidance.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0008211670000264348,
+                "start": 1771574595.1261332,
+                "stop": 1771574595.1296873,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 4, 'rationale': 'The agent recommends avoiding efavirenz or using TD...d lower concentrations but the recommendation contradicts the strong CPIC guidance.', 'recommendation_completeness': 2}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent recommends avoiding efavirenz or using TDM, while CPIC clearly states to initiate with standard dosing - this is completely opposite clinical actions. The implication correctly identifies rapid metabolism and lower concentrations but the recommendation contradicts the strong CPIC guidance.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.0004682919999368096,
+                "start": 1771574595.1304526,
+                "stop": 1771574595.1310463,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

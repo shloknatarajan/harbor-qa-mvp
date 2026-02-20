@@ -1,0 +1,59 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 3,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771574665.008392,
+            "stop": 1771574669.484912
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.0005895839999539021,
+                "start": 1771574665.040611,
+                "stop": 1771574665.041359,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "passed",
+                "duration": 4.417570919000013,
+                "start": 1771574665.0416079,
+                "stop": 1771574669.4597569,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0006604580000839633,
+                "start": 1771574669.4605236,
+                "stop": 1771574669.4843192,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 4, 'implication_accuracy': 4, 'rationale': \"The agent correctly recommends initiating at the lo...though uses slightly different terminology than CPIC's 'mildly reduced metabolism.'\", 'recommendation_completeness': 3}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly recommends initiating at the lowest starting dose and using the shortest duration, but adds monitoring details not specified in CPIC guidelines. The implication accurately describes intermediate metabolizer status with reduced clearance, though uses slightly different terminology than CPIC's 'mildly reduced metabolism.'\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00021654299996498594,
+                "start": 1771574669.4844756,
+                "stop": 1771574669.4847643,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}
