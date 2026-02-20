@@ -4,7 +4,9 @@ from pathlib import Path
 
 import pytest
 
-EXPECTED_RECOMMENDATION = "Consider initiating efavirenz with decreased dose of 400 mg/day"
+EXPECTED_RECOMMENDATION = (
+    "Consider initiating efavirenz with decreased dose of 400 mg/day"
+)
 EXPECTED_CLASSIFICATION = "Moderate"
 DRUG = "efavirenz"
 GENE = "CYP2B6"

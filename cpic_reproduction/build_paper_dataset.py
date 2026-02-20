@@ -52,12 +52,14 @@ def convert_pmids_to_pmcids(pmids: list[str], batch_size: int = 200) -> dict[str
     for i in range(0, len(pmids), batch_size):
         batch = pmids[i : i + batch_size]
         try:
-            params = urlencode({
-                "ids": ",".join(batch),
-                "format": "json",
-                "tool": "cpic_dataset_builder",
-                "email": "cpic@example.com",
-            })
+            params = urlencode(
+                {
+                    "ids": ",".join(batch),
+                    "format": "json",
+                    "tool": "cpic_dataset_builder",
+                    "email": "cpic@example.com",
+                }
+            )
             url = f"{NCBI_CONVERTER_URL}?{params}"
             with urlopen(Request(url), timeout=30) as resp:
                 data = json.loads(resp.read().decode())
@@ -117,7 +119,9 @@ def build_gene_evidence_pmids() -> dict[str, set[str]]:
     total = set()
     for pmids in gene_to_pmids.values():
         total |= pmids
-    print(f"  Total unique evidence PMIDs: {len(total)} across {len(gene_to_pmids)} genes")
+    print(
+        f"  Total unique evidence PMIDs: {len(total)} across {len(gene_to_pmids)} genes"
+    )
 
     return dict(gene_to_pmids)
 
@@ -149,7 +153,9 @@ def build_dataset():
             pair_by_guideline.setdefault(gid, []).append(p)
 
     # Gene-level evidence
-    print("\nBuilding gene-level evidence from allele citations + population studies...")
+    print(
+        "\nBuilding gene-level evidence from allele citations + population studies..."
+    )
     gene_evidence_pmids = build_gene_evidence_pmids()
 
     # ── Collect all PMIDs for conversion ──────────────────────────────
@@ -278,17 +284,25 @@ def build_dataset():
         all_ev_pmids.update(r["evidence_pmids"])
         all_ev_pmcids.update(r["evidence_pmcids"])
 
-    print(f"\n  Guideline papers: {len(all_gl_pmids)} PMIDs, {len(all_gl_pmcids)} PMCIDs "
-          f"({len(all_gl_pmcids)}/{len(all_gl_pmids)} = {len(all_gl_pmcids)/len(all_gl_pmids)*100:.0f}% converted)")
-    print(f"  Evidence papers:  {len(all_ev_pmids)} PMIDs, {len(all_ev_pmcids)} PMCIDs "
-          f"({len(all_ev_pmcids)}/{len(all_ev_pmids)} = {len(all_ev_pmcids)/len(all_ev_pmids)*100:.0f}% converted)")
+    print(
+        f"\n  Guideline papers: {len(all_gl_pmids)} PMIDs, {len(all_gl_pmcids)} PMCIDs "
+        f"({len(all_gl_pmcids)}/{len(all_gl_pmids)} = {len(all_gl_pmcids) / len(all_gl_pmids) * 100:.0f}% converted)"
+    )
+    print(
+        f"  Evidence papers:  {len(all_ev_pmids)} PMIDs, {len(all_ev_pmcids)} PMCIDs "
+        f"({len(all_ev_pmcids)}/{len(all_ev_pmids)} = {len(all_ev_pmcids) / len(all_ev_pmids) * 100:.0f}% converted)"
+    )
 
     ev_pmid_counts = [len(r["evidence_pmids"]) for r in rows]
     ev_pmcid_counts = [len(r["evidence_pmcids"]) for r in rows]
-    print(f"\n  Evidence PMIDs per row:  min={min(ev_pmid_counts)}, "
-          f"max={max(ev_pmid_counts)}, median={sorted(ev_pmid_counts)[len(ev_pmid_counts)//2]}")
-    print(f"  Evidence PMCIDs per row: min={min(ev_pmcid_counts)}, "
-          f"max={max(ev_pmcid_counts)}, median={sorted(ev_pmcid_counts)[len(ev_pmcid_counts)//2]}")
+    print(
+        f"\n  Evidence PMIDs per row:  min={min(ev_pmid_counts)}, "
+        f"max={max(ev_pmid_counts)}, median={sorted(ev_pmid_counts)[len(ev_pmid_counts) // 2]}"
+    )
+    print(
+        f"  Evidence PMCIDs per row: min={min(ev_pmcid_counts)}, "
+        f"max={max(ev_pmcid_counts)}, median={sorted(ev_pmcid_counts)[len(ev_pmcid_counts) // 2]}"
+    )
 
     # Check overlap with existing papers
     papers_dir = PROJECT_ROOT / "data" / "papers"
@@ -307,27 +321,39 @@ def build_dataset():
 
     with open(OUTPUT_TSV, "w", newline="") as f:
         writer = csv.writer(f, delimiter="\t")
-        writer.writerow([
-            "rec_id", "drug", "gene", "variants", "guideline",
-            "guideline_id", "recommendation", "classification",
-            "guideline_pmids", "guideline_pmcids",
-            "evidence_pmids", "evidence_pmcids",
-        ])
+        writer.writerow(
+            [
+                "rec_id",
+                "drug",
+                "gene",
+                "variants",
+                "guideline",
+                "guideline_id",
+                "recommendation",
+                "classification",
+                "guideline_pmids",
+                "guideline_pmcids",
+                "evidence_pmids",
+                "evidence_pmcids",
+            ]
+        )
         for row in rows:
-            writer.writerow([
-                row["rec_id"],
-                row["drug"],
-                row["gene"],
-                json.dumps(row["variants"]),
-                row["guideline"],
-                row["guideline_id"],
-                row["recommendation"],
-                row["classification"],
-                json.dumps(row["guideline_pmids"]),
-                json.dumps(row["guideline_pmcids"]),
-                json.dumps(row["evidence_pmids"]),
-                json.dumps(row["evidence_pmcids"]),
-            ])
+            writer.writerow(
+                [
+                    row["rec_id"],
+                    row["drug"],
+                    row["gene"],
+                    json.dumps(row["variants"]),
+                    row["guideline"],
+                    row["guideline_id"],
+                    row["recommendation"],
+                    row["classification"],
+                    json.dumps(row["guideline_pmids"]),
+                    json.dumps(row["guideline_pmcids"]),
+                    json.dumps(row["evidence_pmids"]),
+                    json.dumps(row["evidence_pmcids"]),
+                ]
+            )
     print(f"Wrote TSV:   {OUTPUT_TSV}")
 
 

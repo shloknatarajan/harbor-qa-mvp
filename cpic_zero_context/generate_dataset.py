@@ -363,7 +363,7 @@ def build_test_py(record: dict) -> str:
         '    rec_text = answers.get("recommendation", "")',
         "    got_category = classify_recommendation(rec_text)",
         "    assert got_category == EXPECTED_ACTION_CATEGORY, (",
-        '        f"Expected action category \'{EXPECTED_ACTION_CATEGORY}\', '
+        "        f\"Expected action category '{EXPECTED_ACTION_CATEGORY}', "
         "got '{got_category}' \"",
         '        f"from recommendation: {rec_text}"',
         "    )",
@@ -373,7 +373,7 @@ def build_test_py(record: dict) -> str:
         '    """Check that the classification strength matches."""',
         '    got = answers.get("classification", "").strip()',
         "    assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (",
-        '        f"Expected classification \'{EXPECTED_CLASSIFICATION}\', got \'{got}\'"',
+        "        f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"",
         "    )",
         "",
         "",

@@ -165,20 +165,22 @@ def build_test_py(record: dict) -> str:
     variant_desc = record["variant_description"]
 
     # Build constants header, then append static code body
-    header = "\n".join([
-        "import os",
-        "import json",
-        "from pathlib import Path",
-        "",
-        "import pytest",
-        "",
-        f"EXPECTED_RECOMMENDATION = {json.dumps(recommendation)}",
-        f"EXPECTED_CLASSIFICATION = {json.dumps(classification)}",
-        f"DRUG = {json.dumps(drug)}",
-        f"GENE = {json.dumps(gene)}",
-        f"VARIANT = {json.dumps(variant_desc)}",
-        "",
-    ])
+    header = "\n".join(
+        [
+            "import os",
+            "import json",
+            "from pathlib import Path",
+            "",
+            "import pytest",
+            "",
+            f"EXPECTED_RECOMMENDATION = {json.dumps(recommendation)}",
+            f"EXPECTED_CLASSIFICATION = {json.dumps(classification)}",
+            f"DRUG = {json.dumps(drug)}",
+            f"GENE = {json.dumps(gene)}",
+            f"VARIANT = {json.dumps(variant_desc)}",
+            "",
+        ]
+    )
 
     # Static code body — written as a raw string to avoid f-string issues
     body = '''
@@ -308,6 +310,7 @@ def test_safety(judge_result):
 
 # ── Abstract fetching ────────────────────────────────────────────────
 
+
 def fetch_abstracts(pmids: list[str]) -> dict[str, str]:
     """Fetch abstracts from PubMed for a list of PMIDs.
 
@@ -356,7 +359,11 @@ def fetch_abstracts(pmids: list[str]) -> dict[str, str]:
 
             # Extract metadata
             title_el = article.find(".//ArticleTitle")
-            title = title_el.text if title_el is not None and title_el.text else "Unknown Title"
+            title = (
+                title_el.text
+                if title_el is not None and title_el.text
+                else "Unknown Title"
+            )
 
             # Authors
             authors = []
@@ -372,13 +379,19 @@ def fetch_abstracts(pmids: list[str]) -> dict[str, str]:
 
             # Journal
             journal_el = article.find(".//Journal/Title")
-            journal = journal_el.text if journal_el is not None and journal_el.text else "Unknown Journal"
+            journal = (
+                journal_el.text
+                if journal_el is not None and journal_el.text
+                else "Unknown Journal"
+            )
 
             # Year
             year_el = article.find(".//PubDate/Year")
             if year_el is None:
                 year_el = article.find(".//PubDate/MedlineDate")
-            year = year_el.text[:4] if year_el is not None and year_el.text else "Unknown"
+            year = (
+                year_el.text[:4] if year_el is not None and year_el.text else "Unknown"
+            )
 
             # Abstract
             abstract_parts = []
@@ -389,7 +402,11 @@ def fetch_abstracts(pmids: list[str]) -> dict[str, str]:
                     abstract_parts.append(f"**{label}:** {text}")
                 else:
                     abstract_parts.append(text)
-            abstract = "\n\n".join(abstract_parts) if abstract_parts else "No abstract available."
+            abstract = (
+                "\n\n".join(abstract_parts)
+                if abstract_parts
+                else "No abstract available."
+            )
 
             md = (
                 f"# {title}\n"
@@ -421,14 +438,19 @@ def fetch_abstracts(pmids: list[str]) -> dict[str, str]:
 
 def load_target_records() -> list[dict]:
     """Load records for the 5 target guidelines from the paper dataset."""
-    all_recs = [json.loads(line) for line in DATASET_PATH.read_text().splitlines() if line.strip()]
+    all_recs = [
+        json.loads(line)
+        for line in DATASET_PATH.read_text().splitlines()
+        if line.strip()
+    ]
 
     selected = []
     for target in TARGET_GUIDELINES:
         gene = target["gene"]
         match_str = target["guideline_match"].lower()
         guideline_recs = [
-            r for r in all_recs
+            r
+            for r in all_recs
             if r["gene"] == gene and match_str in r["guideline"].lower()
         ]
         print(f"  {gene}: {len(guideline_recs)} recommendations")
@@ -449,10 +471,7 @@ def get_evidence_papers(record: dict) -> tuple[list[str], list[str]]:
     # PMIDs that have corresponding PMCIDs
     # We know len(pmcids) <= len(pmids), and they correspond in order
     # But we can't rely on ordering — instead, check which markdown files exist
-    available_pmcids = [
-        pmc for pmc in pmcids
-        if (MARKDOWN_DIR / f"{pmc}.md").exists()
-    ]
+    available_pmcids = [pmc for pmc in pmcids if (MARKDOWN_DIR / f"{pmc}.md").exists()]
 
     # PMIDs without PMCIDs need abstracts
     # We need to figure out which PMIDs have PMCIDs

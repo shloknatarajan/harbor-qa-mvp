@@ -351,9 +351,7 @@ def format_cpic_comparison(expected: dict, agent: dict | None, lines: list[str])
     exp_cls = expected.get("classification", "?")
     got_cls = agent.get("classification", "?").strip()
     cls_icon = "✓" if got_cls.lower() == exp_cls.lower() else "✗"
-    lines.append(
-        f"        Class  {cls_icon}: agent={got_cls} expected={exp_cls}"
-    )
+    lines.append(f"        Class  {cls_icon}: agent={got_cls} expected={exp_cls}")
 
     # Key terms
     exp_terms = expected.get("key_terms", [])

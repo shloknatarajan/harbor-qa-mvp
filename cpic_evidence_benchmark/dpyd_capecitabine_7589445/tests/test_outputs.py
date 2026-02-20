@@ -4,7 +4,9 @@ from pathlib import Path
 
 import pytest
 
-EXPECTED_RECOMMENDATION = "Avoid use of 5-fluorouracil or 5-fluorouracil prodrug-based regimens."
+EXPECTED_RECOMMENDATION = (
+    "Avoid use of 5-fluorouracil or 5-fluorouracil prodrug-based regimens."
+)
 EXPECTED_CLASSIFICATION = "Strong"
 DRUG = "capecitabine"
 GENE = "DPYD"
