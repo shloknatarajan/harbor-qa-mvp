@@ -226,6 +226,165 @@ def format_summary_qa_comparison(expected: dict, agent: dict | None, lines: list
         )
 
 
+def _is_cpic_prediction_task(result: dict) -> bool:
+    """Check if this is a CPIC prediction task (action category/classification)."""
+    task_dir = _get_task_dir(result)
+    if not task_dir:
+        return False
+    test_file = task_dir / "tests" / "test_outputs.py"
+    if not test_file.exists():
+        return False
+    content = test_file.read_text()
+    return "EXPECTED_ACTION_CATEGORY" in content
+
+
+def extract_cpic_expected(result: dict) -> dict | None:
+    """Extract expected values from CPIC prediction test file."""
+    task_dir = _get_task_dir(result)
+    if not task_dir:
+        return None
+    test_file = task_dir / "tests" / "test_outputs.py"
+    if not test_file.exists():
+        return None
+    content = test_file.read_text()
+
+    expected = {}
+    m = re.search(r'EXPECTED_ACTION_CATEGORY\s*=\s*"([^"]*)"', content)
+    if m:
+        expected["action_category"] = m.group(1)
+
+    m = re.search(r'EXPECTED_CLASSIFICATION\s*=\s*"([^"]*)"', content)
+    if m:
+        expected["classification"] = m.group(1)
+
+    m = re.search(r"EXPECTED_KEY_TERMS\s*=\s*(\[.*?\])", content)
+    if m:
+        try:
+            expected["key_terms"] = json.loads(m.group(1).replace("'", '"'))
+        except json.JSONDecodeError:
+            expected["key_terms"] = []
+
+    m = re.search(r'EXPECTED_RECOMMENDATION\s*=\s*"((?:[^"\\]|\\.)*)"', content)
+    if m:
+        expected["recommendation"] = m.group(1)
+
+    return expected if expected else None
+
+
+def extract_cpic_agent_answers(trial_dir: Path) -> dict | None:
+    """Extract the agent's CPIC prediction answers from its log."""
+    agent_dir = trial_dir / "agent"
+    log_file = agent_dir / "claude-code.txt"
+    if not log_file.exists():
+        log_file = agent_dir / "codex.txt"
+    if not log_file.exists():
+        return None
+    content = log_file.read_text()
+
+    # Look for Write tool with /app/answers.json
+    for m in re.finditer(
+        r'"(?:file_path|filePath)"\s*:\s*"/app/answers\.json"\s*,\s*"content"\s*:\s*"((?:[^"\\]|\\.)*)"',
+        content,
+    ):
+        try:
+            raw = m.group(1).replace("\\n", "\n").replace('\\"', '"')
+            parsed = json.loads(raw)
+            if "recommendation" in parsed or "classification" in parsed:
+                return parsed
+        except json.JSONDecodeError:
+            continue
+
+    # Fallback: inline JSON block
+    m = re.search(r"```json\s*(\{.*?\})\s*```", content, flags=re.DOTALL)
+    if m:
+        try:
+            parsed = json.loads(m.group(1))
+            if "recommendation" in parsed or "classification" in parsed:
+                return parsed
+        except json.JSONDecodeError:
+            pass
+    return None
+
+
+def _classify_recommendation(text: str) -> str:
+    """Classify a recommendation into an action category (mirrors test logic)."""
+    text_lower = text.lower()
+    action_keywords = {
+        "avoid": ["contraindicated", "not recommended", "avoid", "do not use"],
+        "standard_dosing": [
+            "per standard dosing",
+            "standard dosing",
+            "at standard doses",
+            "standard dose",
+            "label-recommended",
+        ],
+        "dose_reduction": [
+            "reduce dose",
+            "reduced dose",
+            "decrease dose",
+            "decreased dose",
+            "lower dose",
+            "dose decrease",
+            "dose reduction",
+            "50% reduction",
+            "50% of standard",
+        ],
+        "dose_increase": [
+            "increase dose",
+            "increased dose",
+            "higher dose",
+            "dose increase",
+        ],
+        "alternative": ["alternative", "consider other", "select alternative"],
+        "monitor": ["monitor", "caution", "therapeutic drug monitoring"],
+    }
+    for category, keywords in action_keywords.items():
+        for kw in keywords:
+            if kw in text_lower:
+                return category
+    return "other"
+
+
+def format_cpic_comparison(expected: dict, agent: dict | None, lines: list[str]):
+    """Append CPIC prediction comparison lines."""
+    if agent is None:
+        lines.append("        (no agent answers extracted)")
+        return
+
+    # Action category
+    exp_action = expected.get("action_category", "?")
+    agent_rec = agent.get("recommendation", "")
+    got_action = _classify_recommendation(agent_rec)
+    action_icon = "✓" if got_action == exp_action else "✗"
+    lines.append(
+        f"        Action {action_icon}: agent={got_action} expected={exp_action}"
+    )
+
+    # Classification
+    exp_cls = expected.get("classification", "?")
+    got_cls = agent.get("classification", "?").strip()
+    cls_icon = "✓" if got_cls.lower() == exp_cls.lower() else "✗"
+    lines.append(f"        Class  {cls_icon}: agent={got_cls} expected={exp_cls}")
+
+    # Key terms
+    exp_terms = expected.get("key_terms", [])
+    if exp_terms:
+        all_text = " ".join(
+            [agent.get("recommendation", ""), agent.get("implication", "")]
+        ).lower()
+        found = [t for t in exp_terms if t.lower() in all_text]
+        terms_icon = "✓" if found else "✗"
+        lines.append(
+            f"        Terms  {terms_icon}: {len(found)}/{len(exp_terms)} matched"
+            + (f"  found: {found}" if found else f"  expected: {exp_terms}")
+        )
+
+    # Show agent's recommendation text (truncated)
+    if agent_rec:
+        display = agent_rec[:80] + ("..." if len(agent_rec) > 80 else "")
+        lines.append(f"        Rec: {display}")
+
+
 def extract_agent_answers(trial_dir: Path) -> dict[str, str]:
     """Extract the agent's answers from its log/trajectory.
 
@@ -396,8 +555,14 @@ def format_trial(trial_dir: Path) -> tuple[list[str], dict]:
             exc_msg = exc_msg[:120] + "..."
         lines.append(f"        error: {exc_type}: {exc_msg}")
 
+    # CPIC prediction tasks: show action/classification/key terms comparison
+    if _is_cpic_prediction_task(result):
+        expected_cpic = extract_cpic_expected(result)
+        agent_cpic = extract_cpic_agent_answers(trial_dir)
+        if expected_cpic:
+            format_cpic_comparison(expected_cpic, agent_cpic, lines)
     # Summary QA tasks: show drugs/phenotypes/count comparison
-    if _is_summary_qa_task(result):
+    elif _is_summary_qa_task(result):
         expected_sq = extract_summary_qa_expected(result)
         agent_sq = extract_summary_qa_agent_answers(trial_dir)
         if expected_sq:
@@ -619,7 +784,16 @@ def show_and_save(job_dir: Path):
     print(output)
 
     RESULTS_DIR.mkdir(exist_ok=True)
-    out_file = RESULTS_DIR / f"{job_dir.name}.txt"
+    # Include benchmark name in the output filename
+    config = load_json(job_dir / "config.json")
+    benchmark = ""
+    if config:
+        datasets = config.get("datasets", [])
+        if datasets:
+            benchmark = datasets[0].get("path", "")
+            benchmark = Path(benchmark).name if benchmark else ""
+    suffix = f"_{benchmark}" if benchmark else ""
+    out_file = RESULTS_DIR / f"{job_dir.name}{suffix}.txt"
     out_file.write_text(output.strip() + "\n")
     print(f"\n  (saved to {out_file})")
 

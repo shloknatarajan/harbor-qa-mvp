@@ -1,0 +1,570 @@
+{
+  "schema_version": "ATIF-v1.2",
+  "session_id": "fbcc3817-239e-4ae0-9f3e-e39392dc4a9a",
+  "agent": {
+    "name": "claude-code",
+    "version": "2.1.49",
+    "model_name": "claude-sonnet-4-6",
+    "extra": {
+      "cwds": [
+        "/app"
+      ],
+      "git_branches": [
+        "HEAD"
+      ]
+    }
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "timestamp": "2026-02-20T02:26:16.341Z",
+      "source": "user",
+      "message": "You are a clinical pharmacogenomics expert.\n\n**Drug:** pravastatin\n**Gene:** SLCO1B1\n**Patient Genotype:** SLCO1B1 Poor Function\n\nResearch papers relevant to this gene-drug combination are available in `/app/papers/`. Read these papers to inform your recommendation.\n\nBased on the evidence in these papers, provide a clinical dosing recommendation for this drug-gene-variant combination.\n\n---\n\nYou must write your recommendation to `/app/recommendation.txt` (a real file on disk). Printing it in chat is not sufficient.\n\nYour recommendation should be a concise clinical dosing recommendation (1-3 sentences). It should specify:\n- What action to take (e.g., use standard dose, reduce dose, avoid drug, use alternative)\n- Any specific dosing adjustments (e.g., 50% dose reduction)\n- Any monitoring or follow-up needed\n\nFor example:\n```\nReduce starting dose by 50% followed by titration of dose based on toxicity or therapeutic drug monitoring.\n```\n\nNotes:\n- Read the research papers in /app/papers/ before answering.\n- Do not use web search. Base your answer on the provided evidence.\n- Write only the recommendation text — no JSON, no extra formatting.",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 2,
+      "timestamp": "2026-02-20T02:26:18.250Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "",
+      "reasoning_content": "null",
+      "metrics": {
+        "prompt_tokens": 18423,
+        "completion_tokens": 0,
+        "cached_tokens": 18420,
+        "extra": {
+          "cache_creation_input_tokens": 1102,
+          "cache_read_input_tokens": 18420,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 1102,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 3,
+      "timestamp": "2026-02-20T02:26:18.529Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "Executed Glob toolu_01BEpm3Wg5sEFHYJhkDV8KgC",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01BEpm3Wg5sEFHYJhkDV8KgC",
+          "function_name": "Glob",
+          "arguments": {
+            "pattern": "/app/papers/**/*"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01BEpm3Wg5sEFHYJhkDV8KgC",
+            "content": "/app/papers/PMC6858017.md\n/app/papers/PMC6896237.md\n/app/papers/PMC8042483.md\n/app/papers/PMC11283089.md\n/app/papers/PMC3246196.md\n/app/papers/PMC7289979.md\n/app/papers/PMC7005217.md\n/app/papers/PMC3266790.md\n/app/papers/PMC3947488.md\n/app/papers/PMC11751521.md\n/app/papers/PMC6000981.md\n/app/papers/PMC11671340.md\n/app/papers/PMC3876790.md\n/app/papers/PMC11050003.md\n/app/papers/PMC12127550.md\n/app/papers/PMC12087686.md\n/app/papers/PMC3706890.md\n/app/papers/PMC4220464.md\n/app/papers/PMC5007069.md\n/app/papers/PMC4063287.md\n/app/papers/PMC2884029.md\n/app/papers/PMC9144204.md\n/app/papers/PMC10709409.md\n/app/papers/PMC7983942.md\n/app/papers/PMC7877856.md\n/app/papers/PMID_21630030.md\n/app/papers/PMID_21665049.md\n/app/papers/PMID_20139798.md\n/app/papers/PMID_20712525.md\n/app/papers/PMID_16906022.md\n/app/papers/PMID_18154446.md\n/app/papers/PMID_16198653.md\n/app/papers/PMID_16758257.md\n/app/papers/PMID_18781850.md\n/app/papers/PMID_12490595.md\n/app/papers/PMID_16513443.md\n/app/papers/PMID_34887219.md\n/app/papers/PMID_18159134.md\n/app/papers/PMID_17766002.md\n/app/papers/PMID_10644574.md\n/app/papers/PMID_12130747.md\n/app/papers/PMID_20877131.md\n/app/papers/PMID_16198652.md\n/app/papers/PMID_17996736.md\n/app/papers/PMID_19122343.md\n/app/papers/PMID_12811365.md\n/app/papers/PMID_25546334.md\n/app/papers/PMID_18043684.md\n/app/papers/PMID_16515396.md\n/app/papers/PMID_15226675.md\n/app/papers/PMID_18695635.md\n/app/papers/PMID_15116054.md\n/app/papers/PMID_11477075.md\n/app/papers/PMID_18185926.md\n/app/papers/PMID_16697742.md\n/app/papers/PMID_36964102.md\n/app/papers/PMID_10358072.md\n/app/papers/PMID_15970799.md\n/app/papers/PMID_10601278.md\n/app/papers/PMID_17568401.md\n/app/papers/PMID_17883959.md\n/app/papers/PMID_21245207.md\n\n[metadata] {\"filenames\": [\"/app/papers/PMC6858017.md\", \"/app/papers/PMC6896237.md\", \"/app/papers/PMC8042483.md\", \"/app/papers/PMC11283089.md\", \"/app/papers/PMC3246196.md\", \"/app/papers/PMC7289979.md\", \"/app/papers/PMC7005217.md\", \"/app/papers/PMC3266790.md\", \"/app/papers/PMC3947488.md\", \"/app/papers/PMC11751521.md\", \"/app/papers/PMC6000981.md\", \"/app/papers/PMC11671340.md\", \"/app/papers/PMC3876790.md\", \"/app/papers/PMC11050003.md\", \"/app/papers/PMC12127550.md\", \"/app/papers/PMC12087686.md\", \"/app/papers/PMC3706890.md\", \"/app/papers/PMC4220464.md\", \"/app/papers/PMC5007069.md\", \"/app/papers/PMC4063287.md\", \"/app/papers/PMC2884029.md\", \"/app/papers/PMC9144204.md\", \"/app/papers/PMC10709409.md\", \"/app/papers/PMC7983942.md\", \"/app/papers/PMC7877856.md\", \"/app/papers/PMID_21630030.md\", \"/app/papers/PMID_21665049.md\", \"/app/papers/PMID_20139798.md\", \"/app/papers/PMID_20712525.md\", \"/app/papers/PMID_16906022.md\", \"/app/papers/PMID_18154446.md\", \"/app/papers/PMID_16198653.md\", \"/app/papers/PMID_16758257.md\", \"/app/papers/PMID_18781850.md\", \"/app/papers/PMID_12490595.md\", \"/app/papers/PMID_16513443.md\", \"/app/papers/PMID_34887219.md\", \"/app/papers/PMID_18159134.md\", \"/app/papers/PMID_17766002.md\", \"/app/papers/PMID_10644574.md\", \"/app/papers/PMID_12130747.md\", \"/app/papers/PMID_20877131.md\", \"/app/papers/PMID_16198652.md\", \"/app/papers/PMID_17996736.md\", \"/app/papers/PMID_19122343.md\", \"/app/papers/PMID_12811365.md\", \"/app/papers/PMID_25546334.md\", \"/app/papers/PMID_18043684.md\", \"/app/papers/PMID_16515396.md\", \"/app/papers/PMID_15226675.md\", \"/app/papers/PMID_18695635.md\", \"/app/papers/PMID_15116054.md\", \"/app/papers/PMID_11477075.md\", \"/app/papers/PMID_18185926.md\", \"/app/papers/PMID_16697742.md\", \"/app/papers/PMID_36964102.md\", \"/app/papers/PMID_10358072.md\", \"/app/papers/PMID_15970799.md\", \"/app/papers/PMID_10601278.md\", \"/app/papers/PMID_17568401.md\", \"/app/papers/PMID_17883959.md\", \"/app/papers/PMID_21245207.md\"], \"durationMs\": 235, \"numFiles\": 62, \"truncated\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 18423,
+        "completion_tokens": 0,
+        "cached_tokens": 18420,
+        "extra": {
+          "cache_creation_input_tokens": 1102,
+          "cache_read_input_tokens": 18420,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 1102,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false,
+        "tool_use_name": "Glob",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "filenames": [
+              "/app/papers/PMC6858017.md",
+              "/app/papers/PMC6896237.md",
+              "/app/papers/PMC8042483.md",
+              "/app/papers/PMC11283089.md",
+              "/app/papers/PMC3246196.md",
+              "/app/papers/PMC7289979.md",
+              "/app/papers/PMC7005217.md",
+              "/app/papers/PMC3266790.md",
+              "/app/papers/PMC3947488.md",
+              "/app/papers/PMC11751521.md",
+              "/app/papers/PMC6000981.md",
+              "/app/papers/PMC11671340.md",
+              "/app/papers/PMC3876790.md",
+              "/app/papers/PMC11050003.md",
+              "/app/papers/PMC12127550.md",
+              "/app/papers/PMC12087686.md",
+              "/app/papers/PMC3706890.md",
+              "/app/papers/PMC4220464.md",
+              "/app/papers/PMC5007069.md",
+              "/app/papers/PMC4063287.md",
+              "/app/papers/PMC2884029.md",
+              "/app/papers/PMC9144204.md",
+              "/app/papers/PMC10709409.md",
+              "/app/papers/PMC7983942.md",
+              "/app/papers/PMC7877856.md",
+              "/app/papers/PMID_21630030.md",
+              "/app/papers/PMID_21665049.md",
+              "/app/papers/PMID_20139798.md",
+              "/app/papers/PMID_20712525.md",
+              "/app/papers/PMID_16906022.md",
+              "/app/papers/PMID_18154446.md",
+              "/app/papers/PMID_16198653.md",
+              "/app/papers/PMID_16758257.md",
+              "/app/papers/PMID_18781850.md",
+              "/app/papers/PMID_12490595.md",
+              "/app/papers/PMID_16513443.md",
+              "/app/papers/PMID_34887219.md",
+              "/app/papers/PMID_18159134.md",
+              "/app/papers/PMID_17766002.md",
+              "/app/papers/PMID_10644574.md",
+              "/app/papers/PMID_12130747.md",
+              "/app/papers/PMID_20877131.md",
+              "/app/papers/PMID_16198652.md",
+              "/app/papers/PMID_17996736.md",
+              "/app/papers/PMID_19122343.md",
+              "/app/papers/PMID_12811365.md",
+              "/app/papers/PMID_25546334.md",
+              "/app/papers/PMID_18043684.md",
+              "/app/papers/PMID_16515396.md",
+              "/app/papers/PMID_15226675.md",
+              "/app/papers/PMID_18695635.md",
+              "/app/papers/PMID_15116054.md",
+              "/app/papers/PMID_11477075.md",
+              "/app/papers/PMID_18185926.md",
+              "/app/papers/PMID_16697742.md",
+              "/app/papers/PMID_36964102.md",
+              "/app/papers/PMID_10358072.md",
+              "/app/papers/PMID_15970799.md",
+              "/app/papers/PMID_10601278.md",
+              "/app/papers/PMID_17568401.md",
+              "/app/papers/PMID_17883959.md",
+              "/app/papers/PMID_21245207.md"
+            ],
+            "durationMs": 235,
+            "numFiles": 62,
+            "truncated": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01BEpm3Wg5sEFHYJhkDV8KgC",
+            "type": "tool_result",
+            "content": "/app/papers/PMC6858017.md\n/app/papers/PMC6896237.md\n/app/papers/PMC8042483.md\n/app/papers/PMC11283089.md\n/app/papers/PMC3246196.md\n/app/papers/PMC7289979.md\n/app/papers/PMC7005217.md\n/app/papers/PMC3266790.md\n/app/papers/PMC3947488.md\n/app/papers/PMC11751521.md\n/app/papers/PMC6000981.md\n/app/papers/PMC11671340.md\n/app/papers/PMC3876790.md\n/app/papers/PMC11050003.md\n/app/papers/PMC12127550.md\n/app/papers/PMC12087686.md\n/app/papers/PMC3706890.md\n/app/papers/PMC4220464.md\n/app/papers/PMC5007069.md\n/app/papers/PMC4063287.md\n/app/papers/PMC2884029.md\n/app/papers/PMC9144204.md\n/app/papers/PMC10709409.md\n/app/papers/PMC7983942.md\n/app/papers/PMC7877856.md\n/app/papers/PMID_21630030.md\n/app/papers/PMID_21665049.md\n/app/papers/PMID_20139798.md\n/app/papers/PMID_20712525.md\n/app/papers/PMID_16906022.md\n/app/papers/PMID_18154446.md\n/app/papers/PMID_16198653.md\n/app/papers/PMID_16758257.md\n/app/papers/PMID_18781850.md\n/app/papers/PMID_12490595.md\n/app/papers/PMID_16513443.md\n/app/papers/PMID_34887219.md\n/app/papers/PMID_18159134.md\n/app/papers/PMID_17766002.md\n/app/papers/PMID_10644574.md\n/app/papers/PMID_12130747.md\n/app/papers/PMID_20877131.md\n/app/papers/PMID_16198652.md\n/app/papers/PMID_17996736.md\n/app/papers/PMID_19122343.md\n/app/papers/PMID_12811365.md\n/app/papers/PMID_25546334.md\n/app/papers/PMID_18043684.md\n/app/papers/PMID_16515396.md\n/app/papers/PMID_15226675.md\n/app/papers/PMID_18695635.md\n/app/papers/PMID_15116054.md\n/app/papers/PMID_11477075.md\n/app/papers/PMID_18185926.md\n/app/papers/PMID_16697742.md\n/app/papers/PMID_36964102.md\n/app/papers/PMID_10358072.md\n/app/papers/PMID_15970799.md\n/app/papers/PMID_10601278.md\n/app/papers/PMID_17568401.md\n/app/papers/PMID_17883959.md\n/app/papers/PMID_21245207.md"
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "filenames": [
+              "/app/papers/PMC6858017.md",
+              "/app/papers/PMC6896237.md",
+              "/app/papers/PMC8042483.md",
+              "/app/papers/PMC11283089.md",
+              "/app/papers/PMC3246196.md",
+              "/app/papers/PMC7289979.md",
+              "/app/papers/PMC7005217.md",
+              "/app/papers/PMC3266790.md",
+              "/app/papers/PMC3947488.md",
+              "/app/papers/PMC11751521.md",
+              "/app/papers/PMC6000981.md",
+              "/app/papers/PMC11671340.md",
+              "/app/papers/PMC3876790.md",
+              "/app/papers/PMC11050003.md",
+              "/app/papers/PMC12127550.md",
+              "/app/papers/PMC12087686.md",
+              "/app/papers/PMC3706890.md",
+              "/app/papers/PMC4220464.md",
+              "/app/papers/PMC5007069.md",
+              "/app/papers/PMC4063287.md",
+              "/app/papers/PMC2884029.md",
+              "/app/papers/PMC9144204.md",
+              "/app/papers/PMC10709409.md",
+              "/app/papers/PMC7983942.md",
+              "/app/papers/PMC7877856.md",
+              "/app/papers/PMID_21630030.md",
+              "/app/papers/PMID_21665049.md",
+              "/app/papers/PMID_20139798.md",
+              "/app/papers/PMID_20712525.md",
+              "/app/papers/PMID_16906022.md",
+              "/app/papers/PMID_18154446.md",
+              "/app/papers/PMID_16198653.md",
+              "/app/papers/PMID_16758257.md",
+              "/app/papers/PMID_18781850.md",
+              "/app/papers/PMID_12490595.md",
+              "/app/papers/PMID_16513443.md",
+              "/app/papers/PMID_34887219.md",
+              "/app/papers/PMID_18159134.md",
+              "/app/papers/PMID_17766002.md",
+              "/app/papers/PMID_10644574.md",
+              "/app/papers/PMID_12130747.md",
+              "/app/papers/PMID_20877131.md",
+              "/app/papers/PMID_16198652.md",
+              "/app/papers/PMID_17996736.md",
+              "/app/papers/PMID_19122343.md",
+              "/app/papers/PMID_12811365.md",
+              "/app/papers/PMID_25546334.md",
+              "/app/papers/PMID_18043684.md",
+              "/app/papers/PMID_16515396.md",
+              "/app/papers/PMID_15226675.md",
+              "/app/papers/PMID_18695635.md",
+              "/app/papers/PMID_15116054.md",
+              "/app/papers/PMID_11477075.md",
+              "/app/papers/PMID_18185926.md",
+              "/app/papers/PMID_16697742.md",
+              "/app/papers/PMID_36964102.md",
+              "/app/papers/PMID_10358072.md",
+              "/app/papers/PMID_15970799.md",
+              "/app/papers/PMID_10601278.md",
+              "/app/papers/PMID_17568401.md",
+              "/app/papers/PMID_17883959.md",
+              "/app/papers/PMID_21245207.md"
+            ],
+            "durationMs": 235,
+            "numFiles": 62,
+            "truncated": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01BEpm3Wg5sEFHYJhkDV8KgC",
+            "type": "tool_result",
+            "content": "/app/papers/PMC6858017.md\n/app/papers/PMC6896237.md\n/app/papers/PMC8042483.md\n/app/papers/PMC11283089.md\n/app/papers/PMC3246196.md\n/app/papers/PMC7289979.md\n/app/papers/PMC7005217.md\n/app/papers/PMC3266790.md\n/app/papers/PMC3947488.md\n/app/papers/PMC11751521.md\n/app/papers/PMC6000981.md\n/app/papers/PMC11671340.md\n/app/papers/PMC3876790.md\n/app/papers/PMC11050003.md\n/app/papers/PMC12127550.md\n/app/papers/PMC12087686.md\n/app/papers/PMC3706890.md\n/app/papers/PMC4220464.md\n/app/papers/PMC5007069.md\n/app/papers/PMC4063287.md\n/app/papers/PMC2884029.md\n/app/papers/PMC9144204.md\n/app/papers/PMC10709409.md\n/app/papers/PMC7983942.md\n/app/papers/PMC7877856.md\n/app/papers/PMID_21630030.md\n/app/papers/PMID_21665049.md\n/app/papers/PMID_20139798.md\n/app/papers/PMID_20712525.md\n/app/papers/PMID_16906022.md\n/app/papers/PMID_18154446.md\n/app/papers/PMID_16198653.md\n/app/papers/PMID_16758257.md\n/app/papers/PMID_18781850.md\n/app/papers/PMID_12490595.md\n/app/papers/PMID_16513443.md\n/app/papers/PMID_34887219.md\n/app/papers/PMID_18159134.md\n/app/papers/PMID_17766002.md\n/app/papers/PMID_10644574.md\n/app/papers/PMID_12130747.md\n/app/papers/PMID_20877131.md\n/app/papers/PMID_16198652.md\n/app/papers/PMID_17996736.md\n/app/papers/PMID_19122343.md\n/app/papers/PMID_12811365.md\n/app/papers/PMID_25546334.md\n/app/papers/PMID_18043684.md\n/app/papers/PMID_16515396.md\n/app/papers/PMID_15226675.md\n/app/papers/PMID_18695635.md\n/app/papers/PMID_15116054.md\n/app/papers/PMID_11477075.md\n/app/papers/PMID_18185926.md\n/app/papers/PMID_16697742.md\n/app/papers/PMID_36964102.md\n/app/papers/PMID_10358072.md\n/app/papers/PMID_15970799.md\n/app/papers/PMID_10601278.md\n/app/papers/PMID_17568401.md\n/app/papers/PMID_17883959.md\n/app/papers/PMID_21245207.md"
+          }
+        },
+        "raw_arguments": {
+          "pattern": "/app/papers/**/*"
+        }
+      }
+    },
+    {
+      "step_id": 4,
+      "timestamp": "2026-02-20T02:26:25.099Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "Executed Task toolu_013GtwKGucGtusCwYqThoymD",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_013GtwKGucGtusCwYqThoymD",
+          "function_name": "Task",
+          "arguments": {
+            "description": "Read key papers on SLCO1B1 and pravastatin",
+            "subagent_type": "Explore",
+            "prompt": "Search through the papers in /app/papers/ and find those that are most relevant to SLCO1B1 Poor Function and pravastatin dosing. Read through papers that discuss: 1) SLCO1B1 gene variants and statin pharmacokinetics, 2) pravastatin specifically with SLCO1B1, 3) clinical guidelines for SLCO1B1 and statins, 4) myopathy/toxicity risk. \n\nKey papers to prioritize reading (but read others too if they seem relevant):\n- PMC11283089.md\n- PMC8042483.md  \n- PMC6858017.md\n- PMC3876790.md\n- PMC4220464.md\n\nReturn a detailed summary of what each relevant paper says about SLCO1B1 Poor Function and pravastatin - including specific AUC changes, risk levels, and any dosing recommendations."
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_013GtwKGucGtusCwYqThoymD",
+            "content": "{\"type\": \"text\", \"text\": \"Perfect! Now I have comprehensive information. Let me compile the detailed summary based on all the papers I've reviewed.\\n\\n## Detailed Summary: SLCO1B1 Poor Function and Pravastatin Dosing\\n\\nBased on comprehensive review of the priority papers and related literature, here is what each relevant paper says about SLCO1B1 poor function and pravastatin:\\n\\n### **PMID_15226675 (Niemi et al., 2004) - \\\"High plasma pravastatin concentrations are associated with single nucleotide polymorphisms and haplotypes of organic anion transporting polypeptide-C (OATP-C, SLCO1B1)\\\"**\\n\\n- **Key Findings:** This seminal study identified crucial associations between SLCO1B1 variants and pravastatin pharmacokinetics\\n- **AUC Changes:** \\n  - OATP-C 521T>C (Val174Ala) heterozygotes: **106% higher pravastatin AUC** (P=0.0034)\\n  - -11187G>A promoter SNP heterozygotes: **98% higher pravastatin AUC** (P=0.0061)\\n  - *15B haplotype (388A>G + 521T>C): **93% higher AUC** (P=0.024)\\n  - *17 haplotype (-11187G>A + 388A>G + 521T>C): **130% higher AUC** (P=0.0053)\\n- **Clinical Significance:** Haplotypes are more informative than single SNPs in predicting OATP1B1 phenotype\\n- **Poor Function Definition:** SLCO1B1*5 and *15 variants reduce hepatocellular uptake of pravastatin, causing significantly elevated plasma concentrations\\n\\n### **PMID_15116054 (Mwinyi et al., 2004) - \\\"Evidence for inverse effects of OATP-C (SLC21A6) *5 and *1b haplotypes on pravastatin kinetics\\\"**\\n\\n- **AUC(0-6) Values with 40 mg pravastatin dose:**\\n  - *1a/*1a (wild-type): 114.5 ± 68.6 µg·L⁻¹·h\\n  - *1a/*1b or *1b/*1b (enhanced function): 74.8 ± 35.6 µg·L⁻¹·h (**35% LOWER than wild-type**)\\n  - *1a/*5 (poor function): 163.0 ± 64.6 µg·L⁻¹·h (**42% HIGHER than wild-type**)\\n- **Statistical Significance:** P=0.006 across all three groups; P=0.002 between *1b and *5 groups\\n- **Risk Implications:** *5 expression significantly delays hepatocellular uptake of pravastatin, resulting in substantially elevated drug exposure and increased myopathy risk\\n\\n### **PMID_15970799 (Kameyama et al., 2005) - \\\"Functional characterization of SLCO1B1 (OATP-C) variants, SLCO1B1*5, SLCO1B1*15 and SLCO1B1*15+C1007G\\\"**\\n\\n- **Functional Impact:** SLCO1B1*5, *15, and *15+C1007G all showed **significantly decreased transport activities** for pravastatin and other statins\\n- **Mechanism:** The common 521T>C SNP is the key mutation determining loss of function in these variants\\n- **Vmax Reduction:** Kinetic analysis showed Vmax values decreased significantly (Km unchanged) for pravastatin in cells expressing poor function variants\\n- **Cellular Localization:** Poor function proteins localized to both plasma membrane AND intracellular space (protein sorting defect), explaining reduced functional activity\\n- **Clinical Relevance:** Case report mentions a patient with pravastatin-induced myopathy who carried SLCO1B1*15+C1007G\\n\\n### **PMID_16198653 (Chung et al., 2005) - \\\"Effect of OATP1B1 (SLCO1B1) variant alleles on the pharmacokinetics of pitavastatin\\\"**\\n\\n- **Genotype-Phenotype Classification:** Establishes clinical framework for classifying individuals as:\\n  - **Extensive transporter** (*1b/*1b): Dose-normalized AUC = 38.8 ± 13.3 ng·h·mL⁻¹·mg⁻¹\\n  - **Intermediate transporter** (*1a/*1a or *1a/*1b): Dose-normalized AUC = 54.4 ± 12.4 ng·h·mL⁻¹·mg⁻¹\\n  - **Poor transporter** (*1a/*15 or *1b/*15): Dose-normalized AUC = 68.1 ± 6.3 ng·h·mL⁻¹·mg⁻¹ (**76% HIGHER than extensive transporters**)\\n- **Significance:** Demonstrates that poor transporter phenotype has substantially reduced statin clearance\\n\\n### **PMID_16513443 (Katz et al., 2006) - \\\"Organic anion transporting polypeptide 1B1 activity classified by SLCO1B1 genotype\\\"**\\n\\n- **Classification System:** Individuals can be classified as extensive, intermediate, or **poor OATP1B1 transporters** based on SLCO1B1 genotype\\n- **Clinical Consequence for Poor Transporters:** \\\"Increased exposures of OATP1B1 substrates might be expected in individuals who have the poor transporter phenotype or are treated with an OATP1B1 inhibitor\\\"\\n- **Risk Management:** Identifies need for personalized dosing in poor transporters\\n\\n### **PMC3876790 (Prasad et al., 2014) - \\\"Interindividual Variability in Hepatic Organic Anion-Transporting Polypeptides and P-Glycoprotein (ABCB1) Protein Expression\\\"**\\n\\n- **Genotype-Dependent Expression:**\\n  - **SLCO1B1 *14/*14 haplotype:** 2.2-fold HIGHER OATP1B1 expression (enhanced function)\\n  - **SLCO1B1 *14/*1a haplotype:** 1.9-fold higher expression\\n  - **Predicted AUC Changes:** Up to **40% decrease in mean AUC** of OATP1B1 substrates in enhanced transporters (*14/*14)\\n- **Poor Function Variants (like *5, *15):** Predicted to show opposite effect with AUC **increases** (not fully quantified for statins in this paper, but referenced as causing myopathy)\\n- **Clinical Relevance for Statins:** Study notes variant c.521T>C (SLCO1B1*5) is \\\"associated with statin-mediated myopathy\\\"\\n\\n### **PMID_12811365 (Nishizato et al., 2003) - \\\"Polymorphisms of OATP-C (SLC21A6) and OAT3 (SLC22A8) genes: consequences for pravastatin pharmacokinetics\\\"**\\n\\n- **Nonrenal Clearance (mL/kg/h):**\\n  - OATP-C *1b/*1b: 2.01 ± 0.42 L·kg⁻¹·h⁻¹\\n  - OATP-C *1b/*15 (heterozygous, poor function): 1.11 ± 0.34 L·kg⁻¹·h⁻¹ (**45% REDUCTION**, P<0.05)\\n  - OATP-C *15/*15 (homozygous, poor function): 0.29 L·kg⁻¹·h⁻¹ (only 1 subject; **85% REDUCTION**)\\n- **Significance:** Demonstrates dose-response relationship with poor function variants causing progressive reductions in hepatic clearance\\n- **Clinical Implication:** T521C variant (Val174Ala) is \\\"likely to be associated with altered pharmacokinetics of pravastatin\\\"\\n\\n### **PMC8042483 (Zhang et al., 2021) - \\\"SLCO1B1: Application and Limitations of Deep Mutational Scanning for Genomic Missense Variant Function\\\"**\\n\\n- **Severely Damaging Variants:** Identified 6 novel SLCO1B1 missense variants with <25% of wild-type protein expression\\n- **Clinical Relevance:** SLCO1B1*5 variant (rs4149056) is \\\"associated with decreased plasma clearance of statins such as simvastatin, which can result in statin-induced myopathy\\\"\\n- **Mechanism:** Loss of function primarily through altered protein abundance/degradation, not just altered substrate affinity\\n- **Importance:** Identifies previously uncharacterized VUS that may cause myopathy similar to established poor function variants\\n\\n### **PMC6858017 (Ramsey et al., 2019) - \\\"Association of SLCO1B1 *14 Allele with Poor Response to Methotrexate in JIA Patients\\\"**\\n\\n- While focused on methotrexate (not directly pravastatin), **demonstrates the opposite phenotype:**\\n  - **SLCO1B1*14 allele:** INCREASED transporter expression = faster drug clearance = **reduced drug exposure**\\n  - This contrasts with poor function variants (*5, *15) that DECREASE clearance\\n- **Relevance:** Shows how SLCO1B1 variants create a spectrum from poor function (high AUC) to enhanced function (low AUC)\\n\\n### **PMC12087686 (Haldar et al., 2025) - \\\"SLCO1B1 Functional Variants, Bilirubin, Statin-Induced Myotoxicity\\\"**\\n\\n- **Recent Evidence on UNDERSTUDIED VARIANTS:** Identifies SLCO1B1 variants common in Sub-Saharan African ancestry populations that cause severe myotoxicity:\\n  - **rs77271279 (c.481+1G>T - splice site loss-of-function):** Strongest association with elevated bilirubin (P=1.1×10⁻¹⁷) in Black participants; 84% higher mean bilirubin levels\\n  - **rs59502379 (c.1463G>C - missense):** Associated with elevated bilirubin (P=7.4×10⁻¹²) AND severe statin myotoxicity (OR=2.85, 95% CI 1.08-7.52)\\n  - **rs4149056 (c.521T>C - SLCO1B1*5):** The well-established poor function variant\\n\\n- **Coproporphyrin Biomarker:** Plasma coproporphyrin I (endogenous OATP1B1 substrate) levels were elevated in patients with loss-of-function SLCO1B1 haplotypes, indicating reduced hepatic OATP1B1 function\\n\\n- **Clinical Implications for Myopathy Risk:** These understudied variants show effect sizes (bilirubin elevation) larger than the well-established c.521T>C variant in their study population\\n\\n### **PMID_16515396 (Rohrbacher et al., 2006) - \\\"Rapid identification of three functionally relevant polymorphisms in OATP1B1\\\"**\\n\\n- **Haplotype Frequencies in Caucasians:**\\n  - SLCO1B1*15B (-11187G/388G/521C): 9% allele frequency\\n  - SLCO1B1*17 (-11187A/388G/521C): 2% allele frequency\\n- **Both *15B and *17 haplotypes** are \\\"reportedly associated with altered substrate pharmacokinetics\\\" including pravastatin\\n\\n### **PMC11671340 (Unpublished case study) - Rhabdomyolysis case**\\n\\n- **Clinical Case:** African ancestry patient with SLCO1B1 variants (c.481+1G>T and c.1463G>C) developed severe statin-induced rhabdomyolysis when rosuvastatin dose was increased to 40 mg daily\\n- **Biomarker Evidence:** Coproporphyrin I levels elevated at 1.84 ng/mL (normal 0.1-1.6 ng/mL), indicating severe OATP1B1 dysfunction\\n- **Comparison:** CPI level similar to patients with homozygous *15/*15 haplotype (geometric mean 1.65 ng/mL)\\n- **Recommendation:** Clinical guidelines for statin-associated myopathy should include broader range of SLCO1B1 variants reflecting diverse populations\\n\\n---\\n\\n## **SUMMARY TABLE: Pravastatin Dosing Recommendations by SLCO1B1 Function**\\n\\n| SLCO1B1 Genotype | Function Status | AUC Change vs Wild-type | Pravastatin Risk | Clinical Recommendation |\\n|---|---|---|---|---|\\n| *1a/*1a (c.388AA, c.521TT) | Normal/Wild-type | Baseline | Standard risk | Standard dosing |\\n| *1a/*1b, *1b/*1b (c.388AG/GG enhanced) | Enhanced function | -35% lower AUC | Reduced efficacy | May need higher dose for efficacy |\\n| *1a/*15, *1b/*15 (c.521TC heterozygous) | Poor/Reduced function | +45-106% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\\n| *15/*15 (c.521CC homozygous) | Poor/Severely reduced | **+130% higher AUC** | **VERY HIGH myopathy risk** | **Contraindicated or minimal dose** |\\n| *5 variants (c.521T>C) | Poor function | +42-163% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\\n| Recent African ancestry variants (c.481+1G>T, c.1463G>C) | Poor/Loss-of-function | Elevated biomarkers | **VERY HIGH myopathy risk** | **Avoid or minimal dose** |\\n\\n---\\n\\n## **KEY CLINICAL TAKEAWAYS FOR PRAVASTATIN AND SLCO1B1 POOR FUNCTION:**\\n\\n1. **Pravastatin is an OATP1B1 substrate** - Poor function variants dramatically increase plasma concentrations (can exceed 100-130% above normal)\\n\\n2. **Poor Function Phenotype Risk:** Heterozygous carriers of SLCO1B1*5 or *15 have 40-110% higher AUC; homozygous carriers have extreme increases\\n\\n3. **Alternative Statins:** Pravastatin is one of the highest-risk statins for poor OATP1B1 function. Rosuvastatin also heavily dependent on OATP1B1. Atorvastatin and simvastatin more dependent on CYP metabolism but still affected.\\n\\n4. **Dosing Recommendations:** CPIC guidelines recommend dose reduction or avoidance of simvastatin/pravastatin in SLCO1B1*5 carriers; current guidelines don't specifically address all poor function variants (gaps in equity for African ancestry variants)\\n\\n5. **Myopathy/Toxicity Risk:** High plasma concentrations from poor OATP1B1 function are a major mechanistic driver of statin-induced myopathy, rhabdomyolysis, and myotoxicity\\n\\n6. **Biomarkers:** Elevated coproporphyrin I and bilirubin indicate OATP1B1 dysfunction and increased myopathy risk with statin therapy\"}\n\n{\"type\": \"text\", \"text\": \"agentId: a35aede (for resuming to continue this agent's work if needed)\\n<usage>total_tokens: 123270\\ntool_uses: 30\\nduration_ms: 69806</usage>\"}\n\n[metadata] {\"status\": \"completed\", \"prompt\": \"Search through the papers in /app/papers/ and find those that are most relevant to SLCO1B1 Poor Function and pravastatin dosing. Read through papers that discuss: 1) SLCO1B1 gene variants and statin pharmacokinetics, 2) pravastatin specifically with SLCO1B1, 3) clinical guidelines for SLCO1B1 and statins, 4) myopathy/toxicity risk. \\n\\nKey papers to prioritize reading (but read others too if they seem relevant):\\n- PMC11283089.md\\n- PMC8042483.md  \\n- PMC6858017.md\\n- PMC3876790.md\\n- PMC4220464.md\\n\\nReturn a detailed summary of what each relevant paper says about SLCO1B1 Poor Function and pravastatin - including specific AUC changes, risk levels, and any dosing recommendations.\", \"agentId\": \"a35aede\", \"content\": [{\"type\": \"text\", \"text\": \"Perfect! Now I have comprehensive information. Let me compile the detailed summary based on all the papers I've reviewed.\\n\\n## Detailed Summary: SLCO1B1 Poor Function and Pravastatin Dosing\\n\\nBased on comprehensive review of the priority papers and related literature, here is what each relevant paper says about SLCO1B1 poor function and pravastatin:\\n\\n### **PMID_15226675 (Niemi et al., 2004) - \\\"High plasma pravastatin concentrations are associated with single nucleotide polymorphisms and haplotypes of organic anion transporting polypeptide-C (OATP-C, SLCO1B1)\\\"**\\n\\n- **Key Findings:** This seminal study identified crucial associations between SLCO1B1 variants and pravastatin pharmacokinetics\\n- **AUC Changes:** \\n  - OATP-C 521T>C (Val174Ala) heterozygotes: **106% higher pravastatin AUC** (P=0.0034)\\n  - -11187G>A promoter SNP heterozygotes: **98% higher pravastatin AUC** (P=0.0061)\\n  - *15B haplotype (388A>G + 521T>C): **93% higher AUC** (P=0.024)\\n  - *17 haplotype (-11187G>A + 388A>G + 521T>C): **130% higher AUC** (P=0.0053)\\n- **Clinical Significance:** Haplotypes are more informative than single SNPs in predicting OATP1B1 phenotype\\n- **Poor Function Definition:** SLCO1B1*5 and *15 variants reduce hepatocellular uptake of pravastatin, causing significantly elevated plasma concentrations\\n\\n### **PMID_15116054 (Mwinyi et al., 2004) - \\\"Evidence for inverse effects of OATP-C (SLC21A6) *5 and *1b haplotypes on pravastatin kinetics\\\"**\\n\\n- **AUC(0-6) Values with 40 mg pravastatin dose:**\\n  - *1a/*1a (wild-type): 114.5 ± 68.6 µg·L⁻¹·h\\n  - *1a/*1b or *1b/*1b (enhanced function): 74.8 ± 35.6 µg·L⁻¹·h (**35% LOWER than wild-type**)\\n  - *1a/*5 (poor function): 163.0 ± 64.6 µg·L⁻¹·h (**42% HIGHER than wild-type**)\\n- **Statistical Significance:** P=0.006 across all three groups; P=0.002 between *1b and *5 groups\\n- **Risk Implications:** *5 expression significantly delays hepatocellular uptake of pravastatin, resulting in substantially elevated drug exposure and increased myopathy risk\\n\\n### **PMID_15970799 (Kameyama et al., 2005) - \\\"Functional characterization of SLCO1B1 (OATP-C) variants, SLCO1B1*5, SLCO1B1*15 and SLCO1B1*15+C1007G\\\"**\\n\\n- **Functional Impact:** SLCO1B1*5, *15, and *15+C1007G all showed **significantly decreased transport activities** for pravastatin and other statins\\n- **Mechanism:** The common 521T>C SNP is the key mutation determining loss of function in these variants\\n- **Vmax Reduction:** Kinetic analysis showed Vmax values decreased significantly (Km unchanged) for pravastatin in cells expressing poor function variants\\n- **Cellular Localization:** Poor function proteins localized to both plasma membrane AND intracellular space (protein sorting defect), explaining reduced functional activity\\n- **Clinical Relevance:** Case report mentions a patient with pravastatin-induced myopathy who carried SLCO1B1*15+C1007G\\n\\n### **PMID_16198653 (Chung et al., 2005) - \\\"Effect of OATP1B1 (SLCO1B1) variant alleles on the pharmacokinetics of pitavastatin\\\"**\\n\\n- **Genotype-Phenotype Classification:** Establishes clinical framework for classifying individuals as:\\n  - **Extensive transporter** (*1b/*1b): Dose-normalized AUC = 38.8 ± 13.3 ng·h·mL⁻¹·mg⁻¹\\n  - **Intermediate transporter** (*1a/*1a or *1a/*1b): Dose-normalized AUC = 54.4 ± 12.4 ng·h·mL⁻¹·mg⁻¹\\n  - **Poor transporter** (*1a/*15 or *1b/*15): Dose-normalized AUC = 68.1 ± 6.3 ng·h·mL⁻¹·mg⁻¹ (**76% HIGHER than extensive transporters**)\\n- **Significance:** Demonstrates that poor transporter phenotype has substantially reduced statin clearance\\n\\n### **PMID_16513443 (Katz et al., 2006) - \\\"Organic anion transporting polypeptide 1B1 activity classified by SLCO1B1 genotype\\\"**\\n\\n- **Classification System:** Individuals can be classified as extensive, intermediate, or **poor OATP1B1 transporters** based on SLCO1B1 genotype\\n- **Clinical Consequence for Poor Transporters:** \\\"Increased exposures of OATP1B1 substrates might be expected in individuals who have the poor transporter phenotype or are treated with an OATP1B1 inhibitor\\\"\\n- **Risk Management:** Identifies need for personalized dosing in poor transporters\\n\\n### **PMC3876790 (Prasad et al., 2014) - \\\"Interindividual Variability in Hepatic Organic Anion-Transporting Polypeptides and P-Glycoprotein (ABCB1) Protein Expression\\\"**\\n\\n- **Genotype-Dependent Expression:**\\n  - **SLCO1B1 *14/*14 haplotype:** 2.2-fold HIGHER OATP1B1 expression (enhanced function)\\n  - **SLCO1B1 *14/*1a haplotype:** 1.9-fold higher expression\\n  - **Predicted AUC Changes:** Up to **40% decrease in mean AUC** of OATP1B1 substrates in enhanced transporters (*14/*14)\\n- **Poor Function Variants (like *5, *15):** Predicted to show opposite effect with AUC **increases** (not fully quantified for statins in this paper, but referenced as causing myopathy)\\n- **Clinical Relevance for Statins:** Study notes variant c.521T>C (SLCO1B1*5) is \\\"associated with statin-mediated myopathy\\\"\\n\\n### **PMID_12811365 (Nishizato et al., 2003) - \\\"Polymorphisms of OATP-C (SLC21A6) and OAT3 (SLC22A8) genes: consequences for pravastatin pharmacokinetics\\\"**\\n\\n- **Nonrenal Clearance (mL/kg/h):**\\n  - OATP-C *1b/*1b: 2.01 ± 0.42 L·kg⁻¹·h⁻¹\\n  - OATP-C *1b/*15 (heterozygous, poor function): 1.11 ± 0.34 L·kg⁻¹·h⁻¹ (**45% REDUCTION**, P<0.05)\\n  - OATP-C *15/*15 (homozygous, poor function): 0.29 L·kg⁻¹·h⁻¹ (only 1 subject; **85% REDUCTION**)\\n- **Significance:** Demonstrates dose-response relationship with poor function variants causing progressive reductions in hepatic clearance\\n- **Clinical Implication:** T521C variant (Val174Ala) is \\\"likely to be associated with altered pharmacokinetics of pravastatin\\\"\\n\\n### **PMC8042483 (Zhang et al., 2021) - \\\"SLCO1B1: Application and Limitations of Deep Mutational Scanning for Genomic Missense Variant Function\\\"**\\n\\n- **Severely Damaging Variants:** Identified 6 novel SLCO1B1 missense variants with <25% of wild-type protein expression\\n- **Clinical Relevance:** SLCO1B1*5 variant (rs4149056) is \\\"associated with decreased plasma clearance of statins such as simvastatin, which can result in statin-induced myopathy\\\"\\n- **Mechanism:** Loss of function primarily through altered protein abundance/degradation, not just altered substrate affinity\\n- **Importance:** Identifies previously uncharacterized VUS that may cause myopathy similar to established poor function variants\\n\\n### **PMC6858017 (Ramsey et al., 2019) - \\\"Association of SLCO1B1 *14 Allele with Poor Response to Methotrexate in JIA Patients\\\"**\\n\\n- While focused on methotrexate (not directly pravastatin), **demonstrates the opposite phenotype:**\\n  - **SLCO1B1*14 allele:** INCREASED transporter expression = faster drug clearance = **reduced drug exposure**\\n  - This contrasts with poor function variants (*5, *15) that DECREASE clearance\\n- **Relevance:** Shows how SLCO1B1 variants create a spectrum from poor function (high AUC) to enhanced function (low AUC)\\n\\n### **PMC12087686 (Haldar et al., 2025) - \\\"SLCO1B1 Functional Variants, Bilirubin, Statin-Induced Myotoxicity\\\"**\\n\\n- **Recent Evidence on UNDERSTUDIED VARIANTS:** Identifies SLCO1B1 variants common in Sub-Saharan African ancestry populations that cause severe myotoxicity:\\n  - **rs77271279 (c.481+1G>T - splice site loss-of-function):** Strongest association with elevated bilirubin (P=1.1×10⁻¹⁷) in Black participants; 84% higher mean bilirubin levels\\n  - **rs59502379 (c.1463G>C - missense):** Associated with elevated bilirubin (P=7.4×10⁻¹²) AND severe statin myotoxicity (OR=2.85, 95% CI 1.08-7.52)\\n  - **rs4149056 (c.521T>C - SLCO1B1*5):** The well-established poor function variant\\n\\n- **Coproporphyrin Biomarker:** Plasma coproporphyrin I (endogenous OATP1B1 substrate) levels were elevated in patients with loss-of-function SLCO1B1 haplotypes, indicating reduced hepatic OATP1B1 function\\n\\n- **Clinical Implications for Myopathy Risk:** These understudied variants show effect sizes (bilirubin elevation) larger than the well-established c.521T>C variant in their study population\\n\\n### **PMID_16515396 (Rohrbacher et al., 2006) - \\\"Rapid identification of three functionally relevant polymorphisms in OATP1B1\\\"**\\n\\n- **Haplotype Frequencies in Caucasians:**\\n  - SLCO1B1*15B (-11187G/388G/521C): 9% allele frequency\\n  - SLCO1B1*17 (-11187A/388G/521C): 2% allele frequency\\n- **Both *15B and *17 haplotypes** are \\\"reportedly associated with altered substrate pharmacokinetics\\\" including pravastatin\\n\\n### **PMC11671340 (Unpublished case study) - Rhabdomyolysis case**\\n\\n- **Clinical Case:** African ancestry patient with SLCO1B1 variants (c.481+1G>T and c.1463G>C) developed severe statin-induced rhabdomyolysis when rosuvastatin dose was increased to 40 mg daily\\n- **Biomarker Evidence:** Coproporphyrin I levels elevated at 1.84 ng/mL (normal 0.1-1.6 ng/mL), indicating severe OATP1B1 dysfunction\\n- **Comparison:** CPI level similar to patients with homozygous *15/*15 haplotype (geometric mean 1.65 ng/mL)\\n- **Recommendation:** Clinical guidelines for statin-associated myopathy should include broader range of SLCO1B1 variants reflecting diverse populations\\n\\n---\\n\\n## **SUMMARY TABLE: Pravastatin Dosing Recommendations by SLCO1B1 Function**\\n\\n| SLCO1B1 Genotype | Function Status | AUC Change vs Wild-type | Pravastatin Risk | Clinical Recommendation |\\n|---|---|---|---|---|\\n| *1a/*1a (c.388AA, c.521TT) | Normal/Wild-type | Baseline | Standard risk | Standard dosing |\\n| *1a/*1b, *1b/*1b (c.388AG/GG enhanced) | Enhanced function | -35% lower AUC | Reduced efficacy | May need higher dose for efficacy |\\n| *1a/*15, *1b/*15 (c.521TC heterozygous) | Poor/Reduced function | +45-106% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\\n| *15/*15 (c.521CC homozygous) | Poor/Severely reduced | **+130% higher AUC** | **VERY HIGH myopathy risk** | **Contraindicated or minimal dose** |\\n| *5 variants (c.521T>C) | Poor function | +42-163% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\\n| Recent African ancestry variants (c.481+1G>T, c.1463G>C) | Poor/Loss-of-function | Elevated biomarkers | **VERY HIGH myopathy risk** | **Avoid or minimal dose** |\\n\\n---\\n\\n## **KEY CLINICAL TAKEAWAYS FOR PRAVASTATIN AND SLCO1B1 POOR FUNCTION:**\\n\\n1. **Pravastatin is an OATP1B1 substrate** - Poor function variants dramatically increase plasma concentrations (can exceed 100-130% above normal)\\n\\n2. **Poor Function Phenotype Risk:** Heterozygous carriers of SLCO1B1*5 or *15 have 40-110% higher AUC; homozygous carriers have extreme increases\\n\\n3. **Alternative Statins:** Pravastatin is one of the highest-risk statins for poor OATP1B1 function. Rosuvastatin also heavily dependent on OATP1B1. Atorvastatin and simvastatin more dependent on CYP metabolism but still affected.\\n\\n4. **Dosing Recommendations:** CPIC guidelines recommend dose reduction or avoidance of simvastatin/pravastatin in SLCO1B1*5 carriers; current guidelines don't specifically address all poor function variants (gaps in equity for African ancestry variants)\\n\\n5. **Myopathy/Toxicity Risk:** High plasma concentrations from poor OATP1B1 function are a major mechanistic driver of statin-induced myopathy, rhabdomyolysis, and myotoxicity\\n\\n6. **Biomarkers:** Elevated coproporphyrin I and bilirubin indicate OATP1B1 dysfunction and increased myopathy risk with statin therapy\"}], \"totalDurationMs\": 69806, \"totalTokens\": 123270, \"totalToolUseCount\": 30, \"usage\": {\"input_tokens\": 6510, \"cache_creation_input_tokens\": 13897, \"cache_read_input_tokens\": 98997, \"output_tokens\": 3866, \"server_tool_use\": {\"web_search_requests\": 0, \"web_fetch_requests\": 0}, \"service_tier\": \"standard\", \"cache_creation\": {\"ephemeral_1h_input_tokens\": 0, \"ephemeral_5m_input_tokens\": 13897}, \"inference_geo\": \"\", \"iterations\": [], \"speed\": \"standard\"}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 19523,
+        "completion_tokens": 24,
+        "cached_tokens": 19522,
+        "extra": {
+          "cache_creation_input_tokens": 1004,
+          "cache_read_input_tokens": 19522,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 1004,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false,
+        "tool_use_name": "Task",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "status": "completed",
+            "prompt": "Search through the papers in /app/papers/ and find those that are most relevant to SLCO1B1 Poor Function and pravastatin dosing. Read through papers that discuss: 1) SLCO1B1 gene variants and statin pharmacokinetics, 2) pravastatin specifically with SLCO1B1, 3) clinical guidelines for SLCO1B1 and statins, 4) myopathy/toxicity risk. \n\nKey papers to prioritize reading (but read others too if they seem relevant):\n- PMC11283089.md\n- PMC8042483.md  \n- PMC6858017.md\n- PMC3876790.md\n- PMC4220464.md\n\nReturn a detailed summary of what each relevant paper says about SLCO1B1 Poor Function and pravastatin - including specific AUC changes, risk levels, and any dosing recommendations.",
+            "agentId": "a35aede",
+            "content": [
+              {
+                "type": "text",
+                "text": "Perfect! Now I have comprehensive information. Let me compile the detailed summary based on all the papers I've reviewed.\n\n## Detailed Summary: SLCO1B1 Poor Function and Pravastatin Dosing\n\nBased on comprehensive review of the priority papers and related literature, here is what each relevant paper says about SLCO1B1 poor function and pravastatin:\n\n### **PMID_15226675 (Niemi et al., 2004) - \"High plasma pravastatin concentrations are associated with single nucleotide polymorphisms and haplotypes of organic anion transporting polypeptide-C (OATP-C, SLCO1B1)\"**\n\n- **Key Findings:** This seminal study identified crucial associations between SLCO1B1 variants and pravastatin pharmacokinetics\n- **AUC Changes:** \n  - OATP-C 521T>C (Val174Ala) heterozygotes: **106% higher pravastatin AUC** (P=0.0034)\n  - -11187G>A promoter SNP heterozygotes: **98% higher pravastatin AUC** (P=0.0061)\n  - *15B haplotype (388A>G + 521T>C): **93% higher AUC** (P=0.024)\n  - *17 haplotype (-11187G>A + 388A>G + 521T>C): **130% higher AUC** (P=0.0053)\n- **Clinical Significance:** Haplotypes are more informative than single SNPs in predicting OATP1B1 phenotype\n- **Poor Function Definition:** SLCO1B1*5 and *15 variants reduce hepatocellular uptake of pravastatin, causing significantly elevated plasma concentrations\n\n### **PMID_15116054 (Mwinyi et al., 2004) - \"Evidence for inverse effects of OATP-C (SLC21A6) *5 and *1b haplotypes on pravastatin kinetics\"**\n\n- **AUC(0-6) Values with 40 mg pravastatin dose:**\n  - *1a/*1a (wild-type): 114.5 ± 68.6 µg·L⁻¹·h\n  - *1a/*1b or *1b/*1b (enhanced function): 74.8 ± 35.6 µg·L⁻¹·h (**35% LOWER than wild-type**)\n  - *1a/*5 (poor function): 163.0 ± 64.6 µg·L⁻¹·h (**42% HIGHER than wild-type**)\n- **Statistical Significance:** P=0.006 across all three groups; P=0.002 between *1b and *5 groups\n- **Risk Implications:** *5 expression significantly delays hepatocellular uptake of pravastatin, resulting in substantially elevated drug exposure and increased myopathy risk\n\n### **PMID_15970799 (Kameyama et al., 2005) - \"Functional characterization of SLCO1B1 (OATP-C) variants, SLCO1B1*5, SLCO1B1*15 and SLCO1B1*15+C1007G\"**\n\n- **Functional Impact:** SLCO1B1*5, *15, and *15+C1007G all showed **significantly decreased transport activities** for pravastatin and other statins\n- **Mechanism:** The common 521T>C SNP is the key mutation determining loss of function in these variants\n- **Vmax Reduction:** Kinetic analysis showed Vmax values decreased significantly (Km unchanged) for pravastatin in cells expressing poor function variants\n- **Cellular Localization:** Poor function proteins localized to both plasma membrane AND intracellular space (protein sorting defect), explaining reduced functional activity\n- **Clinical Relevance:** Case report mentions a patient with pravastatin-induced myopathy who carried SLCO1B1*15+C1007G\n\n### **PMID_16198653 (Chung et al., 2005) - \"Effect of OATP1B1 (SLCO1B1) variant alleles on the pharmacokinetics of pitavastatin\"**\n\n- **Genotype-Phenotype Classification:** Establishes clinical framework for classifying individuals as:\n  - **Extensive transporter** (*1b/*1b): Dose-normalized AUC = 38.8 ± 13.3 ng·h·mL⁻¹·mg⁻¹\n  - **Intermediate transporter** (*1a/*1a or *1a/*1b): Dose-normalized AUC = 54.4 ± 12.4 ng·h·mL⁻¹·mg⁻¹\n  - **Poor transporter** (*1a/*15 or *1b/*15): Dose-normalized AUC = 68.1 ± 6.3 ng·h·mL⁻¹·mg⁻¹ (**76% HIGHER than extensive transporters**)\n- **Significance:** Demonstrates that poor transporter phenotype has substantially reduced statin clearance\n\n### **PMID_16513443 (Katz et al., 2006) - \"Organic anion transporting polypeptide 1B1 activity classified by SLCO1B1 genotype\"**\n\n- **Classification System:** Individuals can be classified as extensive, intermediate, or **poor OATP1B1 transporters** based on SLCO1B1 genotype\n- **Clinical Consequence for Poor Transporters:** \"Increased exposures of OATP1B1 substrates might be expected in individuals who have the poor transporter phenotype or are treated with an OATP1B1 inhibitor\"\n- **Risk Management:** Identifies need for personalized dosing in poor transporters\n\n### **PMC3876790 (Prasad et al., 2014) - \"Interindividual Variability in Hepatic Organic Anion-Transporting Polypeptides and P-Glycoprotein (ABCB1) Protein Expression\"**\n\n- **Genotype-Dependent Expression:**\n  - **SLCO1B1 *14/*14 haplotype:** 2.2-fold HIGHER OATP1B1 expression (enhanced function)\n  - **SLCO1B1 *14/*1a haplotype:** 1.9-fold higher expression\n  - **Predicted AUC Changes:** Up to **40% decrease in mean AUC** of OATP1B1 substrates in enhanced transporters (*14/*14)\n- **Poor Function Variants (like *5, *15):** Predicted to show opposite effect with AUC **increases** (not fully quantified for statins in this paper, but referenced as causing myopathy)\n- **Clinical Relevance for Statins:** Study notes variant c.521T>C (SLCO1B1*5) is \"associated with statin-mediated myopathy\"\n\n### **PMID_12811365 (Nishizato et al., 2003) - \"Polymorphisms of OATP-C (SLC21A6) and OAT3 (SLC22A8) genes: consequences for pravastatin pharmacokinetics\"**\n\n- **Nonrenal Clearance (mL/kg/h):**\n  - OATP-C *1b/*1b: 2.01 ± 0.42 L·kg⁻¹·h⁻¹\n  - OATP-C *1b/*15 (heterozygous, poor function): 1.11 ± 0.34 L·kg⁻¹·h⁻¹ (**45% REDUCTION**, P<0.05)\n  - OATP-C *15/*15 (homozygous, poor function): 0.29 L·kg⁻¹·h⁻¹ (only 1 subject; **85% REDUCTION**)\n- **Significance:** Demonstrates dose-response relationship with poor function variants causing progressive reductions in hepatic clearance\n- **Clinical Implication:** T521C variant (Val174Ala) is \"likely to be associated with altered pharmacokinetics of pravastatin\"\n\n### **PMC8042483 (Zhang et al., 2021) - \"SLCO1B1: Application and Limitations of Deep Mutational Scanning for Genomic Missense Variant Function\"**\n\n- **Severely Damaging Variants:** Identified 6 novel SLCO1B1 missense variants with <25% of wild-type protein expression\n- **Clinical Relevance:** SLCO1B1*5 variant (rs4149056) is \"associated with decreased plasma clearance of statins such as simvastatin, which can result in statin-induced myopathy\"\n- **Mechanism:** Loss of function primarily through altered protein abundance/degradation, not just altered substrate affinity\n- **Importance:** Identifies previously uncharacterized VUS that may cause myopathy similar to established poor function variants\n\n### **PMC6858017 (Ramsey et al., 2019) - \"Association of SLCO1B1 *14 Allele with Poor Response to Methotrexate in JIA Patients\"**\n\n- While focused on methotrexate (not directly pravastatin), **demonstrates the opposite phenotype:**\n  - **SLCO1B1*14 allele:** INCREASED transporter expression = faster drug clearance = **reduced drug exposure**\n  - This contrasts with poor function variants (*5, *15) that DECREASE clearance\n- **Relevance:** Shows how SLCO1B1 variants create a spectrum from poor function (high AUC) to enhanced function (low AUC)\n\n### **PMC12087686 (Haldar et al., 2025) - \"SLCO1B1 Functional Variants, Bilirubin, Statin-Induced Myotoxicity\"**\n\n- **Recent Evidence on UNDERSTUDIED VARIANTS:** Identifies SLCO1B1 variants common in Sub-Saharan African ancestry populations that cause severe myotoxicity:\n  - **rs77271279 (c.481+1G>T - splice site loss-of-function):** Strongest association with elevated bilirubin (P=1.1×10⁻¹⁷) in Black participants; 84% higher mean bilirubin levels\n  - **rs59502379 (c.1463G>C - missense):** Associated with elevated bilirubin (P=7.4×10⁻¹²) AND severe statin myotoxicity (OR=2.85, 95% CI 1.08-7.52)\n  - **rs4149056 (c.521T>C - SLCO1B1*5):** The well-established poor function variant\n\n- **Coproporphyrin Biomarker:** Plasma coproporphyrin I (endogenous OATP1B1 substrate) levels were elevated in patients with loss-of-function SLCO1B1 haplotypes, indicating reduced hepatic OATP1B1 function\n\n- **Clinical Implications for Myopathy Risk:** These understudied variants show effect sizes (bilirubin elevation) larger than the well-established c.521T>C variant in their study population\n\n### **PMID_16515396 (Rohrbacher et al., 2006) - \"Rapid identification of three functionally relevant polymorphisms in OATP1B1\"**\n\n- **Haplotype Frequencies in Caucasians:**\n  - SLCO1B1*15B (-11187G/388G/521C): 9% allele frequency\n  - SLCO1B1*17 (-11187A/388G/521C): 2% allele frequency\n- **Both *15B and *17 haplotypes** are \"reportedly associated with altered substrate pharmacokinetics\" including pravastatin\n\n### **PMC11671340 (Unpublished case study) - Rhabdomyolysis case**\n\n- **Clinical Case:** African ancestry patient with SLCO1B1 variants (c.481+1G>T and c.1463G>C) developed severe statin-induced rhabdomyolysis when rosuvastatin dose was increased to 40 mg daily\n- **Biomarker Evidence:** Coproporphyrin I levels elevated at 1.84 ng/mL (normal 0.1-1.6 ng/mL), indicating severe OATP1B1 dysfunction\n- **Comparison:** CPI level similar to patients with homozygous *15/*15 haplotype (geometric mean 1.65 ng/mL)\n- **Recommendation:** Clinical guidelines for statin-associated myopathy should include broader range of SLCO1B1 variants reflecting diverse populations\n\n---\n\n## **SUMMARY TABLE: Pravastatin Dosing Recommendations by SLCO1B1 Function**\n\n| SLCO1B1 Genotype | Function Status | AUC Change vs Wild-type | Pravastatin Risk | Clinical Recommendation |\n|---|---|---|---|---|\n| *1a/*1a (c.388AA, c.521TT) | Normal/Wild-type | Baseline | Standard risk | Standard dosing |\n| *1a/*1b, *1b/*1b (c.388AG/GG enhanced) | Enhanced function | -35% lower AUC | Reduced efficacy | May need higher dose for efficacy |\n| *1a/*15, *1b/*15 (c.521TC heterozygous) | Poor/Reduced function | +45-106% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\n| *15/*15 (c.521CC homozygous) | Poor/Severely reduced | **+130% higher AUC** | **VERY HIGH myopathy risk** | **Contraindicated or minimal dose** |\n| *5 variants (c.521T>C) | Poor function | +42-163% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\n| Recent African ancestry variants (c.481+1G>T, c.1463G>C) | Poor/Loss-of-function | Elevated biomarkers | **VERY HIGH myopathy risk** | **Avoid or minimal dose** |\n\n---\n\n## **KEY CLINICAL TAKEAWAYS FOR PRAVASTATIN AND SLCO1B1 POOR FUNCTION:**\n\n1. **Pravastatin is an OATP1B1 substrate** - Poor function variants dramatically increase plasma concentrations (can exceed 100-130% above normal)\n\n2. **Poor Function Phenotype Risk:** Heterozygous carriers of SLCO1B1*5 or *15 have 40-110% higher AUC; homozygous carriers have extreme increases\n\n3. **Alternative Statins:** Pravastatin is one of the highest-risk statins for poor OATP1B1 function. Rosuvastatin also heavily dependent on OATP1B1. Atorvastatin and simvastatin more dependent on CYP metabolism but still affected.\n\n4. **Dosing Recommendations:** CPIC guidelines recommend dose reduction or avoidance of simvastatin/pravastatin in SLCO1B1*5 carriers; current guidelines don't specifically address all poor function variants (gaps in equity for African ancestry variants)\n\n5. **Myopathy/Toxicity Risk:** High plasma concentrations from poor OATP1B1 function are a major mechanistic driver of statin-induced myopathy, rhabdomyolysis, and myotoxicity\n\n6. **Biomarkers:** Elevated coproporphyrin I and bilirubin indicate OATP1B1 dysfunction and increased myopathy risk with statin therapy"
+              }
+            ],
+            "totalDurationMs": 69806,
+            "totalTokens": 123270,
+            "totalToolUseCount": 30,
+            "usage": {
+              "input_tokens": 6510,
+              "cache_creation_input_tokens": 13897,
+              "cache_read_input_tokens": 98997,
+              "output_tokens": 3866,
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 13897
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard"
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_013GtwKGucGtusCwYqThoymD",
+            "type": "tool_result",
+            "content": [
+              {
+                "type": "text",
+                "text": "Perfect! Now I have comprehensive information. Let me compile the detailed summary based on all the papers I've reviewed.\n\n## Detailed Summary: SLCO1B1 Poor Function and Pravastatin Dosing\n\nBased on comprehensive review of the priority papers and related literature, here is what each relevant paper says about SLCO1B1 poor function and pravastatin:\n\n### **PMID_15226675 (Niemi et al., 2004) - \"High plasma pravastatin concentrations are associated with single nucleotide polymorphisms and haplotypes of organic anion transporting polypeptide-C (OATP-C, SLCO1B1)\"**\n\n- **Key Findings:** This seminal study identified crucial associations between SLCO1B1 variants and pravastatin pharmacokinetics\n- **AUC Changes:** \n  - OATP-C 521T>C (Val174Ala) heterozygotes: **106% higher pravastatin AUC** (P=0.0034)\n  - -11187G>A promoter SNP heterozygotes: **98% higher pravastatin AUC** (P=0.0061)\n  - *15B haplotype (388A>G + 521T>C): **93% higher AUC** (P=0.024)\n  - *17 haplotype (-11187G>A + 388A>G + 521T>C): **130% higher AUC** (P=0.0053)\n- **Clinical Significance:** Haplotypes are more informative than single SNPs in predicting OATP1B1 phenotype\n- **Poor Function Definition:** SLCO1B1*5 and *15 variants reduce hepatocellular uptake of pravastatin, causing significantly elevated plasma concentrations\n\n### **PMID_15116054 (Mwinyi et al., 2004) - \"Evidence for inverse effects of OATP-C (SLC21A6) *5 and *1b haplotypes on pravastatin kinetics\"**\n\n- **AUC(0-6) Values with 40 mg pravastatin dose:**\n  - *1a/*1a (wild-type): 114.5 ± 68.6 µg·L⁻¹·h\n  - *1a/*1b or *1b/*1b (enhanced function): 74.8 ± 35.6 µg·L⁻¹·h (**35% LOWER than wild-type**)\n  - *1a/*5 (poor function): 163.0 ± 64.6 µg·L⁻¹·h (**42% HIGHER than wild-type**)\n- **Statistical Significance:** P=0.006 across all three groups; P=0.002 between *1b and *5 groups\n- **Risk Implications:** *5 expression significantly delays hepatocellular uptake of pravastatin, resulting in substantially elevated drug exposure and increased myopathy risk\n\n### **PMID_15970799 (Kameyama et al., 2005) - \"Functional characterization of SLCO1B1 (OATP-C) variants, SLCO1B1*5, SLCO1B1*15 and SLCO1B1*15+C1007G\"**\n\n- **Functional Impact:** SLCO1B1*5, *15, and *15+C1007G all showed **significantly decreased transport activities** for pravastatin and other statins\n- **Mechanism:** The common 521T>C SNP is the key mutation determining loss of function in these variants\n- **Vmax Reduction:** Kinetic analysis showed Vmax values decreased significantly (Km unchanged) for pravastatin in cells expressing poor function variants\n- **Cellular Localization:** Poor function proteins localized to both plasma membrane AND intracellular space (protein sorting defect), explaining reduced functional activity\n- **Clinical Relevance:** Case report mentions a patient with pravastatin-induced myopathy who carried SLCO1B1*15+C1007G\n\n### **PMID_16198653 (Chung et al., 2005) - \"Effect of OATP1B1 (SLCO1B1) variant alleles on the pharmacokinetics of pitavastatin\"**\n\n- **Genotype-Phenotype Classification:** Establishes clinical framework for classifying individuals as:\n  - **Extensive transporter** (*1b/*1b): Dose-normalized AUC = 38.8 ± 13.3 ng·h·mL⁻¹·mg⁻¹\n  - **Intermediate transporter** (*1a/*1a or *1a/*1b): Dose-normalized AUC = 54.4 ± 12.4 ng·h·mL⁻¹·mg⁻¹\n  - **Poor transporter** (*1a/*15 or *1b/*15): Dose-normalized AUC = 68.1 ± 6.3 ng·h·mL⁻¹·mg⁻¹ (**76% HIGHER than extensive transporters**)\n- **Significance:** Demonstrates that poor transporter phenotype has substantially reduced statin clearance\n\n### **PMID_16513443 (Katz et al., 2006) - \"Organic anion transporting polypeptide 1B1 activity classified by SLCO1B1 genotype\"**\n\n- **Classification System:** Individuals can be classified as extensive, intermediate, or **poor OATP1B1 transporters** based on SLCO1B1 genotype\n- **Clinical Consequence for Poor Transporters:** \"Increased exposures of OATP1B1 substrates might be expected in individuals who have the poor transporter phenotype or are treated with an OATP1B1 inhibitor\"\n- **Risk Management:** Identifies need for personalized dosing in poor transporters\n\n### **PMC3876790 (Prasad et al., 2014) - \"Interindividual Variability in Hepatic Organic Anion-Transporting Polypeptides and P-Glycoprotein (ABCB1) Protein Expression\"**\n\n- **Genotype-Dependent Expression:**\n  - **SLCO1B1 *14/*14 haplotype:** 2.2-fold HIGHER OATP1B1 expression (enhanced function)\n  - **SLCO1B1 *14/*1a haplotype:** 1.9-fold higher expression\n  - **Predicted AUC Changes:** Up to **40% decrease in mean AUC** of OATP1B1 substrates in enhanced transporters (*14/*14)\n- **Poor Function Variants (like *5, *15):** Predicted to show opposite effect with AUC **increases** (not fully quantified for statins in this paper, but referenced as causing myopathy)\n- **Clinical Relevance for Statins:** Study notes variant c.521T>C (SLCO1B1*5) is \"associated with statin-mediated myopathy\"\n\n### **PMID_12811365 (Nishizato et al., 2003) - \"Polymorphisms of OATP-C (SLC21A6) and OAT3 (SLC22A8) genes: consequences for pravastatin pharmacokinetics\"**\n\n- **Nonrenal Clearance (mL/kg/h):**\n  - OATP-C *1b/*1b: 2.01 ± 0.42 L·kg⁻¹·h⁻¹\n  - OATP-C *1b/*15 (heterozygous, poor function): 1.11 ± 0.34 L·kg⁻¹·h⁻¹ (**45% REDUCTION**, P<0.05)\n  - OATP-C *15/*15 (homozygous, poor function): 0.29 L·kg⁻¹·h⁻¹ (only 1 subject; **85% REDUCTION**)\n- **Significance:** Demonstrates dose-response relationship with poor function variants causing progressive reductions in hepatic clearance\n- **Clinical Implication:** T521C variant (Val174Ala) is \"likely to be associated with altered pharmacokinetics of pravastatin\"\n\n### **PMC8042483 (Zhang et al., 2021) - \"SLCO1B1: Application and Limitations of Deep Mutational Scanning for Genomic Missense Variant Function\"**\n\n- **Severely Damaging Variants:** Identified 6 novel SLCO1B1 missense variants with <25% of wild-type protein expression\n- **Clinical Relevance:** SLCO1B1*5 variant (rs4149056) is \"associated with decreased plasma clearance of statins such as simvastatin, which can result in statin-induced myopathy\"\n- **Mechanism:** Loss of function primarily through altered protein abundance/degradation, not just altered substrate affinity\n- **Importance:** Identifies previously uncharacterized VUS that may cause myopathy similar to established poor function variants\n\n### **PMC6858017 (Ramsey et al., 2019) - \"Association of SLCO1B1 *14 Allele with Poor Response to Methotrexate in JIA Patients\"**\n\n- While focused on methotrexate (not directly pravastatin), **demonstrates the opposite phenotype:**\n  - **SLCO1B1*14 allele:** INCREASED transporter expression = faster drug clearance = **reduced drug exposure**\n  - This contrasts with poor function variants (*5, *15) that DECREASE clearance\n- **Relevance:** Shows how SLCO1B1 variants create a spectrum from poor function (high AUC) to enhanced function (low AUC)\n\n### **PMC12087686 (Haldar et al., 2025) - \"SLCO1B1 Functional Variants, Bilirubin, Statin-Induced Myotoxicity\"**\n\n- **Recent Evidence on UNDERSTUDIED VARIANTS:** Identifies SLCO1B1 variants common in Sub-Saharan African ancestry populations that cause severe myotoxicity:\n  - **rs77271279 (c.481+1G>T - splice site loss-of-function):** Strongest association with elevated bilirubin (P=1.1×10⁻¹⁷) in Black participants; 84% higher mean bilirubin levels\n  - **rs59502379 (c.1463G>C - missense):** Associated with elevated bilirubin (P=7.4×10⁻¹²) AND severe statin myotoxicity (OR=2.85, 95% CI 1.08-7.52)\n  - **rs4149056 (c.521T>C - SLCO1B1*5):** The well-established poor function variant\n\n- **Coproporphyrin Biomarker:** Plasma coproporphyrin I (endogenous OATP1B1 substrate) levels were elevated in patients with loss-of-function SLCO1B1 haplotypes, indicating reduced hepatic OATP1B1 function\n\n- **Clinical Implications for Myopathy Risk:** These understudied variants show effect sizes (bilirubin elevation) larger than the well-established c.521T>C variant in their study population\n\n### **PMID_16515396 (Rohrbacher et al., 2006) - \"Rapid identification of three functionally relevant polymorphisms in OATP1B1\"**\n\n- **Haplotype Frequencies in Caucasians:**\n  - SLCO1B1*15B (-11187G/388G/521C): 9% allele frequency\n  - SLCO1B1*17 (-11187A/388G/521C): 2% allele frequency\n- **Both *15B and *17 haplotypes** are \"reportedly associated with altered substrate pharmacokinetics\" including pravastatin\n\n### **PMC11671340 (Unpublished case study) - Rhabdomyolysis case**\n\n- **Clinical Case:** African ancestry patient with SLCO1B1 variants (c.481+1G>T and c.1463G>C) developed severe statin-induced rhabdomyolysis when rosuvastatin dose was increased to 40 mg daily\n- **Biomarker Evidence:** Coproporphyrin I levels elevated at 1.84 ng/mL (normal 0.1-1.6 ng/mL), indicating severe OATP1B1 dysfunction\n- **Comparison:** CPI level similar to patients with homozygous *15/*15 haplotype (geometric mean 1.65 ng/mL)\n- **Recommendation:** Clinical guidelines for statin-associated myopathy should include broader range of SLCO1B1 variants reflecting diverse populations\n\n---\n\n## **SUMMARY TABLE: Pravastatin Dosing Recommendations by SLCO1B1 Function**\n\n| SLCO1B1 Genotype | Function Status | AUC Change vs Wild-type | Pravastatin Risk | Clinical Recommendation |\n|---|---|---|---|---|\n| *1a/*1a (c.388AA, c.521TT) | Normal/Wild-type | Baseline | Standard risk | Standard dosing |\n| *1a/*1b, *1b/*1b (c.388AG/GG enhanced) | Enhanced function | -35% lower AUC | Reduced efficacy | May need higher dose for efficacy |\n| *1a/*15, *1b/*15 (c.521TC heterozygous) | Poor/Reduced function | +45-106% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\n| *15/*15 (c.521CC homozygous) | Poor/Severely reduced | **+130% higher AUC** | **VERY HIGH myopathy risk** | **Contraindicated or minimal dose** |\n| *5 variants (c.521T>C) | Poor function | +42-163% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\n| Recent African ancestry variants (c.481+1G>T, c.1463G>C) | Poor/Loss-of-function | Elevated biomarkers | **VERY HIGH myopathy risk** | **Avoid or minimal dose** |\n\n---\n\n## **KEY CLINICAL TAKEAWAYS FOR PRAVASTATIN AND SLCO1B1 POOR FUNCTION:**\n\n1. **Pravastatin is an OATP1B1 substrate** - Poor function variants dramatically increase plasma concentrations (can exceed 100-130% above normal)\n\n2. **Poor Function Phenotype Risk:** Heterozygous carriers of SLCO1B1*5 or *15 have 40-110% higher AUC; homozygous carriers have extreme increases\n\n3. **Alternative Statins:** Pravastatin is one of the highest-risk statins for poor OATP1B1 function. Rosuvastatin also heavily dependent on OATP1B1. Atorvastatin and simvastatin more dependent on CYP metabolism but still affected.\n\n4. **Dosing Recommendations:** CPIC guidelines recommend dose reduction or avoidance of simvastatin/pravastatin in SLCO1B1*5 carriers; current guidelines don't specifically address all poor function variants (gaps in equity for African ancestry variants)\n\n5. **Myopathy/Toxicity Risk:** High plasma concentrations from poor OATP1B1 function are a major mechanistic driver of statin-induced myopathy, rhabdomyolysis, and myotoxicity\n\n6. **Biomarkers:** Elevated coproporphyrin I and bilirubin indicate OATP1B1 dysfunction and increased myopathy risk with statin therapy"
+              },
+              {
+                "type": "text",
+                "text": "agentId: a35aede (for resuming to continue this agent's work if needed)\n<usage>total_tokens: 123270\ntool_uses: 30\nduration_ms: 69806</usage>"
+              }
+            ]
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "status": "completed",
+            "prompt": "Search through the papers in /app/papers/ and find those that are most relevant to SLCO1B1 Poor Function and pravastatin dosing. Read through papers that discuss: 1) SLCO1B1 gene variants and statin pharmacokinetics, 2) pravastatin specifically with SLCO1B1, 3) clinical guidelines for SLCO1B1 and statins, 4) myopathy/toxicity risk. \n\nKey papers to prioritize reading (but read others too if they seem relevant):\n- PMC11283089.md\n- PMC8042483.md  \n- PMC6858017.md\n- PMC3876790.md\n- PMC4220464.md\n\nReturn a detailed summary of what each relevant paper says about SLCO1B1 Poor Function and pravastatin - including specific AUC changes, risk levels, and any dosing recommendations.",
+            "agentId": "a35aede",
+            "content": [
+              {
+                "type": "text",
+                "text": "Perfect! Now I have comprehensive information. Let me compile the detailed summary based on all the papers I've reviewed.\n\n## Detailed Summary: SLCO1B1 Poor Function and Pravastatin Dosing\n\nBased on comprehensive review of the priority papers and related literature, here is what each relevant paper says about SLCO1B1 poor function and pravastatin:\n\n### **PMID_15226675 (Niemi et al., 2004) - \"High plasma pravastatin concentrations are associated with single nucleotide polymorphisms and haplotypes of organic anion transporting polypeptide-C (OATP-C, SLCO1B1)\"**\n\n- **Key Findings:** This seminal study identified crucial associations between SLCO1B1 variants and pravastatin pharmacokinetics\n- **AUC Changes:** \n  - OATP-C 521T>C (Val174Ala) heterozygotes: **106% higher pravastatin AUC** (P=0.0034)\n  - -11187G>A promoter SNP heterozygotes: **98% higher pravastatin AUC** (P=0.0061)\n  - *15B haplotype (388A>G + 521T>C): **93% higher AUC** (P=0.024)\n  - *17 haplotype (-11187G>A + 388A>G + 521T>C): **130% higher AUC** (P=0.0053)\n- **Clinical Significance:** Haplotypes are more informative than single SNPs in predicting OATP1B1 phenotype\n- **Poor Function Definition:** SLCO1B1*5 and *15 variants reduce hepatocellular uptake of pravastatin, causing significantly elevated plasma concentrations\n\n### **PMID_15116054 (Mwinyi et al., 2004) - \"Evidence for inverse effects of OATP-C (SLC21A6) *5 and *1b haplotypes on pravastatin kinetics\"**\n\n- **AUC(0-6) Values with 40 mg pravastatin dose:**\n  - *1a/*1a (wild-type): 114.5 ± 68.6 µg·L⁻¹·h\n  - *1a/*1b or *1b/*1b (enhanced function): 74.8 ± 35.6 µg·L⁻¹·h (**35% LOWER than wild-type**)\n  - *1a/*5 (poor function): 163.0 ± 64.6 µg·L⁻¹·h (**42% HIGHER than wild-type**)\n- **Statistical Significance:** P=0.006 across all three groups; P=0.002 between *1b and *5 groups\n- **Risk Implications:** *5 expression significantly delays hepatocellular uptake of pravastatin, resulting in substantially elevated drug exposure and increased myopathy risk\n\n### **PMID_15970799 (Kameyama et al., 2005) - \"Functional characterization of SLCO1B1 (OATP-C) variants, SLCO1B1*5, SLCO1B1*15 and SLCO1B1*15+C1007G\"**\n\n- **Functional Impact:** SLCO1B1*5, *15, and *15+C1007G all showed **significantly decreased transport activities** for pravastatin and other statins\n- **Mechanism:** The common 521T>C SNP is the key mutation determining loss of function in these variants\n- **Vmax Reduction:** Kinetic analysis showed Vmax values decreased significantly (Km unchanged) for pravastatin in cells expressing poor function variants\n- **Cellular Localization:** Poor function proteins localized to both plasma membrane AND intracellular space (protein sorting defect), explaining reduced functional activity\n- **Clinical Relevance:** Case report mentions a patient with pravastatin-induced myopathy who carried SLCO1B1*15+C1007G\n\n### **PMID_16198653 (Chung et al., 2005) - \"Effect of OATP1B1 (SLCO1B1) variant alleles on the pharmacokinetics of pitavastatin\"**\n\n- **Genotype-Phenotype Classification:** Establishes clinical framework for classifying individuals as:\n  - **Extensive transporter** (*1b/*1b): Dose-normalized AUC = 38.8 ± 13.3 ng·h·mL⁻¹·mg⁻¹\n  - **Intermediate transporter** (*1a/*1a or *1a/*1b): Dose-normalized AUC = 54.4 ± 12.4 ng·h·mL⁻¹·mg⁻¹\n  - **Poor transporter** (*1a/*15 or *1b/*15): Dose-normalized AUC = 68.1 ± 6.3 ng·h·mL⁻¹·mg⁻¹ (**76% HIGHER than extensive transporters**)\n- **Significance:** Demonstrates that poor transporter phenotype has substantially reduced statin clearance\n\n### **PMID_16513443 (Katz et al., 2006) - \"Organic anion transporting polypeptide 1B1 activity classified by SLCO1B1 genotype\"**\n\n- **Classification System:** Individuals can be classified as extensive, intermediate, or **poor OATP1B1 transporters** based on SLCO1B1 genotype\n- **Clinical Consequence for Poor Transporters:** \"Increased exposures of OATP1B1 substrates might be expected in individuals who have the poor transporter phenotype or are treated with an OATP1B1 inhibitor\"\n- **Risk Management:** Identifies need for personalized dosing in poor transporters\n\n### **PMC3876790 (Prasad et al., 2014) - \"Interindividual Variability in Hepatic Organic Anion-Transporting Polypeptides and P-Glycoprotein (ABCB1) Protein Expression\"**\n\n- **Genotype-Dependent Expression:**\n  - **SLCO1B1 *14/*14 haplotype:** 2.2-fold HIGHER OATP1B1 expression (enhanced function)\n  - **SLCO1B1 *14/*1a haplotype:** 1.9-fold higher expression\n  - **Predicted AUC Changes:** Up to **40% decrease in mean AUC** of OATP1B1 substrates in enhanced transporters (*14/*14)\n- **Poor Function Variants (like *5, *15):** Predicted to show opposite effect with AUC **increases** (not fully quantified for statins in this paper, but referenced as causing myopathy)\n- **Clinical Relevance for Statins:** Study notes variant c.521T>C (SLCO1B1*5) is \"associated with statin-mediated myopathy\"\n\n### **PMID_12811365 (Nishizato et al., 2003) - \"Polymorphisms of OATP-C (SLC21A6) and OAT3 (SLC22A8) genes: consequences for pravastatin pharmacokinetics\"**\n\n- **Nonrenal Clearance (mL/kg/h):**\n  - OATP-C *1b/*1b: 2.01 ± 0.42 L·kg⁻¹·h⁻¹\n  - OATP-C *1b/*15 (heterozygous, poor function): 1.11 ± 0.34 L·kg⁻¹·h⁻¹ (**45% REDUCTION**, P<0.05)\n  - OATP-C *15/*15 (homozygous, poor function): 0.29 L·kg⁻¹·h⁻¹ (only 1 subject; **85% REDUCTION**)\n- **Significance:** Demonstrates dose-response relationship with poor function variants causing progressive reductions in hepatic clearance\n- **Clinical Implication:** T521C variant (Val174Ala) is \"likely to be associated with altered pharmacokinetics of pravastatin\"\n\n### **PMC8042483 (Zhang et al., 2021) - \"SLCO1B1: Application and Limitations of Deep Mutational Scanning for Genomic Missense Variant Function\"**\n\n- **Severely Damaging Variants:** Identified 6 novel SLCO1B1 missense variants with <25% of wild-type protein expression\n- **Clinical Relevance:** SLCO1B1*5 variant (rs4149056) is \"associated with decreased plasma clearance of statins such as simvastatin, which can result in statin-induced myopathy\"\n- **Mechanism:** Loss of function primarily through altered protein abundance/degradation, not just altered substrate affinity\n- **Importance:** Identifies previously uncharacterized VUS that may cause myopathy similar to established poor function variants\n\n### **PMC6858017 (Ramsey et al., 2019) - \"Association of SLCO1B1 *14 Allele with Poor Response to Methotrexate in JIA Patients\"**\n\n- While focused on methotrexate (not directly pravastatin), **demonstrates the opposite phenotype:**\n  - **SLCO1B1*14 allele:** INCREASED transporter expression = faster drug clearance = **reduced drug exposure**\n  - This contrasts with poor function variants (*5, *15) that DECREASE clearance\n- **Relevance:** Shows how SLCO1B1 variants create a spectrum from poor function (high AUC) to enhanced function (low AUC)\n\n### **PMC12087686 (Haldar et al., 2025) - \"SLCO1B1 Functional Variants, Bilirubin, Statin-Induced Myotoxicity\"**\n\n- **Recent Evidence on UNDERSTUDIED VARIANTS:** Identifies SLCO1B1 variants common in Sub-Saharan African ancestry populations that cause severe myotoxicity:\n  - **rs77271279 (c.481+1G>T - splice site loss-of-function):** Strongest association with elevated bilirubin (P=1.1×10⁻¹⁷) in Black participants; 84% higher mean bilirubin levels\n  - **rs59502379 (c.1463G>C - missense):** Associated with elevated bilirubin (P=7.4×10⁻¹²) AND severe statin myotoxicity (OR=2.85, 95% CI 1.08-7.52)\n  - **rs4149056 (c.521T>C - SLCO1B1*5):** The well-established poor function variant\n\n- **Coproporphyrin Biomarker:** Plasma coproporphyrin I (endogenous OATP1B1 substrate) levels were elevated in patients with loss-of-function SLCO1B1 haplotypes, indicating reduced hepatic OATP1B1 function\n\n- **Clinical Implications for Myopathy Risk:** These understudied variants show effect sizes (bilirubin elevation) larger than the well-established c.521T>C variant in their study population\n\n### **PMID_16515396 (Rohrbacher et al., 2006) - \"Rapid identification of three functionally relevant polymorphisms in OATP1B1\"**\n\n- **Haplotype Frequencies in Caucasians:**\n  - SLCO1B1*15B (-11187G/388G/521C): 9% allele frequency\n  - SLCO1B1*17 (-11187A/388G/521C): 2% allele frequency\n- **Both *15B and *17 haplotypes** are \"reportedly associated with altered substrate pharmacokinetics\" including pravastatin\n\n### **PMC11671340 (Unpublished case study) - Rhabdomyolysis case**\n\n- **Clinical Case:** African ancestry patient with SLCO1B1 variants (c.481+1G>T and c.1463G>C) developed severe statin-induced rhabdomyolysis when rosuvastatin dose was increased to 40 mg daily\n- **Biomarker Evidence:** Coproporphyrin I levels elevated at 1.84 ng/mL (normal 0.1-1.6 ng/mL), indicating severe OATP1B1 dysfunction\n- **Comparison:** CPI level similar to patients with homozygous *15/*15 haplotype (geometric mean 1.65 ng/mL)\n- **Recommendation:** Clinical guidelines for statin-associated myopathy should include broader range of SLCO1B1 variants reflecting diverse populations\n\n---\n\n## **SUMMARY TABLE: Pravastatin Dosing Recommendations by SLCO1B1 Function**\n\n| SLCO1B1 Genotype | Function Status | AUC Change vs Wild-type | Pravastatin Risk | Clinical Recommendation |\n|---|---|---|---|---|\n| *1a/*1a (c.388AA, c.521TT) | Normal/Wild-type | Baseline | Standard risk | Standard dosing |\n| *1a/*1b, *1b/*1b (c.388AG/GG enhanced) | Enhanced function | -35% lower AUC | Reduced efficacy | May need higher dose for efficacy |\n| *1a/*15, *1b/*15 (c.521TC heterozygous) | Poor/Reduced function | +45-106% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\n| *15/*15 (c.521CC homozygous) | Poor/Severely reduced | **+130% higher AUC** | **VERY HIGH myopathy risk** | **Contraindicated or minimal dose** |\n| *5 variants (c.521T>C) | Poor function | +42-163% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\n| Recent African ancestry variants (c.481+1G>T, c.1463G>C) | Poor/Loss-of-function | Elevated biomarkers | **VERY HIGH myopathy risk** | **Avoid or minimal dose** |\n\n---\n\n## **KEY CLINICAL TAKEAWAYS FOR PRAVASTATIN AND SLCO1B1 POOR FUNCTION:**\n\n1. **Pravastatin is an OATP1B1 substrate** - Poor function variants dramatically increase plasma concentrations (can exceed 100-130% above normal)\n\n2. **Poor Function Phenotype Risk:** Heterozygous carriers of SLCO1B1*5 or *15 have 40-110% higher AUC; homozygous carriers have extreme increases\n\n3. **Alternative Statins:** Pravastatin is one of the highest-risk statins for poor OATP1B1 function. Rosuvastatin also heavily dependent on OATP1B1. Atorvastatin and simvastatin more dependent on CYP metabolism but still affected.\n\n4. **Dosing Recommendations:** CPIC guidelines recommend dose reduction or avoidance of simvastatin/pravastatin in SLCO1B1*5 carriers; current guidelines don't specifically address all poor function variants (gaps in equity for African ancestry variants)\n\n5. **Myopathy/Toxicity Risk:** High plasma concentrations from poor OATP1B1 function are a major mechanistic driver of statin-induced myopathy, rhabdomyolysis, and myotoxicity\n\n6. **Biomarkers:** Elevated coproporphyrin I and bilirubin indicate OATP1B1 dysfunction and increased myopathy risk with statin therapy"
+              }
+            ],
+            "totalDurationMs": 69806,
+            "totalTokens": 123270,
+            "totalToolUseCount": 30,
+            "usage": {
+              "input_tokens": 6510,
+              "cache_creation_input_tokens": 13897,
+              "cache_read_input_tokens": 98997,
+              "output_tokens": 3866,
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 13897
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard"
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_013GtwKGucGtusCwYqThoymD",
+            "type": "tool_result",
+            "content": [
+              {
+                "type": "text",
+                "text": "Perfect! Now I have comprehensive information. Let me compile the detailed summary based on all the papers I've reviewed.\n\n## Detailed Summary: SLCO1B1 Poor Function and Pravastatin Dosing\n\nBased on comprehensive review of the priority papers and related literature, here is what each relevant paper says about SLCO1B1 poor function and pravastatin:\n\n### **PMID_15226675 (Niemi et al., 2004) - \"High plasma pravastatin concentrations are associated with single nucleotide polymorphisms and haplotypes of organic anion transporting polypeptide-C (OATP-C, SLCO1B1)\"**\n\n- **Key Findings:** This seminal study identified crucial associations between SLCO1B1 variants and pravastatin pharmacokinetics\n- **AUC Changes:** \n  - OATP-C 521T>C (Val174Ala) heterozygotes: **106% higher pravastatin AUC** (P=0.0034)\n  - -11187G>A promoter SNP heterozygotes: **98% higher pravastatin AUC** (P=0.0061)\n  - *15B haplotype (388A>G + 521T>C): **93% higher AUC** (P=0.024)\n  - *17 haplotype (-11187G>A + 388A>G + 521T>C): **130% higher AUC** (P=0.0053)\n- **Clinical Significance:** Haplotypes are more informative than single SNPs in predicting OATP1B1 phenotype\n- **Poor Function Definition:** SLCO1B1*5 and *15 variants reduce hepatocellular uptake of pravastatin, causing significantly elevated plasma concentrations\n\n### **PMID_15116054 (Mwinyi et al., 2004) - \"Evidence for inverse effects of OATP-C (SLC21A6) *5 and *1b haplotypes on pravastatin kinetics\"**\n\n- **AUC(0-6) Values with 40 mg pravastatin dose:**\n  - *1a/*1a (wild-type): 114.5 ± 68.6 µg·L⁻¹·h\n  - *1a/*1b or *1b/*1b (enhanced function): 74.8 ± 35.6 µg·L⁻¹·h (**35% LOWER than wild-type**)\n  - *1a/*5 (poor function): 163.0 ± 64.6 µg·L⁻¹·h (**42% HIGHER than wild-type**)\n- **Statistical Significance:** P=0.006 across all three groups; P=0.002 between *1b and *5 groups\n- **Risk Implications:** *5 expression significantly delays hepatocellular uptake of pravastatin, resulting in substantially elevated drug exposure and increased myopathy risk\n\n### **PMID_15970799 (Kameyama et al., 2005) - \"Functional characterization of SLCO1B1 (OATP-C) variants, SLCO1B1*5, SLCO1B1*15 and SLCO1B1*15+C1007G\"**\n\n- **Functional Impact:** SLCO1B1*5, *15, and *15+C1007G all showed **significantly decreased transport activities** for pravastatin and other statins\n- **Mechanism:** The common 521T>C SNP is the key mutation determining loss of function in these variants\n- **Vmax Reduction:** Kinetic analysis showed Vmax values decreased significantly (Km unchanged) for pravastatin in cells expressing poor function variants\n- **Cellular Localization:** Poor function proteins localized to both plasma membrane AND intracellular space (protein sorting defect), explaining reduced functional activity\n- **Clinical Relevance:** Case report mentions a patient with pravastatin-induced myopathy who carried SLCO1B1*15+C1007G\n\n### **PMID_16198653 (Chung et al., 2005) - \"Effect of OATP1B1 (SLCO1B1) variant alleles on the pharmacokinetics of pitavastatin\"**\n\n- **Genotype-Phenotype Classification:** Establishes clinical framework for classifying individuals as:\n  - **Extensive transporter** (*1b/*1b): Dose-normalized AUC = 38.8 ± 13.3 ng·h·mL⁻¹·mg⁻¹\n  - **Intermediate transporter** (*1a/*1a or *1a/*1b): Dose-normalized AUC = 54.4 ± 12.4 ng·h·mL⁻¹·mg⁻¹\n  - **Poor transporter** (*1a/*15 or *1b/*15): Dose-normalized AUC = 68.1 ± 6.3 ng·h·mL⁻¹·mg⁻¹ (**76% HIGHER than extensive transporters**)\n- **Significance:** Demonstrates that poor transporter phenotype has substantially reduced statin clearance\n\n### **PMID_16513443 (Katz et al., 2006) - \"Organic anion transporting polypeptide 1B1 activity classified by SLCO1B1 genotype\"**\n\n- **Classification System:** Individuals can be classified as extensive, intermediate, or **poor OATP1B1 transporters** based on SLCO1B1 genotype\n- **Clinical Consequence for Poor Transporters:** \"Increased exposures of OATP1B1 substrates might be expected in individuals who have the poor transporter phenotype or are treated with an OATP1B1 inhibitor\"\n- **Risk Management:** Identifies need for personalized dosing in poor transporters\n\n### **PMC3876790 (Prasad et al., 2014) - \"Interindividual Variability in Hepatic Organic Anion-Transporting Polypeptides and P-Glycoprotein (ABCB1) Protein Expression\"**\n\n- **Genotype-Dependent Expression:**\n  - **SLCO1B1 *14/*14 haplotype:** 2.2-fold HIGHER OATP1B1 expression (enhanced function)\n  - **SLCO1B1 *14/*1a haplotype:** 1.9-fold higher expression\n  - **Predicted AUC Changes:** Up to **40% decrease in mean AUC** of OATP1B1 substrates in enhanced transporters (*14/*14)\n- **Poor Function Variants (like *5, *15):** Predicted to show opposite effect with AUC **increases** (not fully quantified for statins in this paper, but referenced as causing myopathy)\n- **Clinical Relevance for Statins:** Study notes variant c.521T>C (SLCO1B1*5) is \"associated with statin-mediated myopathy\"\n\n### **PMID_12811365 (Nishizato et al., 2003) - \"Polymorphisms of OATP-C (SLC21A6) and OAT3 (SLC22A8) genes: consequences for pravastatin pharmacokinetics\"**\n\n- **Nonrenal Clearance (mL/kg/h):**\n  - OATP-C *1b/*1b: 2.01 ± 0.42 L·kg⁻¹·h⁻¹\n  - OATP-C *1b/*15 (heterozygous, poor function): 1.11 ± 0.34 L·kg⁻¹·h⁻¹ (**45% REDUCTION**, P<0.05)\n  - OATP-C *15/*15 (homozygous, poor function): 0.29 L·kg⁻¹·h⁻¹ (only 1 subject; **85% REDUCTION**)\n- **Significance:** Demonstrates dose-response relationship with poor function variants causing progressive reductions in hepatic clearance\n- **Clinical Implication:** T521C variant (Val174Ala) is \"likely to be associated with altered pharmacokinetics of pravastatin\"\n\n### **PMC8042483 (Zhang et al., 2021) - \"SLCO1B1: Application and Limitations of Deep Mutational Scanning for Genomic Missense Variant Function\"**\n\n- **Severely Damaging Variants:** Identified 6 novel SLCO1B1 missense variants with <25% of wild-type protein expression\n- **Clinical Relevance:** SLCO1B1*5 variant (rs4149056) is \"associated with decreased plasma clearance of statins such as simvastatin, which can result in statin-induced myopathy\"\n- **Mechanism:** Loss of function primarily through altered protein abundance/degradation, not just altered substrate affinity\n- **Importance:** Identifies previously uncharacterized VUS that may cause myopathy similar to established poor function variants\n\n### **PMC6858017 (Ramsey et al., 2019) - \"Association of SLCO1B1 *14 Allele with Poor Response to Methotrexate in JIA Patients\"**\n\n- While focused on methotrexate (not directly pravastatin), **demonstrates the opposite phenotype:**\n  - **SLCO1B1*14 allele:** INCREASED transporter expression = faster drug clearance = **reduced drug exposure**\n  - This contrasts with poor function variants (*5, *15) that DECREASE clearance\n- **Relevance:** Shows how SLCO1B1 variants create a spectrum from poor function (high AUC) to enhanced function (low AUC)\n\n### **PMC12087686 (Haldar et al., 2025) - \"SLCO1B1 Functional Variants, Bilirubin, Statin-Induced Myotoxicity\"**\n\n- **Recent Evidence on UNDERSTUDIED VARIANTS:** Identifies SLCO1B1 variants common in Sub-Saharan African ancestry populations that cause severe myotoxicity:\n  - **rs77271279 (c.481+1G>T - splice site loss-of-function):** Strongest association with elevated bilirubin (P=1.1×10⁻¹⁷) in Black participants; 84% higher mean bilirubin levels\n  - **rs59502379 (c.1463G>C - missense):** Associated with elevated bilirubin (P=7.4×10⁻¹²) AND severe statin myotoxicity (OR=2.85, 95% CI 1.08-7.52)\n  - **rs4149056 (c.521T>C - SLCO1B1*5):** The well-established poor function variant\n\n- **Coproporphyrin Biomarker:** Plasma coproporphyrin I (endogenous OATP1B1 substrate) levels were elevated in patients with loss-of-function SLCO1B1 haplotypes, indicating reduced hepatic OATP1B1 function\n\n- **Clinical Implications for Myopathy Risk:** These understudied variants show effect sizes (bilirubin elevation) larger than the well-established c.521T>C variant in their study population\n\n### **PMID_16515396 (Rohrbacher et al., 2006) - \"Rapid identification of three functionally relevant polymorphisms in OATP1B1\"**\n\n- **Haplotype Frequencies in Caucasians:**\n  - SLCO1B1*15B (-11187G/388G/521C): 9% allele frequency\n  - SLCO1B1*17 (-11187A/388G/521C): 2% allele frequency\n- **Both *15B and *17 haplotypes** are \"reportedly associated with altered substrate pharmacokinetics\" including pravastatin\n\n### **PMC11671340 (Unpublished case study) - Rhabdomyolysis case**\n\n- **Clinical Case:** African ancestry patient with SLCO1B1 variants (c.481+1G>T and c.1463G>C) developed severe statin-induced rhabdomyolysis when rosuvastatin dose was increased to 40 mg daily\n- **Biomarker Evidence:** Coproporphyrin I levels elevated at 1.84 ng/mL (normal 0.1-1.6 ng/mL), indicating severe OATP1B1 dysfunction\n- **Comparison:** CPI level similar to patients with homozygous *15/*15 haplotype (geometric mean 1.65 ng/mL)\n- **Recommendation:** Clinical guidelines for statin-associated myopathy should include broader range of SLCO1B1 variants reflecting diverse populations\n\n---\n\n## **SUMMARY TABLE: Pravastatin Dosing Recommendations by SLCO1B1 Function**\n\n| SLCO1B1 Genotype | Function Status | AUC Change vs Wild-type | Pravastatin Risk | Clinical Recommendation |\n|---|---|---|---|---|\n| *1a/*1a (c.388AA, c.521TT) | Normal/Wild-type | Baseline | Standard risk | Standard dosing |\n| *1a/*1b, *1b/*1b (c.388AG/GG enhanced) | Enhanced function | -35% lower AUC | Reduced efficacy | May need higher dose for efficacy |\n| *1a/*15, *1b/*15 (c.521TC heterozygous) | Poor/Reduced function | +45-106% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\n| *15/*15 (c.521CC homozygous) | Poor/Severely reduced | **+130% higher AUC** | **VERY HIGH myopathy risk** | **Contraindicated or minimal dose** |\n| *5 variants (c.521T>C) | Poor function | +42-163% higher AUC | **HIGH myopathy risk** | **Reduce dose or avoid** |\n| Recent African ancestry variants (c.481+1G>T, c.1463G>C) | Poor/Loss-of-function | Elevated biomarkers | **VERY HIGH myopathy risk** | **Avoid or minimal dose** |\n\n---\n\n## **KEY CLINICAL TAKEAWAYS FOR PRAVASTATIN AND SLCO1B1 POOR FUNCTION:**\n\n1. **Pravastatin is an OATP1B1 substrate** - Poor function variants dramatically increase plasma concentrations (can exceed 100-130% above normal)\n\n2. **Poor Function Phenotype Risk:** Heterozygous carriers of SLCO1B1*5 or *15 have 40-110% higher AUC; homozygous carriers have extreme increases\n\n3. **Alternative Statins:** Pravastatin is one of the highest-risk statins for poor OATP1B1 function. Rosuvastatin also heavily dependent on OATP1B1. Atorvastatin and simvastatin more dependent on CYP metabolism but still affected.\n\n4. **Dosing Recommendations:** CPIC guidelines recommend dose reduction or avoidance of simvastatin/pravastatin in SLCO1B1*5 carriers; current guidelines don't specifically address all poor function variants (gaps in equity for African ancestry variants)\n\n5. **Myopathy/Toxicity Risk:** High plasma concentrations from poor OATP1B1 function are a major mechanistic driver of statin-induced myopathy, rhabdomyolysis, and myotoxicity\n\n6. **Biomarkers:** Elevated coproporphyrin I and bilirubin indicate OATP1B1 dysfunction and increased myopathy risk with statin therapy"
+              },
+              {
+                "type": "text",
+                "text": "agentId: a35aede (for resuming to continue this agent's work if needed)\n<usage>total_tokens: 123270\ntool_uses: 30\nduration_ms: 69806</usage>"
+              }
+            ]
+          }
+        },
+        "raw_arguments": {
+          "description": "Read key papers on SLCO1B1 and pravastatin",
+          "subagent_type": "Explore",
+          "prompt": "Search through the papers in /app/papers/ and find those that are most relevant to SLCO1B1 Poor Function and pravastatin dosing. Read through papers that discuss: 1) SLCO1B1 gene variants and statin pharmacokinetics, 2) pravastatin specifically with SLCO1B1, 3) clinical guidelines for SLCO1B1 and statins, 4) myopathy/toxicity risk. \n\nKey papers to prioritize reading (but read others too if they seem relevant):\n- PMC11283089.md\n- PMC8042483.md  \n- PMC6858017.md\n- PMC3876790.md\n- PMC4220464.md\n\nReturn a detailed summary of what each relevant paper says about SLCO1B1 Poor Function and pravastatin - including specific AUC changes, risk levels, and any dosing recommendations."
+        }
+      }
+    },
+    {
+      "step_id": 5,
+      "timestamp": "2026-02-20T02:27:44.697Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "",
+      "reasoning_content": "null",
+      "metrics": {
+        "prompt_tokens": 20527,
+        "completion_tokens": 8,
+        "cached_tokens": 20526,
+        "extra": {
+          "cache_creation_input_tokens": 4236,
+          "cache_read_input_tokens": 20526,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 4236,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 6,
+      "timestamp": "2026-02-20T02:27:44.872Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "Now I have sufficient evidence to write the clinical recommendation.",
+      "metrics": {
+        "prompt_tokens": 20527,
+        "completion_tokens": 8,
+        "cached_tokens": 20526,
+        "extra": {
+          "cache_creation_input_tokens": 4236,
+          "cache_read_input_tokens": 20526,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 4236,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 7,
+      "timestamp": "2026-02-20T02:27:48.306Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "Executed Write toolu_01LNxQNfhgFJj26avZ4zFjxH",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01LNxQNfhgFJj26avZ4zFjxH",
+          "function_name": "Write",
+          "arguments": {
+            "file_path": "/app/recommendation.txt",
+            "content": "Avoid pravastatin or use the lowest effective dose with caution; SLCO1B1 Poor Function significantly impairs hepatic OATP1B1-mediated uptake of pravastatin, resulting in 45–130% higher systemic exposure (AUC) and substantially elevated risk of statin-induced myopathy and rhabdomyolysis. Consider switching to an alternative statin less dependent on OATP1B1 transport (e.g., fluvastatin or rosuvastatin at a reduced dose), and monitor closely for muscle-related adverse effects (myalgia, elevated CK) if pravastatin is continued."
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01LNxQNfhgFJj26avZ4zFjxH",
+            "content": "File created successfully at: /app/recommendation.txt\n\n[metadata] {\"type\": \"create\", \"filePath\": \"/app/recommendation.txt\", \"content\": \"Avoid pravastatin or use the lowest effective dose with caution; SLCO1B1 Poor Function significantly impairs hepatic OATP1B1-mediated uptake of pravastatin, resulting in 45–130% higher systemic exposure (AUC) and substantially elevated risk of statin-induced myopathy and rhabdomyolysis. Consider switching to an alternative statin less dependent on OATP1B1 transport (e.g., fluvastatin or rosuvastatin at a reduced dose), and monitor closely for muscle-related adverse effects (myalgia, elevated CK) if pravastatin is continued.\", \"structuredPatch\": [], \"originalFile\": null}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 20527,
+        "completion_tokens": 8,
+        "cached_tokens": 20526,
+        "extra": {
+          "cache_creation_input_tokens": 4236,
+          "cache_read_input_tokens": 20526,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 4236,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false,
+        "tool_use_name": "Write",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "type": "create",
+            "filePath": "/app/recommendation.txt",
+            "content": "Avoid pravastatin or use the lowest effective dose with caution; SLCO1B1 Poor Function significantly impairs hepatic OATP1B1-mediated uptake of pravastatin, resulting in 45–130% higher systemic exposure (AUC) and substantially elevated risk of statin-induced myopathy and rhabdomyolysis. Consider switching to an alternative statin less dependent on OATP1B1 transport (e.g., fluvastatin or rosuvastatin at a reduced dose), and monitor closely for muscle-related adverse effects (myalgia, elevated CK) if pravastatin is continued.",
+            "structuredPatch": [],
+            "originalFile": null
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01LNxQNfhgFJj26avZ4zFjxH",
+            "type": "tool_result",
+            "content": "File created successfully at: /app/recommendation.txt"
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "type": "create",
+            "filePath": "/app/recommendation.txt",
+            "content": "Avoid pravastatin or use the lowest effective dose with caution; SLCO1B1 Poor Function significantly impairs hepatic OATP1B1-mediated uptake of pravastatin, resulting in 45–130% higher systemic exposure (AUC) and substantially elevated risk of statin-induced myopathy and rhabdomyolysis. Consider switching to an alternative statin less dependent on OATP1B1 transport (e.g., fluvastatin or rosuvastatin at a reduced dose), and monitor closely for muscle-related adverse effects (myalgia, elevated CK) if pravastatin is continued.",
+            "structuredPatch": [],
+            "originalFile": null
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01LNxQNfhgFJj26avZ4zFjxH",
+            "type": "tool_result",
+            "content": "File created successfully at: /app/recommendation.txt"
+          }
+        },
+        "raw_arguments": {
+          "file_path": "/app/recommendation.txt",
+          "content": "Avoid pravastatin or use the lowest effective dose with caution; SLCO1B1 Poor Function significantly impairs hepatic OATP1B1-mediated uptake of pravastatin, resulting in 45–130% higher systemic exposure (AUC) and substantially elevated risk of statin-induced myopathy and rhabdomyolysis. Consider switching to an alternative statin less dependent on OATP1B1 transport (e.g., fluvastatin or rosuvastatin at a reduced dose), and monitor closely for muscle-related adverse effects (myalgia, elevated CK) if pravastatin is continued."
+        }
+      }
+    },
+    {
+      "step_id": 8,
+      "timestamp": "2026-02-20T02:27:55.996Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "The recommendation has been written to `/app/recommendation.txt`. Here is a summary of the clinical reasoning:\n\n**Key evidence from the papers:**\n- SLCO1B1 Poor Function variants (*5/*15 haplotypes carrying the c.521T>C substitution) reduce OATP1B1-mediated hepatic uptake of pravastatin, causing **45–130% increases in systemic AUC** (Nishizato 2003, Niemi 2004, Mwinyi 2004)\n- The homozygous poor function state (*15/*15) showed an ~85% reduction in nonrenal clearance and the highest AUC elevation (~130%)\n- Elevated plasma pravastatin concentrations in poor function carriers directly underlie the increased risk of myopathy and rhabdomyolysis, supported by both pharmacokinetic and clinical case data\n- Newer ancestry-diverse variants (e.g., c.481+1G>T, c.1463G>C) similarly impair OATP1B1 function and have been linked to severe statin myotoxicity\n\nThe recommendation is to **avoid pravastatin** (or use the lowest feasible dose only with close monitoring) and consider an alternative statin with reduced OATP1B1 dependence.",
+      "metrics": {
+        "prompt_tokens": 24763,
+        "completion_tokens": 1,
+        "cached_tokens": 24762,
+        "extra": {
+          "cache_creation_input_tokens": 742,
+          "cache_read_input_tokens": 24762,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 742,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false
+      }
+    }
+  ],
+  "final_metrics": {
+    "total_prompt_tokens": 142713,
+    "total_completion_tokens": 49,
+    "total_cached_tokens": 142702,
+    "total_steps": 8,
+    "extra": {
+      "service_tiers": [
+        "standard"
+      ],
+      "total_cache_creation_input_tokens": 16658,
+      "total_cache_read_input_tokens": 142702
+    }
+  }
+}

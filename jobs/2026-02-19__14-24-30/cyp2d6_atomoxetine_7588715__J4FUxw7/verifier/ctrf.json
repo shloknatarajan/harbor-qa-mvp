@@ -1,0 +1,51 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 3,
+            "passed": 1,
+            "failed": 1,
+            "skipped": 1,
+            "pending": 0,
+            "other": 0,
+            "start": 1771540141.5096762,
+            "stop": 1771540141.548962
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_action_category",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0008058330000153546,
+                "start": 1771540141.5418172,
+                "stop": 1771540141.5480123,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Moderate', 'implication': 'CYP2D6 activity score 2.75 classifies this patient as an Ultrarapid Met...CYP2D6-metabolized agent for ADHD (e.g., methylphenidate) if response to standard atomoxetine dosing is insufficient.'}\n\n    def test_action_category(answers):\n        \"\"\"Check that the recommendation maps to the correct action category.\"\"\"\n        rec_text = answers.get(\"recommendation\", \"\")\n        got_category = classify_recommendation(rec_text)\n>       assert got_category == EXPECTED_ACTION_CATEGORY, (\n            f\"Expected action category '{EXPECTED_ACTION_CATEGORY}', got '{got_category}' \"\n            f\"from recommendation: {rec_text}\"\n        )\nE       AssertionError: Expected action category 'other', got 'standard_dosing' from recommendation: CYP2D6 activity score of 2.75 corresponds to an Ultrarapid Metabolizer (UM) phenotype (AS > 2.25). Atomoxetine is extensively metabolized by CYP2D6; UMs clear the drug more rapidly, resulting in substantially lower plasma concentrations at standard doses and potentially inadequate therapeutic response. Consider initiating at the standard dose but titrating upward more aggressively (up to 1.5\u20132\u00d7 the typical target dose) based on clinical response and tolerability. Alternatively, consider selecting a non-CYP2D6-metabolized agent for ADHD (e.g., methylphenidate) if response to standard atomoxetine dosing is insufficient.\nE       assert 'standard_dosing' == 'other'\nE         \nE         - other\nE         + standard_dosing\n\n/tests/test_outputs.py:46: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.0002651660000196898,
+                "start": 1771540141.5481374,
+                "stop": 1771540141.548491,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_key_terms",
+                "status": "skipped",
+                "duration": 0.00017395799994801564,
+                "start": 1771540141.5485814,
+                "stop": 1771540141.5488715,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "('/tests/test_outputs.py', 63, 'Skipped: No key terms defined for this recommendation')"
+            }
+        ]
+    }
+}

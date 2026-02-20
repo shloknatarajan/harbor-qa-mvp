@@ -1,0 +1,56 @@
+Hit:1 http://ports.ubuntu.com/ubuntu-ports noble InRelease
+Hit:2 http://ports.ubuntu.com/ubuntu-ports noble-updates InRelease
+Hit:3 http://ports.ubuntu.com/ubuntu-ports noble-backports InRelease
+Hit:4 http://ports.ubuntu.com/ubuntu-ports noble-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (8.5.0-2ubuntu10.6).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
+downloading uv 0.9.7 aarch64-unknown-linux-gnu
+no checksums to verify
+installing to /root/.local/bin
+  uv
+  uvx
+everything's installed!
+/tests/test.sh: line 8: /root/.local/bin/env: No such file or directory
+Downloading cpython-3.14.0-linux-aarch64-gnu (download) (28.6MiB)
+ Downloading cpython-3.14.0-linux-aarch64-gnu (download)
+Downloading pygments (1.2MiB)
+ Downloading pygments
+Installed 6 packages in 6ms
+============================= test session starts ==============================
+platform linux -- Python 3.14.0, pytest-8.4.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.3.5
+collected 3 items
+
+../tests/test_outputs.py F.s                                             [100%]
+
+=================================== FAILURES ===================================
+_____________________________ test_action_category _____________________________
+
+answers = {'classification': 'Moderate', 'implication': 'G6PD Variable genotype encompasses variants with uncertain or intermedi...oprim-sulfamethoxazole or fosfomycin, if susceptibility permits) may be preferable to avoid oxidative hemolytic risk.'}
+
+    def test_action_category(answers):
+        """Check that the recommendation maps to the correct action category."""
+        rec_text = answers.get("recommendation", "")
+        got_category = classify_recommendation(rec_text)
+>       assert got_category == EXPECTED_ACTION_CATEGORY, (
+            f"Expected action category '{EXPECTED_ACTION_CATEGORY}', got '{got_category}' "
+            f"from recommendation: {rec_text}"
+        )
+E       AssertionError: Expected action category 'other', got 'avoid' from recommendation: Use with caution or consider an alternative antibiotic. G6PD Variable genotype indicates variants of uncertain functional effect on G6PD enzyme activity. If nitrofurantoin is used, monitor closely for signs and symptoms of hemolytic anemia (e.g., fatigue, pallor, jaundice, dark urine). Discontinue immediately if hemolysis is suspected. An alternative agent (e.g., trimethoprim-sulfamethoxazole or fosfomycin, if susceptibility permits) may be preferable to avoid oxidative hemolytic risk.
+E       assert 'avoid' == 'other'
+E         
+E         - other
+E         + avoid
+
+/tests/test_outputs.py:46: AssertionError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_classification
+SKIPPED [1] ../tests/test_outputs.py:63: No key terms defined for this recommendation
+FAILED ../tests/test_outputs.py::test_action_category - AssertionError: Expec...
+==================== 1 failed, 1 passed, 1 skipped in 0.04s ====================
