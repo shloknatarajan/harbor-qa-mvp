@@ -618,7 +618,16 @@ def show_and_save(job_dir: Path):
     print(output)
 
     RESULTS_DIR.mkdir(exist_ok=True)
-    out_file = RESULTS_DIR / f"{job_dir.name}.txt"
+    # Include benchmark name in the output filename
+    config = load_json(job_dir / "config.json")
+    benchmark = ""
+    if config:
+        datasets = config.get("datasets", [])
+        if datasets:
+            benchmark = datasets[0].get("path", "")
+            benchmark = Path(benchmark).name if benchmark else ""
+    suffix = f"_{benchmark}" if benchmark else ""
+    out_file = RESULTS_DIR / f"{job_dir.name}{suffix}.txt"
     out_file.write_text(output.strip() + "\n")
     print(f"\n  (saved to {out_file})")
 
