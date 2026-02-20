@@ -1,0 +1,53 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 3,
+            "passed": 1,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771570505.6749923,
+            "stop": 1771570505.7087119
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_action_category",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00041429199995945964,
+                "start": 1771570505.7023163,
+                "stop": 1771570505.7072258,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Strong', 'implication': 'A CYP2C9 activity score of 0.5 (Poor Metabolizer phenotype, e.g., *2/*3 d...r closely for NSAID-related adverse effects including gastrointestinal bleeding, renal toxicity, and fluid retention.'}\n\n    def test_action_category(answers):\n        \"\"\"Check that the recommendation maps to the correct action category.\"\"\"\n        rec_text = answers.get(\"recommendation\", \"\")\n        got_category = classify_recommendation(rec_text)\n>       assert got_category == EXPECTED_ACTION_CATEGORY, (\n            f\"Expected action category '{EXPECTED_ACTION_CATEGORY}', got '{got_category}' \"\n            f\"from recommendation: {rec_text}\"\n        )\nE       AssertionError: Expected action category 'alternative', got 'avoid' from recommendation: Avoid piroxicam if possible; select an alternative NSAID that is not predominantly metabolized by CYP2C9 (e.g., aspirin, naproxen, or ketorolac). If piroxicam is clinically necessary, reduce the dose by at least 50% of the standard dose and monitor closely for NSAID-related adverse effects including gastrointestinal bleeding, renal toxicity, and fluid retention.\nE       assert 'avoid' == 'alternative'\nE         \nE         - alternative\nE         + avoid\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00021854199997051182,
+                "start": 1771570505.707315,
+                "stop": 1771570505.7083693,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Strong', 'implication': 'A CYP2C9 activity score of 0.5 (Poor Metabolizer phenotype, e.g., *2/*3 d...r closely for NSAID-related adverse effects including gastrointestinal bleeding, renal toxicity, and fluid retention.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Moderate', got 'Strong'\nE       assert 'strong' == 'moderate'\nE         \nE         - moderate\nE         + strong\n\n/tests/test_outputs.py:76: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_key_terms",
+                "status": "passed",
+                "duration": 0.0001417910000327538,
+                "start": 1771570505.7084408,
+                "stop": 1771570505.7086344,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

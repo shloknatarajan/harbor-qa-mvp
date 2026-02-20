@@ -1,0 +1,53 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 3,
+            "passed": 1,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771571022.4928517,
+            "stop": 1771571022.5278943
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_action_category",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0006475010002304771,
+                "start": 1771571022.5209792,
+                "stop": 1771571022.526318,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Moderate', 'implication': \"MT-RNR1 variants of uncertain significance may alter the structure of t... about the uncertain but potentially elevated risk of irreversible aminoglycoside-induced sensorineural hearing loss.'}\n\n    def test_action_category(answers):\n        \"\"\"Check that the recommendation maps to the correct action category.\"\"\"\n        rec_text = answers.get(\"recommendation\", \"\")\n        got_category = classify_recommendation(rec_text)\n>       assert got_category == EXPECTED_ACTION_CATEGORY, (\n            f\"Expected action category '{EXPECTED_ACTION_CATEGORY}', got '{got_category}' \"\n            f\"from recommendation: {rec_text}\"\n        )\nE       AssertionError: Expected action category 'standard_dosing', got 'alternative' from recommendation: Use an alternative non-aminoglycoside antibiotic if clinically feasible. If netilmicin is deemed medically necessary and no suitable alternative exists, use the lowest effective dose with the shortest possible duration, obtain baseline and serial audiological monitoring, and counsel the patient about the uncertain but potentially elevated risk of irreversible aminoglycoside-induced sensorineural hearing loss.\nE       assert 'alternative' == 'standard_dosing'\nE         \nE         - standard_dosing\nE         + alternative\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00023383199982163205,
+                "start": 1771571022.5264125,
+                "stop": 1771571022.5275311,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Moderate', 'implication': \"MT-RNR1 variants of uncertain significance may alter the structure of t... about the uncertain but potentially elevated risk of irreversible aminoglycoside-induced sensorineural hearing loss.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Optional', got 'Moderate'\nE       assert 'moderate' == 'optional'\nE         \nE         - optional\nE         + moderate\n\n/tests/test_outputs.py:76: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_key_terms",
+                "status": "passed",
+                "duration": 0.00013020900019000692,
+                "start": 1771571022.5276294,
+                "stop": 1771571022.527813,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

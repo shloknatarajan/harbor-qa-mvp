@@ -1,0 +1,53 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 3,
+            "passed": 1,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771570798.5347953,
+            "stop": 1771570798.5702236
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_action_category",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0004431670001849852,
+                "start": 1771570798.5634367,
+                "stop": 1771570798.5686464,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Strong', 'implication': 'DPYD activity score of 1.5 designates an Intermediate Metabolizer, typica...inetic-guided dose adjustment may be considered if available. Avoid empiric dose escalation without close monitoring.'}\n\n    def test_action_category(answers):\n        \"\"\"Check that the recommendation maps to the correct action category.\"\"\"\n        rec_text = answers.get(\"recommendation\", \"\")\n        got_category = classify_recommendation(rec_text)\n>       assert got_category == EXPECTED_ACTION_CATEGORY, (\n            f\"Expected action category '{EXPECTED_ACTION_CATEGORY}', got '{got_category}' \"\n            f\"from recommendation: {rec_text}\"\n        )\nE       AssertionError: Expected action category 'dose_reduction', got 'avoid' from recommendation: Reduce the starting dose of capecitabine by 25% (e.g., from 1250 mg/m2 to ~950 mg/m2 twice daily). Titrate subsequent doses based on observed toxicity and clinical response. Pharmacokinetic-guided dose adjustment may be considered if available. Avoid empiric dose escalation without close monitoring.\nE       assert 'avoid' == 'dose_reduction'\nE         \nE         - dose_reduction\nE         + avoid\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00023154200016506366,
+                "start": 1771570798.568762,
+                "stop": 1771570798.5698612,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Strong', 'implication': 'DPYD activity score of 1.5 designates an Intermediate Metabolizer, typica...inetic-guided dose adjustment may be considered if available. Avoid empiric dose escalation without close monitoring.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Moderate', got 'Strong'\nE       assert 'strong' == 'moderate'\nE         \nE         - moderate\nE         + strong\n\n/tests/test_outputs.py:76: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_key_terms",
+                "status": "passed",
+                "duration": 0.00015287500013982935,
+                "start": 1771570798.5699399,
+                "stop": 1771570798.570151,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

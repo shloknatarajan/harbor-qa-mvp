@@ -1,0 +1,62 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 2,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771571280.5259645,
+            "stop": 1771571283.491141
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_recommendation_file_exists",
+                "status": "passed",
+                "duration": 0.0002729579998685949,
+                "start": 1771571280.5486436,
+                "stop": 1771571280.5490332,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_match",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 2.910768959000052,
+                "start": 1771571280.5491219,
+                "stop": 1771571283.4883103,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_result = {'action_match': 2, 'brief_rationale': 'The agent recommends dose reduction when guidelines strongly recommend avoidin...ug entirely, which misses the primary safety action but provides good clinical detail.', 'safety': 2, 'specificity': 4}\n\n    def test_action_match(judge_result):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_result[\"action_match\"]\n>       assert score >= 4, (\n            f\"Action match score {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_result.get('brief_rationale', '')}\"\n        )\nE       AssertionError: Action match score 2/5 (need >= 4). Rationale: The agent recommends dose reduction when guidelines strongly recommend avoiding the drug entirely, which misses the primary safety action but provides good clinical detail.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:110: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_specificity",
+                "status": "passed",
+                "duration": 0.0003229159999591502,
+                "start": 1771571283.4887059,
+                "stop": 1771571283.48913,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0003410010001516639,
+                "start": 1771571283.4892359,
+                "stop": 1771571283.4909782,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_result = {'action_match': 2, 'brief_rationale': 'The agent recommends dose reduction when guidelines strongly recommend avoidin...ug entirely, which misses the primary safety action but provides good clinical detail.', 'safety': 2, 'specificity': 4}\n\n    def test_safety(judge_result):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_result[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety score {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_result.get('brief_rationale', '')}\"\n        )\nE       AssertionError: Safety score 2/5 (need >= 4). Rationale: The agent recommends dose reduction when guidelines strongly recommend avoiding the drug entirely, which misses the primary safety action but provides good clinical detail.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:128: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}
