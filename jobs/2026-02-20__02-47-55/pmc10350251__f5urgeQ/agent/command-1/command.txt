@@ -1,0 +1,106 @@
+trap 'rm -rf /tmp/codex-secrets "$CODEX_HOME/auth.json"' EXIT TERM INT; codex exec --dangerously-bypass-approvals-and-sandbox --skip-git-repo-check --model gpt-5 --json --enable unified_exec -c model_reasoning_effort=high -- 'You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **8 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+NUDT15 *2 + *3 + *5 + *6 is associated with increased likelihood of Leukopenia and Drug Toxicity when treated with ______ in people with Inflammatory Bowel Diseases.
+
+Which drug correctly fills in the blank?
+
+- a) thioridazine
+- b) perindopril
+- c) thioguanine
+- d) azathioprine
+
+## Question 2
+
+NUDT15 *2 + *3 + *5 + *6 is associated with increased likelihood of Leukopenia and Drug Toxicity when treated with ______ in people with Inflammatory Bowel Diseases.
+
+Which drug correctly fills in the blank?
+
+- a) thioridazine
+- b) perindopril
+- c) thioguanine
+- d) None of the options
+
+## Question 3
+
+NUDT15 *2 + *3 + *5 + *6 is associated with increased likelihood of Leukopenia and Drug Toxicity when treated with ______ in people with Inflammatory Bowel Diseases.
+
+Which drug correctly fills in the blank?
+
+- a) perindopril
+- b) azathioprine
+- c) thioridazine
+- d) thioguanine
+
+## Question 4
+
+NUDT15 *2 + *3 + *5 + *6 is associated with increased likelihood of Leukopenia and Drug Toxicity when treated with ______ in people with Inflammatory Bowel Diseases.
+
+Which drug correctly fills in the blank?
+
+- a) thioridazine
+- b) None of the options
+- c) perindopril
+- d) thioguanine
+
+## Question 5
+
+NUDT15 *2/*3 is associated with increased likelihood of Agranulocytosis when treated with ______ in people with Inflammatory Bowel Diseases.
+
+Which drug correctly fills in the blank?
+
+- a) azathioprine
+- b) thioguanine
+- c) perindopril
+- d) thioridazine
+
+## Question 6
+
+NUDT15 *2/*3 is associated with increased likelihood of Agranulocytosis when treated with ______ in people with Inflammatory Bowel Diseases.
+
+Which drug correctly fills in the blank?
+
+- a) perindopril
+- b) None of the options
+- c) thioguanine
+- d) thioridazine
+
+## Question 7
+
+Genotype AC is associated with increased likelihood of Leukopenia when treated with ______ in people with Inflammatory Bowel Diseases as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) thioguanine
+- b) azathioprine
+- c) thioridazine
+- d) perindopril
+
+## Question 8
+
+Genotype AC is associated with increased likelihood of Leukopenia when treated with ______ in people with Inflammatory Bowel Diseases as compared to genotype CC.
+
+Which drug correctly fills in the blank?
+
+- a) thioridazine
+- b) thioguanine
+- c) perindopril
+- d) None of the options
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 8 questions (keys "1" through "8").
+' 2>&1 </dev/null | tee /logs/agent/codex.txt

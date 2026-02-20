@@ -1,0 +1,381 @@
+{
+  "schema_version": "ATIF-v1.5",
+  "session_id": "019c7b36-3017-7471-9a5a-7916013b3848",
+  "agent": {
+    "name": "codex",
+    "version": "0.104.0",
+    "model_name": "gpt-5",
+    "extra": {
+      "originator": "codex_exec",
+      "cwd": "/app"
+    }
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "timestamp": "2026-02-20T13:21:14.778Z",
+      "source": "system",
+      "message": "<permissions instructions>\nFilesystem sandboxing defines which files can be read or written. `sandbox_mode` is `danger-full-access`: No filesystem sandboxing - all commands are permitted. Network access is enabled.\nApproval policy is currently never. Do not provide the `sandbox_permissions` for any reason, commands will be rejected.\n</permissions instructions>"
+    },
+    {
+      "step_id": 2,
+      "timestamp": "2026-02-20T13:21:14.778Z",
+      "source": "user",
+      "message": "# AGENTS.md instructions for /app\n\n<INSTRUCTIONS>\n## Skills\nA skill is a set of local instructions to follow that is stored in a `SKILL.md` file. Below is the list of skills that can be used. Each entry includes a name, description, and file path so you can open the source for full instructions when using a specific skill.\n### Available skills\n- skill-creator: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Codex's capabilities with specialized knowledge, workflows, or tool integrations. (file: /logs/agent/skills/.system/skill-creator/SKILL.md)\n- skill-installer: Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable skills, install a curated skill, or install a skill from another repo (including private repos). (file: /logs/agent/skills/.system/skill-installer/SKILL.md)\n### How to use skills\n- Discovery: The list above is the skills available in this session (name + description + file path). Skill bodies live on disk at the listed paths.\n- Trigger rules: If the user names a skill (with `$SkillName` or plain text) OR the task clearly matches a skill's description shown above, you must use that skill for that turn. Multiple mentions mean use them all. Do not carry skills across turns unless re-mentioned.\n- Missing/blocked: If a named skill isn't in the list or the path can't be read, say so briefly and continue with the best fallback.\n- How to use a skill (progressive disclosure):\n  1) After deciding to use a skill, open its `SKILL.md`. Read only enough to follow the workflow.\n  2) When `SKILL.md` references relative paths (e.g., `scripts/foo.py`), resolve them relative to the skill directory listed above first, and only consider other paths if needed.\n  3) If `SKILL.md` points to extra folders such as `references/`, load only the specific files needed for the request; don't bulk-load everything.\n  4) If `scripts/` exist, prefer running or patching them instead of retyping large code blocks.\n  5) If `assets/` or templates exist, reuse them instead of recreating from scratch.\n- Coordination and sequencing:\n  - If multiple skills apply, choose the minimal set that covers the request and state the order you'll use them.\n  - Announce which skill(s) you're using and why (one short line). If you skip an obvious skill, say why.\n- Context hygiene:\n  - Keep context small: summarize long sections instead of pasting them; only load extra files when needed.\n  - Avoid deep reference-chasing: prefer opening only files directly linked from `SKILL.md` unless you're blocked.\n  - When variants exist (frameworks, providers, domains), pick only the relevant reference file(s) and note that choice.\n- Safety and fallback: If a skill can't be applied cleanly (missing files, unclear instructions), state the issue, pick the next-best approach, and continue.\n</INSTRUCTIONS>"
+    },
+    {
+      "step_id": 3,
+      "timestamp": "2026-02-20T13:21:14.778Z",
+      "source": "user",
+      "message": "<environment_context>\n  <cwd>/app</cwd>\n  <shell>bash</shell>\n</environment_context>"
+    },
+    {
+      "step_id": 4,
+      "timestamp": "2026-02-20T13:21:14.778Z",
+      "source": "user",
+      "message": "You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` \u2014 read them to find the answers.\n\nThere are **2 questions** below. For each question, determine the correct answer letter.\n\n## Question 1\n\nCYP2D6 poor metabolizer is associated with increased likelihood of Bradycardia when treated with ______ as compared to CYP2D6 normal metabolizer.\n\nWhich drug correctly fills in the blank?\n\n- a) bisoprolol\n- b) celiprolol\n- c) metoprolol\n- d) alpha-hydroxymetoprolol\n\n## Question 2\n\nCYP2D6 poor metabolizer is associated with increased likelihood of Bradycardia when treated with ______ as compared to CYP2D6 normal metabolizer.\n\nWhich drug correctly fills in the blank?\n\n- a) None of the options\n- b) celiprolol\n- c) alpha-hydroxymetoprolol\n- d) bisoprolol\n\n---\n\nWrite your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:\n\n```json\n{\n  \"1\": \"a\",\n  \"2\": \"a\"\n}\n```\n\nYou must answer all 2 questions (keys \"1\" through \"2\").\n"
+    },
+    {
+      "step_id": 5,
+      "timestamp": "2026-02-20T13:21:18.213Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "I\u2019ll scan the papers in /app/papers, find evidence for each question, then write answers.json."
+    },
+    {
+      "step_id": 6,
+      "timestamp": "2026-02-20T13:21:18.844Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_0cmG4dhxLpZqYqTu32jWNBKm",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_0cmG4dhxLpZqYqTu32jWNBKm",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "in_progress",
+                "step": "List and skim /app/papers"
+              },
+              {
+                "status": "pending",
+                "step": "Extract findings on CYP2D6 & bradycardia"
+              },
+              {
+                "status": "pending",
+                "step": "Select correct options per question"
+              },
+              {
+                "status": "pending",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_0cmG4dhxLpZqYqTu32jWNBKm",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"in_progress\",\"step\":\"List and skim /app/papers\"},{\"status\":\"pending\",\"step\":\"Extract findings on CYP2D6 & bradycardia\"},{\"status\":\"pending\",\"step\":\"Select correct options per question\"},{\"status\":\"pending\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 7,
+      "timestamp": "2026-02-20T13:21:19.969Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_uhVEgwb7ZEYbfgyvWckoASo3",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_uhVEgwb7ZEYbfgyvWckoASo3",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "ls -lah /app/papers"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_uhVEgwb7ZEYbfgyvWckoASo3",
+            "content": "Chunk ID: f34cb9\nWall time: 0.0618 seconds\nProcess exited with code 0\nOriginal token count: 39\nOutput:\ntotal 60K\ndrwxr-xr-x 2 root root 4.0K Feb 20 12:26 .\ndrwxr-xr-x 1 root root 4.0K Feb 20 12:26 ..\n-rw-r--r-- 1 root root  52K Feb 17 05:19 PMC10058912.md\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"ls -lah /app/papers\"}"
+      }
+    },
+    {
+      "step_id": 8,
+      "timestamp": "2026-02-20T13:21:21.098Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_djtVOZ57QYtz4Lff43eA8iPu",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_djtVOZ57QYtz4Lff43eA8iPu",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,200p' /app/papers/PMC10058912.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_djtVOZ57QYtz4Lff43eA8iPu",
+            "content": "Chunk ID: 109d6a\nWall time: 0.0622 seconds\nProcess exited with code 0\nOriginal token count: 7724\nOutput:\n# Metoprolol and CYP2D6: A Retrospective Cohort Study Evaluating Genotype-Based Outcomes\n\n## Metadata\n**Authors:** Savannah Collett, Amanda Massmann, Natasha J Petry, Joel Van Heukelom, April Schultz, Tadd Hellwig, Jordan F Baye\n**Journal:** Journal of Personalized Medicine\n**Date:** 2023 Feb 26\n**DOI:** [10.3390/jpm13030416](https://doi.org/10.3390/jpm13030416)\n**PMID:** 36983598\n**PMCID:** PMC10058912\n**URL:** https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10058912/\n**PDF:** [https://pmc.ncbi.nlm.nih.gov/articles/PMC10058912/pdf/jpm-13-00416.pdf](https://pmc.ncbi.nlm.nih.gov/articles/PMC10058912/pdf/jpm-13-00416.pdf)\n\n## Abstract\n\nMetoprolol is a medication commonly utilized in select patients to achieve a reduction in heart rate, systolic blood pressure, or other indications. A majority of metoprolol metabolism occurs via CYP2D6. Decreased expression of the CYP2D6 enzyme increases the concentration of metoprolol. Current pharmacogenomics guidelines by the Dutch Pharmacogenomics Working Group recommend slower titrations and dose decreases to minimize adverse effects from poor metabolizers or normal metabolizers taking concomitant medications that are strong inhibitors of CYP2D6 (phenoconverters). This study aimed to evaluate adverse effects such as bradycardia, hypotension, and syncope in patients who are expected to have absent CYP2D6 enzyme activity due to drug\u2013drug or drug\u2013gene interactions. The secondary aims of this study were to evaluate heart rate measurements for the included participants. Retrospective data were collected for individuals with CYP2D6 genotyping results obtained for clinical purposes. Three categories (CYP2D6 normal metabolizers, poor metabolizers, and phenoconverters) were assigned. A total of 325 participants were included. There was no statistically significant difference found in the primary composite outcome between the three metabolizer groups (p = 0.054). However, a statistically significant difference was identified in the incidences of bradycardia between the poor metabolizers and the normal metabolizers or phenoconverters (p < 0.0001). The average heart rates were 2.8 beats per minute (bpm) and 2.6 bpm lower for the poor metabolizer and phenoconverter groups, respectively, compared to the normal metabolizers (p < 0.0001 for both comparisons). This study further supports the role of genetic testing in precision medicine to help individualize patient care as CYP2D6 poor metabolizers taking metoprolol were found to have an increase in bradycardia. Additional research is needed to clarify the dose relationship in this drug\u2013gene interaction.\n\nKeywords: pharmacogenomics, CYP2D6, beta blocker, phenoconversion\n\n## 1. Introduction\n\nMetoprolol is a commonly utilized medication for conditions such as heart failure, atrial fibrillation, and hypertension. The mechanism of metoprolol is a cardioselective, beta-1 adrenergic receptor blocker which has the desired effects of reducing heart rate and blood pressure and increasing cardiac output. The metabolism of metoprolol occurs primarily via the CYP2D6 enzyme, with reported estimates of approximately 70\u201380% [[1](#B1-jpm-13-00416)]. It has been postulated that the reduction in metoprolol metabolism leads to increased concentrations and subsequently increased adverse effects associated with the medication [[2](#B2-jpm-13-00416),[3](#B3-jpm-13-00416)]. A standardization of the *CYP2D6* genotype\u2013phenotype association established four phenotype groups: ultra-rapid metabolizers (UM), normal metabolizers (NM), intermediate metabolizers (IM), and poor metabolizers (PM) ([Table 1](#jpm-13-00416-t001)). As CYP2D6 PMs have no enzyme activity, individuals in this phenotype group are expected to exhibit a several-fold increase in metoprolol concentrations compared to NMs [[3](#B3-jpm-13-00416),[4](#B4-jpm-13-00416)]. It is estimated that 8% of Caucasians are PMs, while the incidence in other populations is approximately 2% [[5](#B5-jpm-13-00416)].\n\n### Table 1.\n\n| Phenotype | Activity Score Range | Activity Score/Genotypes | Examples of CYP2D6 Diplotypes |\n| --- | --- | --- | --- |\n| Ultra-rapid metabolizer | >2.25 | >2.25 | *1/*1\u00d7N, *1/*2\u00d7N, *2/*2\u00d7N |\n| Normal metabolizer | 1.25 < x < 2.25 | 1.251.51.752.02.25 | *1/*10*1/*41, *1/*9*10/*41\u00d73*1/*1, *1/*2*2\u00d72/*10 |\n| Intermediate metabolizer | 0 < x < 1.25 | 0.250.50.751 | *4/*10*4/*41, *10/*10*10/*41*41/*41, *1/*5 |\n| Poor metabolizer | 0 | 0 | *3/*4, *4/*4, *5/*5, *5/*6 |\n\nTable 1 Caption: Predicted CYP2D6 phenotypes based on diplotypes.\n\nPhenoconversion is a discrepancy in the patient\u2019s genotypic prediction of drug metabolism and the true phenotypic capacity the individual demonstrates on the metabolism of a drug; in other words, it is a drug\u2013drug interaction due to inhibition of the CYP2D6 enzyme [[7](#B7-jpm-13-00416),[8](#B8-jpm-13-00416)]. Strong inhibitors of CYP2D6 decrease the enzyme activity to near zero, causing individuals who display normal or intermediate genotypes to mimic a poor metabolizer [[9](#B9-jpm-13-00416)]. Commonly prescribed medications that are known strong inhibitors of the CYP2D6 enzyme include bupropion, fluoxetine, paroxetine, quinidine, and terbinafine [[10](#B10-jpm-13-00416)].\n\nThere is mounting evidence implying an increased risk of adverse hemodynamic outcomes due to drug\u2013drug interactions between CYP2D6 inhibitors and beta blockers [[11](#B11-jpm-13-00416),[12](#B12-jpm-13-00416),[13](#B13-jpm-13-00416),[14](#B14-jpm-13-00416)]. The corollary drug\u2013gene interaction (e.g., using metoprolol in CYP2D6 poor metabolizers) has gained interest in the past decade, and an association between the CYP2D6 metabolizer phenotype and metoprolol serum concentrations seems likely [[4](#B4-jpm-13-00416),[15](#B15-jpm-13-00416),[16](#B16-jpm-13-00416),[17](#B17-jpm-13-00416),[18](#B18-jpm-13-00416),[19](#B19-jpm-13-00416)]. Several studies have also noted a relationship between CYP2D6 phenotype and clinical outcomes and, in general, a decreasing function of CYP2D6 is associated with lower blood pressure (BP) [[20](#B20-jpm-13-00416),[21](#B21-jpm-13-00416)] and a decreased heart rate (HR) [[20](#B20-jpm-13-00416),[21](#B21-jpm-13-00416),[22](#B22-jpm-13-00416)]. Despite sound evidence on pharmacokinetic and surrogate outcomes in the literature, an association between CYP2D6 phenotype and patient-reported clinical symptoms in metoprolol users remains uncertain as studies have found both positive [[23](#B23-jpm-13-00416),[24](#B24-jpm-13-00416),[25](#B25-jpm-13-00416),[26](#B26-jpm-13-00416)] and negative [[27](#B27-jpm-13-00416),[28](#B28-jpm-13-00416),[29](#B29-jpm-13-00416),[30](#B30-jpm-13-00416)] associations. The Dutch Pharmacogenomics Working Group (DPWG) has published guidelines with clearly delineated recommendations for *CYP2D6* [[2](#B2-jpm-13-00416)]. For PMs, DPWG guidelines recommend increasing the metoprolol dose in smaller steps and/or prescribing no more than 25% of the standard dose (i.e., a 75% dose reduction). The Clinical Pharmacogenetics Implementation Consortium (CPIC) has not published a pharmacogenomics (PGx) guideline for beta blockers, though one is reported to be in progress.\n\nThe PGx service at Sanford Health (Sanford Imagenetics) was created in 2014 with the goal of merging PGx into primary care. Our implementation efforts are described in depth elsewhere [[31](#B31-jpm-13-00416)]. In brief, our approach includes both pre-emptive population screening and reactive testing capabilities and, to date, we have completed preemptive PGx panels on more than 19,000 patients. The current iteration of the PGx panel consists of 11 genes: *CYP2C9*, *CYP2C19*, *CYP2D6*, *CYP2C* cluster, *CYP3A5*, *CYP4F2*, *DPYD*, *IFNL3*, *SLCO1B1*, *TPMT*, and *VKORC1*. The metoprolol-*CYP2D6* interaction is commonly encountered in our practice; we have encountered over 500 patients with a relevant drug-gene (*CYP2D6*) or drug\u2013drug (phenoconversion) interaction. Anecdotally, we have noticed bradycardia seems more common in our patients that are CYP2D6 PMs or those taking phenoconverting medications. PGx population studies tend to be statistically limited by the relative infrequency of the minor allele frequency. Thus, we sought to utilize the size of our population to assess the clinical outcomes. Therefore, the aim of this study was to systematically evaluate the effect of the CYP2D6 phenotype on the side effects of metoprolol in a cohort of our patients.\n\n## 2. Materials and Methods\n\nThis was a retrospective, single-health-system, cohort study. Participants were included in the trial if they were older or equal to 18 years of age, had documented results of the *CYP2D6* genotype and phenotype within their electronic medical record (EMR), and had a history of at least one outpatient metoprolol prescription. Exclusion criteria included a documented pacemaker, primary bradycardia, which was defined as a heart rate (HR) less than 55 beats per minute (bpm), or concomitant use of diltiazem, verapamil, or digoxin while on metoprolol (ivabradine was not formally excluded, but no study participants were found to be taking this medication). Participants were chosen initially from the PM population and were matched 1:1 to NMs based on age, sex, and race. The phenoconverter cohort was subsequently matched to the NMs and PMs in the same way. Matching was performed using simple random selection. The primary outcome was a composite incidence of symptomatic bradycardia (i.e., HR < 60 bpm with documentation of adverse reaction), hypotension (i.e., systolic blood pressure (SBP) < 90 or diastolic blood pressure (DBP) < 60), and syncope (i.e., a documented loss of consciousness associated with low blood pressure). Secondary outcomes included the individual components of the primary outcome, incidence of patient-self-reported lightheaded and dizziness, and heart rates for the included patients.\n\nThe outcome variables were collected via manual chart review of progress notes searching for the key terms (bradycardia, hypotension, syncope, dizziness, or lightheadedness) and if there was a concurrent active metoprolol prescription. If the variable was documented in the patient\u2019s chart, it was confirmed against the medication list to ensure overlap with an active metoprolol prescription or documentation within the provider\u2019s notes that the patient was actively taking metoprolol. The overlap of the metoprolol and phenoconverting medications was also verified based on the medication list in the patients\u2019 charts. Patients were classified as phenoconverters based on a documented normal CYP2D6 phenotype with a documented overlap of metoprolol and one of the three following medications: bupropion, fluoxetine, or paroxetine (no individuals in the study population were taking quinidine or terbinafine). Outcome variables were only collected during the time of phenoconversion overlap. Notably, we limited the phenoconverter group to strong inhibitors of CYP2D6 only and identified phenoconverters only from the NM group. This was done with the intention of creating three groups that avoided confounding drug\u2013drug and drug\u2013gene interactions.\n\nHemodynamic data\u2014HR, SBP, and DBP\u2014were collected from the EMR using an automated data query. The analysis focused on HR due to the significant secondary outcome in bradycardia. We collected HR measurements for all ambulatory patient visits taken throughout the study observation period. The average heart rate and minimum heart rate (i.e., an average of the lowest recorded heart rate) were analyzed using the Kruskal \u2013Wallis test, and Dunn\u2019s test was used for a post-hoc pairwise comparison.\n\nAn estimated 2500 patients fit the inclusion criteria. Previous studies found a rate of 9% of symptomatic bradycardia in PMs and 1.6% in NMs, suggesting an effect size of 0.122 using Cramers V method [[30](#B30-jpm-13-00416)]. Assuming two metabolizer groups and a phenoconverter group, a sample size of 145 participants in each group was needed to produce an 80% power to detect a significant outcome. Chi square testing was utilized for a test of difference between the three metabolizer groups. Multivariate logistic regression was used to identify predictors of the outcomes. The model included covariates of age, sex, and race, using a 95% Wald confidence interval for significance. The Shapiro\u2013Wilk test defined the heart rate data as nonparametric, allowing for test of difference to be performed using the Kruskal\u2013Wallis test.\n\n*CYP2D6* genotyping was performed at the Sanford Medical Genetics Laboratory (SMGL), which utilizes multiple platforms to ascertain *CYP2D6* genotype and phenotype. The following alleles were tested for *CYP2D6*: *2, *3, *4, *4M, *5 (deletion), *6, *9, *10, *17, *29, and *41. Fluidigm SNP Dynamic Array [Standard BioTools; South San Francisco, CA] is utilized for genotyping; copy number assessment is conducted via droplet digital PCR [Bio-Rad; Hercules, CA, USA].\n\n## 3. Results\n\nThere were 189 PMs who met the inclusion criteria for this study; however, after accounting for exclusion criteria, 114 PMs were included in the final analysis. These were paired 1:1 with an age-, sex-, and race-matched individual who was selected at random from the NM group, accounting for the 114 individuals in the NM group. The phenoconverter group was likewise matched to the PM group, though only 97 individuals were found to have a qualifying drug\u2013drug interaction ([Figure 1](#jpm-13-00416-f001)).\n\n### Figure 1.\n\n![Figure 1](https://cdn.ncbi.nlm.nih.gov/pmc/blobs/b9e6/10058912/10706f03e8bf/jpm-13-00416-g001.jpg)\n\n[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10058912_jpm-13-00416-g001.jpg)\n\nFlowchart of study participants.\n\nBaseline characteristics for the study population, which was predominantly Caucasian and had a nearly equal split between male (48.6%) and female (51.4%) participants overall, are provided in [Table 2](#jpm-13-00416-t002). The average age was 66.8, 66.9, and 65.2 years old in the NM, PM, and phenoconverter groups, respectively. The study cohort demographics largely matched the demographics in the region we serve. Given the retrospective nature of this study, there was a small numeric variation in the baseline characteristics, though there were no statistically significant differences between phenotype groups. A total of 325 patients were included in the analysis: NM = 114, PM = 114, and phenoconverters = 97.\n\n### Table 2.\n\n|   | Normal Metabolizer | Poor Metabolizer | Phenoconverter |\n| --- | --- | --- | --- |\n| Demographic | n = 114 | n = 114 | n = 97 |\n| Age (yrs.) |   |   |   |\n| <55 | 16 (14%) | 16 (14%) | 15 (15%) |\n| 55\u201364 | 24 (21%) | 24 (21%) | 24 (25%) |\n| 65\u201374 | 50 (44%) | 51 (45%) | 42 (43%) |\n| 75+ | 24 (21%) | 23 (20%) | 16 (16%) |\n| Sex |   |   |   |\n| Male | 58 (51%) | 58 (51%) | 42 (43%) |\n| Female | 56 (49%) | 56 (49%) | 55 (57%) |\n| Race |   |   |   |\n| Caucasian/white | 114 (100%) | 113 (99%) | 96 (99%) |\n| American Indian/Alaskan Native | 0 | 1 (1%) | 0 |\n| Asian | 0 | 0 | 1 (1%) |\n| Concomitant Medications |   |   |   |\n| Bupropion | 0 | n/a | 59 (61%) ^ |\n| Fluoxetine | 0 | n/a | 40 (41%) ^ |\n| Paroxetine | 0 | n/a | 16 (16%) ^ |\n\nTable 2 Caption: Baseline characteristics of the study population.\n\n[Figure 2](#jpm-13-00416-f002) describes the composite incidence of bradycardia, hypotension, and syncope in the three study groups; individual components of the primary are also depicted. There was a numeric increase in events in the PM group (50%) vs. the NM group (34%) but less so in the phenoconverter group (39.5%). Statistical significance was not achieved for the primary outcome (*p* = 0.054). Among secondary outcomes, a statistically significant difference was noted in the bradycardia outcome between the three groups (*p* < 0.0001). The incidence of bradycardia was 25.4%, 41.2%, and 14.4% in the NMs, PMs, and phenoconverter groups, respectively. There were no other differences found amongst the secondary outcomes. A regression analysis ([Table 3](#jpm-13-00416-t003)) was completed to account for predefined variables of age, sex, and race. The regression analysis showed an association between bradycardia and PM phenotype. The odds ratio for bradycardia between the NM and PM groups was 1.62 (95% CI 1.11 to 2.39; *p* < 0.0001). Age was a notable driver for this association (*p* = 0.0002). [Figure 3](#jpm-13-00416-f003) highlights a descriptive visual for the incidence of bradycardia stratified by age. While the overall trend shows the incidence of bradycardia increases with age, PMs are numerically the most affected, especially in age groups greater than 65 years old.\n\n### Figure 2.\n\n![Figure 2](https://cdn.ncbi.nlm.nih.gov/pmc/blobs/b9e6/10058912/a0212d880c8e/jpm-13-00416-g002.jpg)\n\n[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10058912_jpm-13-00416-g002.jpg)\n\nIncidence of primary composite outcome and individual components of the primary.\n\n### Table 3.\n\n|   | Event Incidence (%) |  |  | Odds Ratio (95% CI) |  |\n| --- | --- | --- | --- | --- | --- |\n| Outcome | NM (n = 114) | PM (n = 114) | Pheno (n = 97) | NM vs. PM | NM vs. Pheno |\n| Primary Composite | 45 (39.5) | 57 (50) | 33 (34) | 1.27 (0.95 to 1.70) | 0.862 (0.599 to 1.23) |\n| Individual Components of Primary |   |   |   |   |   |\n| Hypotension | 21 (18.4) | 21 (18.4) | 17 (17.5) | 1.00 (0.58 to 1.72) | 0.95 (0.54 to 1.68) |\n| Bradycardia | 29 (25.4) | 47 (41.2) | 14 (14.4) | 1.62 (1.11 to 2.39) * | 0.57 (0.32 to 1.00) |\n| Syncope | 13 (11.4) | 18 (15.8) | 13 (13.4) | 1.39 (0.72 to 2.67) | 1.18 (0.58 to 2.38) |\n| Additional Secondary Outcomes |   |   |   |   |   |\n| Lightheadedness | 39 (34.2) | 44 (38.6) | 33 (34) | 1.13 (0.80 to 1.59) | 0.99 (0.68 to 1.4) |\n| Dizziness | 59 (51.8) | 62 (54.4) | 46 (47.4) | 1.05 (0.82 to 1.35) | 0.92 (0.69 to 1.20) |\n\nTable 3 Caption: Incidence of primary and secondary outcomes stratified by CYP2D6 phenotype.\n\n### Figure 3.\n\n![Figure 3](https://cdn.ncbi.nlm.nih.gov/pmc/blobs/b9e6/10058912/d82ceba2f53d/jpm-13-00416-g003.jpg)\n\n[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10058912_jpm-13-00416-g003.jpg)\n\nIncidence of bradycardia among CYP2D6 phenotypes stratified by age.\n\nHR was a predefined secondary outcome of this study due to the drug\u2019s mechanism of action. [Figure 4](#jpm-13-00416-f004) shows the average and minimum heart rates recorded for the study participants. The average heart rates ([Figure 4](#jpm-13-00416-f004)a) were 75.9 \u00b1 16.8 bpm, 73.1 \u00b1 15.5 bpm, and 73.3 \u00b1 13.8 bpm in the NMs, PMs, and phenoconverters, respectively (*p* < 0.0001). Pairwise comparisons between NMs vs. PMs (*p* < 0.0001) and NMs vs. phenoconverters (*p* < 0.0001) were statistically significant but were non-significant between PMs and phenoconverters. The minimum heart rate ([Figure 4](#jpm-13-00416-f004)b) was found to be statistically different between the three metabolizer groups (*p* = 0.0052). The mean minimum HRs were 62.5 \u00b1 10.8 bpm, 58.0 \u00b1 10.3 bpm, and 61.8 \u00b1 9.5 bpm for NMs, PMs, and phenoconverters, respectively. While the study groups were relatively equal in size, the PM group had more BP assessments documented (4053 BP assessments) compared to phenoconverters (2670 BP assessments) and NMs (2422 BP assessments). This finding was not included in the overall purpose of study, but is an interesting finding noted through data analysis.\n\n### Figure 4.\n\n![Figure 4](https://cdn.ncbi.nlm.nih.gov/pmc/blobs/b9e6/10058912/17244ff4ac33/jpm-13-00416-g004.jpg)\n\n[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10058912_jpm-13-00416-g004.jpg)\n\nAmbulatory measurements of heart rate for all patients taken throughout the study observation period: (a) average of all heart rate measurements (mean +/\u2212 95% CI) stratified by CYP2D6 phenotype group and (b) average minimum heart rate. NM:normal metabolizers; PM: poor metabolizers; Pheno: phenoconverter group. * p < 0.5; **** p < 0.001; NS: non-significant.\n\n## 4. Discussion\n\nThe results of our study indicate that CYP2D6 PMs have an increased risk of bradycardia and a lower minimum HR compared to NMs and phenoconverters. The incidence of bradycardia was 62% higher in the PM group vs. the NM group, and the minimum HR was four bpm lower in the PM group compared to the NM and phenoconverter groups. The primary composite outcome\u2014incidence of bradycardia, hypotension, and syncope\u2014was not statistically different between groups, though the study was initially powered to find a difference in the bradycardia outcome alone. The phenoconverter group demonstrated no meaningful differences in clinical outcomes when compared to the NM group. This was unexpected but is possibly related to the small cohort size and the non-standardized time of phenoconversion overlap.\n\nThis study contributes to the growing body of evidence for the relationship between *CYP2D6* and metoprolol. There exists substantial literature related to metoprolol PGx, though the evidence is more compelling for surrogate outcomes (e.g., HR and BP) than clinical outcomes. A genetic substudy of the MERIT-HF trial found a greater decrease in HR and DBP outcomes for CYP2D6 IM and PM groups compared to the NM group [[20](#B20-jpm-13-00416)]. This effect was most pronounced during early titration and when reaching target dose (i.e., 200 mg of metoprolol succinate daily), thus suggesting a dose-response effect. A prospective study by Thomas and colleagues found that a lower CYP2D6 activity score was significantly associated with a greater reduction in HR (*p* < 0.001) [[22](#B22-jpm-13-00416)]. This study, which was performed in the USA, provided a demographically diverse (>30% African American, ~50% female) population, and the HR reduction in the PM group was nearly twice that of the NM group (\u221213.7 bpm vs. \u22127.1 bpm, respectively), though the association was non-significant. An observational study in Germany by Wuttke and colleagues found a fivefold higher risk for metoprolol-related adverse effects in CYP2D6 PMs vs. non-PMs in an at-large population [[23](#B23-jpm-13-00416)]. A Dutch study by Bijl and colleagues found an 8.5 bpm decrease in HR, leading to increased risk for bradycardia, in CYP2D6 PMs taking metoprolol compared to CYP2D6 NMs (OR = 3.86, *p* = 0.0014) [[25](#B25-jpm-13-00416)]. Recently, Chen and colleagues performed a prospective observational trial of metoprolol tolerance in a Han Chinese population, stratifying adverse events by CYP2D6 phenotype [[26](#B26-jpm-13-00416)]. While few PMs were enrolled in the study, the study did find a statistically higher incidence of postural hypotension, bradycardia, asystole, and syncope in the IM group compared to the NM group. The overall incidence of cardiovascular adverse events for IMs was 60% higher than the NM group in Chen et al. (OR = 1.06; *p* < 0.001). Comparatively, while the composite primary outcome in the present study was non-significant, bradycardia was found to be significantly more common in the PM group (OR = 1.62; *p* < 0.0001). Taken in the context of previous studies, our results are encouraging that a clinical outcome may, in fact, exist. A prospective randomized clinical trial is likely needed to find a definitive association between the *CYP2D6* genotype and metoprolol adverse effects.\n\nThe strengths of this study include its cohort matching, broad population sampling secondary to limited exclusion criteria, and the large PGx population that was able to be included for this study. A manual chart review of adverse effects likely contributed to the high yield of incidence of outcomes instead of relying on documented ICD-9/-10 codes in the EMR. Moreover, the large sample size of the PM group (often a limiting factor in PGx studies) and the relatively balanced number of individuals in each group led to a more robust statistical analysis. Correlations among clinical and surrogate outcomes are also compelling, though the clinical significance of the observed heart rate differences is debatable.\n\nThere were several key limitations to this study. First, the study was underpowered to detect a difference in the primary outcome. Original inclusion estimates placed the number of individuals in each group around 145; however, after accounting for exclusion criteria (in the PM group) and verifying the drug\u2013drug interactions (in the phenoconverter group), the number of individuals included in each group was significantly limited. As a result, the desired sample size was not obtained. This is particularly noteworthy as the primary outcome bordered on statistical significance. However, the effect seen in the bradycardia secondary outcome is concordant with those seen in previous studies [[23](#B23-jpm-13-00416),[25](#B25-jpm-13-00416)], and we believe that the bradycardia outcome is worth reporting as it is a clear driver of the primary outcome and is clinically relevant.\n\nSecond, due to the retrospective nature of this study, we could not directly assess medication compliance related to both phenoconversion medications and overall metoprolol use. Without the ability to assess compliance, participants in the phenoconverter group may not actually have been on the inhibitor at the time of metoprolol use, which is potentially why the results were not as expected for this group. Furthermore, phenoconversion was addressed strictly as an all-or-none phenomenon in that only NMs taking strong CYP2D6 inhibitors were analyzed in this cohort. Future studies should seek to explore the effect of phenoconversion within other metabolizer groups and with moderate CYP2D6 inhibitors.\n\nThird, our study did not specifically address metoprolol dose or formulation, only whether patients were taking metoprolol or not. Further analysis of the dose effect on the outcomes would be beneficial to help correlate a potential relationship between genotype and maintenance dose. The analysis also did not distinguish between metoprolol formulation (tartrate vs. succinate). While the clinical implications of metoprolol formulation within the context of drug-gene and drug-drug interactions are not fully understood, there are important pharmacokinetic differences that may impact drug interactions such as phenoconversion [[22](#B22-jpm-13-00416)].\n\nFinally, the characteristics of the study population need to be considered when applying and interpreting this study. The participants in this study were generally reflective of our rural Midwestern patient population, which tends to be older and self-identifies as being of northern European ancestry. The frequency of PMs in individuals with European ancestry is approximately 6\u20138% vs. 1\u20133% for other ethnic groups [[5](#B5-jpm-13-00416)]. The outcomes studied in this trial may be less pronounced in non-white populations and may limit the application of these results to areas that serve more diverse populations. Additionally, the average age of the study population was 66.4 years old, and the multivariate analysis found a positive correlation between age and bradycardia. While this result is not surprising, applying these results to younger patients may overestimate the risk. Notably, the multivariate analysis identified age as an independent variable but did not model this as a confounder. Thus, the impact of age vs. genotype was not fully elucidated. Investigators may wish to consider age as an a priori confounder in future studies.\n\n## 5. Conclusions\n\nThis study found that CYP2D6 PMs taking metoprolol had a significant increase in the incidence of symptomatic bradycardia compared to genotypic NMs. The study did not reach statistical significance surrounding the primary composite outcome, however. Nonetheless, this study supports previous findings that metoprolol may be clinically impacted by CYP2D6 phenotype, though future research is warranted to investigate the impact of a wider range of CYP2D6 phenotypes. While a statically significant difference in bradycardia between CYP2D6 NMs and PMs was found, CYP2D6 major inhibitors did not produce the same effect in this study. Additional research into the impact of CYP2D6 phenoconversion and the role drug\u2013drug interactions play on metoprolol is also needed.\n\n## Acknowledgments\n\nThe authors would like to thank Aarabhi Gurumoorthy for completing the data analysis for this study.\n\n## Author Contributions\n\nConceptualization, A.M., N.J.P., J.V.H., A.S., and J.F.B.; methodology, S.C., T.H., J.F.B. and J.F.B.; investigation, S.C. and J.F.B.; writing, S.C., A.M., N.J.P., J.V.H., A.S., and J.F.B. All authors have read and agreed to the published version of the manuscript.\n\n## Institutional Review Board Statement\n\nThe study was conducted in accordance with the Declaration of Helsinki and was approved by the Sanford Research Institutional Review Board (protocol number: STUDY00002212; date of approval: 11/6/2020).\n\n## Informed Consent Statement\n\nPatient consent was waived as this was a retrospective study involving no more than minimal risk.\n\n## Data Availability Statement\n\nNot applicable.\n\n## Conflicts of Interest\n\nThe authors declare no conflict of interest.\n\n## Funding Statement\n\nThis research received no external funding.\n\n## Footnotes\n\n## Associated Data\n\n*This section collects any data citations, data availability statements, or supplementary materials included in this article.*\n\n### Data Availability Statement\n\nNot applicable.\n\n### Data Availability Statement\n\nNot applicable.\n\n## References\n\n1. Lennard M.S., Silas J.H., Freestone S., Ramsay L.E., Tucker G.T., Woods H.F. Oxidation Phenotype\u2014A Major Determinant of Metoprolol Metabolism and Response. N. Engl. J. Med. 1982;307:1558\u20131560. doi: 10.1056/NEJM198212163072505.  [DOI](https://doi.org/10.1056/NEJM198212163072505) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/7144837/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=N.%20Engl.%20J.%20Med.&title=Oxidation%20Phenotype%E2%80%94A%20Major%20Determinant%20of%20Metoprolol%20Metabolism%20and%20Response&author=M.S.%20Lennard&author=J.H.%20Silas&author=S.%20Freestone&author=L.E.%20Ramsay&author=G.T.%20Tucker&volume=307&publication_year=1982&pages=1558-1560&pmid=7144837&doi=10.1056/NEJM198212163072505&)\n\n2. Annotation of DPWG Guideline for Metoprolol and CYP2D6. [(accessed on 16 September 2022)]. Available online: https://www.pharmgkb.org/guidelineAnnotation/PA166104995.  [https://www.pharmgkb.org/guidelineAnnotation/PA166104995](https://www.pharmgkb.org/guidelineAnnotation/PA166104995)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,200p' /app/papers/PMC10058912.md\"}"
+      }
+    },
+    {
+      "step_id": 9,
+      "timestamp": "2026-02-20T13:21:26.490Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_pLthNoGe0FEbqiztaNrgczW8",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_pLthNoGe0FEbqiztaNrgczW8",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"bradycardia|bisoprolol|celiprolol|alpha-hydroxymetoprolol|metoprolol\" /app/papers/PMC10058912.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_pLthNoGe0FEbqiztaNrgczW8",
+            "content": "Chunk ID: d774ef\nWall time: 0.0532 seconds\nProcess exited with code 0\nOriginal token count: 4877\nOutput:\n15:Metoprolol is a medication commonly utilized in select patients to achieve a reduction in heart rate, systolic blood pressure, or other indications. A majority of metoprolol metabolism occurs via CYP2D6. Decreased expression of the CYP2D6 enzyme increases the concentration of metoprolol. Current pharmacogenomics guidelines by the Dutch Pharmacogenomics Working Group recommend slower titrations and dose decreases to minimize adverse effects from poor metabolizers or normal metabolizers taking concomitant medications that are strong inhibitors of CYP2D6 (phenoconverters). This study aimed to evaluate adverse effects such as bradycardia, hypotension, and syncope in patients who are expected to have absent CYP2D6 enzyme activity due to drug\u2013drug or drug\u2013gene interactions. The secondary aims of this study were to evaluate heart rate measurements for the included participants. Retrospective data were collected for individuals with CYP2D6 genotyping results obtained for clinical purposes. Three categories (CYP2D6 normal metabolizers, poor metabolizers, and phenoconverters) were assigned. A total of 325 participants were included. There was no statistically significant difference found in the primary composite outcome between the three metabolizer groups (p = 0.054). However, a statistically significant difference was identified in the incidences of bradycardia between the poor metabolizers and the normal metabolizers or phenoconverters (p < 0.0001). The average heart rates were 2.8 beats per minute (bpm) and 2.6 bpm lower for the poor metabolizer and phenoconverter groups, respectively, compared to the normal metabolizers (p < 0.0001 for both comparisons). This study further supports the role of genetic testing in precision medicine to help individualize patient care as CYP2D6 poor metabolizers taking metoprolol were found to have an increase in bradycardia. Additional research is needed to clarify the dose relationship in this drug\u2013gene interaction.\n21:Metoprolol is a commonly utilized medication for conditions such as heart failure, atrial fibrillation, and hypertension. The mechanism of metoprolol is a cardioselective, beta-1 adrenergic receptor blocker which has the desired effects of reducing heart rate and blood pressure and increasing cardiac output. The metabolism of metoprolol occurs primarily via the CYP2D6 enzyme, with reported estimates of approximately 70\u201380% [[1](#B1-jpm-13-00416)]. It has been postulated that the reduction in metoprolol metabolism leads to increased concentrations and subsequently increased adverse effects associated with the medication [[2](#B2-jpm-13-00416),[3](#B3-jpm-13-00416)]. A standardization of the *CYP2D6* genotype\u2013phenotype association established four phenotype groups: ultra-rapid metabolizers (UM), normal metabolizers (NM), intermediate metabolizers (IM), and poor metabolizers (PM) ([Table 1](#jpm-13-00416-t001)). As CYP2D6 PMs have no enzyme activity, individuals in this phenotype group are expected to exhibit a several-fold increase in metoprolol concentrations compared to NMs [[3](#B3-jpm-13-00416),[4](#B4-jpm-13-00416)]. It is estimated that 8% of Caucasians are PMs, while the incidence in other populations is approximately 2% [[5](#B5-jpm-13-00416)].\n36:There is mounting evidence implying an increased risk of adverse hemodynamic outcomes due to drug\u2013drug interactions between CYP2D6 inhibitors and beta blockers [[11](#B11-jpm-13-00416),[12](#B12-jpm-13-00416),[13](#B13-jpm-13-00416),[14](#B14-jpm-13-00416)]. The corollary drug\u2013gene interaction (e.g., using metoprolol in CYP2D6 poor metabolizers) has gained interest in the past decade, and an association between the CYP2D6 metabolizer phenotype and metoprolol serum concentrations seems likely [[4](#B4-jpm-13-00416),[15](#B15-jpm-13-00416),[16](#B16-jpm-13-00416),[17](#B17-jpm-13-00416),[18](#B18-jpm-13-00416),[19](#B19-jpm-13-00416)]. Several studies have also noted a relationship between CYP2D6 phenotype and clinical outcomes and, in general, a decreasing function of CYP2D6 is associated with lower blood pressure (BP) [[20](#B20-jpm-13-00416),[21](#B21-jpm-13-00416)] and a decreased heart rate (HR) [[20](#B20-jpm-13-00416),[21](#B21-jpm-13-00416),[22](#B22-jpm-13-00416)]. Despite sound evidence on pharmacokinetic and surrogate outcomes in the literature, an association between CYP2D6 phenotype and patient-reported clinical symptoms in metoprolol users remains uncertain as studies have found both positive [[23](#B23-jpm-13-00416),[24](#B24-jpm-13-00416),[25](#B25-jpm-13-00416),[26](#B26-jpm-13-00416)] and negative [[27](#B27-jpm-13-00416),[28](#B28-jpm-13-00416),[29](#B29-jpm-13-00416),[30](#B30-jpm-13-00416)] associations. The Dutch Pharmacogenomics Working Group (DPWG) has published guidelines with clearly delineated recommendations for *CYP2D6* [[2](#B2-jpm-13-00416)]. For PMs, DPWG guidelines recommend increasing the metoprolol dose in smaller steps and/or prescribing no more than 25% of the standard dose (i.e., a 75% dose reduction). The Clinical Pharmacogenetics Implementation Consortium (CPIC) has not published a pharmacogenomics (PGx) guideline for beta blockers, though one is reported to be in progress.\n38:The PGx service at Sanford Health (Sanford Imagenetics) was created in 2014 with the goal of merging PGx into primary care. Our implementation efforts are described in depth elsewhere [[31](#B31-jpm-13-00416)]. In brief, our approach includes both pre-emptive population screening and reactive testing capabilities and, to date, we have completed preemptive PGx panels on more than 19,000 patients. The current iteration of the PGx panel consists of 11 genes: *CYP2C9*, *CYP2C19*, *CYP2D6*, *CYP2C* cluster, *CYP3A5*, *CYP4F2*, *DPYD*, *IFNL3*, *SLCO1B1*, *TPMT*, and *VKORC1*. The metoprolol-*CYP2D6* interaction is commonly encountered in our practice; we have encountered over 500 patients with a relevant drug-gene (*CYP2D6*) or drug\u2013drug (phenoconversion) interaction. Anecdotally, we have noticed bradycardia seems more common in our patients that are CYP2D6 PMs or those taking phenoconverting medications. PGx population studies tend to be statistically limited by the relative infrequency of the minor allele frequency. Thus, we sought to utilize the size of our population to assess the clinical outcomes. Therefore, the aim of this study was to systematically evaluate the effect of the CYP2D6 phenotype on the side effects of metoprolol in a cohort of our patients.\n42:This was a retrospective, single-health-system, cohort study. Participants were included in the trial if they were older or equal to 18 years of age, had documented results of the *CYP2D6* genotype and phenotype within their electronic medical record (EMR), and had a history of at least one outpatient metoprolol prescription. Exclusion criteria included a documented pacemaker, primary bradycardia, which was defined as a heart rate (HR) less than 55 beats per minute (bpm), or concomitant use of diltiazem, verapamil, or digoxin while on metoprolol (ivabradine was not formally excluded, but no study participants were found to be taking this medication). Participants were chosen initially from the PM population and were matched 1:1 to NMs based on age, sex, and race. The phenoconverter cohort was subsequently matched to the NMs and PMs in the same way. Matching was performed using simple random selection. The primary outcome was a composite incidence of symptomatic bradycardia (i.e., HR < 60 bpm with documentation of adverse reaction), hypotension (i.e., systolic blood pressure (SBP) < 90 or diastolic blood pressure (DBP) < 60), and syncope (i.e., a documented loss of consciousness associated with low blood pressure). Secondary outcomes included the individual components of the primary outcome, incidence of patient-self-reported lightheaded and dizziness, and heart rates for the included patients.\n44:The outcome variables were collected via manual chart review of progress notes searching for the key terms (bradycardia, hypotension, syncope, dizziness, or lightheadedness) and if there was a concurrent active metoprolol prescription. If the variable was documented in the patient\u2019s chart, it was confirmed against the medication list to ensure overlap with an active metoprolol prescription or documentation within the provider\u2019s notes that the patient was actively taking metoprolol. The overlap of the metoprolol and phenoconverting medications was also verified based on the medication list in the patients\u2019 charts. Patients were classified as phenoconverters based on a documented normal CYP2D6 phenotype with a documented overlap of metoprolol and one of the three following medications: bupropion, fluoxetine, or paroxetine (no individuals in the study population were taking quinidine or terbinafine). Outcome variables were only collected during the time of phenoconversion overlap. Notably, we limited the phenoconverter group to strong inhibitors of CYP2D6 only and identified phenoconverters only from the NM group. This was done with the intention of creating three groups that avoided confounding drug\u2013drug and drug\u2013gene interactions.\n46:Hemodynamic data\u2014HR, SBP, and DBP\u2014were collected from the EMR using an automated data query. The analysis focused on HR due to the significant secondary outcome in bradycardia. We collected HR measurements for all ambulatory patient visits taken throughout the study observation period. The average heart rate and minimum heart rate (i.e., an average of the lowest recorded heart rate) were analyzed using the Kruskal \u2013Wallis test, and Dunn\u2019s test was used for a post-hoc pairwise comparison.\n48:An estimated 2500 patients fit the inclusion criteria. Previous studies found a rate of 9% of symptomatic bradycardia in PMs and 1.6% in NMs, suggesting an effect size of 0.122 using Cramers V method [[30](#B30-jpm-13-00416)]. Assuming two metabolizer groups and a phenoconverter group, a sample size of 145 participants in each group was needed to produce an 80% power to detect a significant outcome. Chi square testing was utilized for a test of difference between the three metabolizer groups. Multivariate logistic regression was used to identify predictors of the outcomes. The model included covariates of age, sex, and race, using a 95% Wald confidence interval for significance. The Shapiro\u2013Wilk test defined the heart rate data as nonparametric, allowing for test of difference to be performed using the Kruskal\u2013Wallis test.\n90:[Figure 2](#jpm-13-00416-f002) describes the composite incidence of bradycardia, hypotension, and syncope in the three study groups; individual components of the primary are also depicted. There was a numeric increase in events in the PM group (50%) vs. the NM group (34%) but less so in the phenoconverter group (39.5%). Statistical significance was not achieved for the primary outcome (*p* = 0.054). Among secondary outcomes, a statistically significant difference was noted in the bradycardia outcome between the three groups (*p* < 0.0001). The incidence of bradycardia was 25.4%, 41.2%, and 14.4% in the NMs, PMs, and phenoconverter groups, respectively. There were no other differences found amongst the secondary outcomes. A regression analysis ([Table 3](#jpm-13-00416-t003)) was completed to account for predefined variables of age, sex, and race. The regression analysis showed an association between bradycardia and PM phenotype. The odds ratio for bradycardia between the NM and PM groups was 1.62 (95% CI 1.11 to 2.39; *p* < 0.0001). Age was a notable driver for this association (*p* = 0.0002). [Figure 3](#jpm-13-00416-f003) highlights a descriptive visual for the incidence of bradycardia stratified by age. While the overall trend shows the incidence of bradycardia increases with age, PMs are numerically the most affected, especially in age groups greater than 65 years old.\n122:Incidence of bradycardia among CYP2D6 phenotypes stratified by age.\n136:The results of our study indicate that CYP2D6 PMs have an increased risk of bradycardia and a lower minimum HR compared to NMs and phenoconverters. The incidence of bradycardia was 62% higher in the PM group vs. the NM group, and the minimum HR was four bpm lower in the PM group compared to the NM and phenoconverter groups. The primary composite outcome\u2014incidence of bradycardia, hypotension, and syncope\u2014was not statistically different between groups, though the study was initially powered to find a difference in the bradycardia outcome alone. The phenoconverter group demonstrated no meaningful differences in clinical outcomes when compared to the NM group. This was unexpected but is possibly related to the small cohort size and the non-standardized time of phenoconversion overlap.\n138:This study contributes to the growing body of evidence for the relationship between *CYP2D6* and metoprolol. There exists substantial literature related to metoprolol PGx, though the evidence is more compelling for surrogate outcomes (e.g., HR and BP) than clinical outcomes. A genetic substudy of the MERIT-HF trial found a greater decrease in HR and DBP outcomes for CYP2D6 IM and PM groups compared to the NM group [[20](#B20-jpm-13-00416)]. This effect was most pronounced during early titration and when reaching target dose (i.e., 200 mg of metoprolol succinate daily), thus suggesting a dose-response effect. A prospective study by Thomas and colleagues found that a lower CYP2D6 activity score was significantly associated with a greater reduction in HR (*p* < 0.001) [[22](#B22-jpm-13-00416)]. This study, which was performed in the USA, provided a demographically diverse (>30% African American, ~50% female) population, and the HR reduction in the PM group was nearly twice that of the NM group (\u221213.7 bpm vs. \u22127.1 bpm, respectively), though the association was non-significant. An observational study in Germany by Wuttke and colleagues found a fivefold higher risk for metoprolol-related adverse effects in CYP2D6 PMs vs. non-PMs in an at-large population [[23](#B23-jpm-13-00416)]. A Dutch study by Bijl and colleagues found an 8.5 bpm decrease in HR, leading to increased risk for bradycardia, in CYP2D6 PMs taking metoprolol compared to CYP2D6 NMs (OR = 3.86, *p* = 0.0014) [[25](#B25-jpm-13-00416)]. Recently, Chen and colleagues performed a prospective observational trial of metoprolol tolerance in a Han Chinese population, stratifying adverse events by CYP2D6 phenotype [[26](#B26-jpm-13-00416)]. While few PMs were enrolled in the study, the study did find a statistically higher incidence of postural hypotension, bradycardia, asystole, and syncope in the IM group compared to the NM group. The overall incidence of cardiovascular adverse events for IMs was 60% higher than the NM group in Chen et al. (OR = 1.06; *p* < 0.001). Comparatively, while the composite primary outcome in the present study was non-significant, bradycardia was found to be significantly more common in the PM group (OR = 1.62; *p* < 0.0001). Taken in the context of previous studies, our results are encouraging that a clinical outcome may, in fact, exist. A prospective randomized clinical trial is likely needed to find a definitive association between the *CYP2D6* genotype and metoprolol adverse effects.\n142:There were several key limitations to this study. First, the study was underpowered to detect a difference in the primary outcome. Original inclusion estimates placed the number of individuals in each group around 145; however, after accounting for exclusion criteria (in the PM group) and verifying the drug\u2013drug interactions (in the phenoconverter group), the number of individuals included in each group was significantly limited. As a result, the desired sample size was not obtained. This is particularly noteworthy as the primary outcome bordered on statistical significance. However, the effect seen in the bradycardia secondary outcome is concordant with those seen in previous studies [[23](#B23-jpm-13-00416),[25](#B25-jpm-13-00416)], and we believe that the bradycardia outcome is worth reporting as it is a clear driver of the primary outcome and is clinically relevant.\n144:Second, due to the retrospective nature of this study, we could not directly assess medication compliance related to both phenoconversion medications and overall metoprolol use. Without the ability to assess compliance, participants in the phenoconverter group may not actually have been on the inhibitor at the time of metoprolol use, which is potentially why the results were not as expected for this group. Furthermore, phenoconversion was addressed strictly as an all-or-none phenomenon in that only NMs taking strong CYP2D6 inhibitors were analyzed in this cohort. Future studies should seek to explore the effect of phenoconversion within other metabolizer groups and with moderate CYP2D6 inhibitors.\n146:Third, our study did not specifically address metoprolol dose or formulation, only whether patients were taking metoprolol or not. Further analysis of the dose effect on the outcomes would be beneficial to help correlate a potential relationship between genotype and maintenance dose. The analysis also did not distinguish between metoprolol formulation (tartrate vs. succinate). While the clinical implications of metoprolol formulation within the context of drug-gene and drug-drug interactions are not fully understood, there are important pharmacokinetic differences that may impact drug interactions such as phenoconversion [[22](#B22-jpm-13-00416)].\n148:Finally, the characteristics of the study population need to be considered when applying and interpreting this study. The participants in this study were generally reflective of our rural Midwestern patient population, which tends to be older and self-identifies as being of northern European ancestry. The frequency of PMs in individuals with European ancestry is approximately 6\u20138% vs. 1\u20133% for other ethnic groups [[5](#B5-jpm-13-00416)]. The outcomes studied in this trial may be less pronounced in non-white populations and may limit the application of these results to areas that serve more diverse populations. Additionally, the average age of the study population was 66.4 years old, and the multivariate analysis found a positive correlation between age and bradycardia. While this result is not surprising, applying these results to younger patients may overestimate the risk. Notably, the multivariate analysis identified age as an independent variable but did not model this as a confounder. Thus, the impact of age vs. genotype was not fully elucidated. Investigators may wish to consider age as an a priori confounder in future studies.\n152:This study found that CYP2D6 PMs taking metoprolol had a significant increase in the incidence of symptomatic bradycardia compared to genotypic NMs. The study did not reach statistical significance surrounding the primary composite outcome, however. Nonetheless, this study supports previous findings that metoprolol may be clinically impacted by CYP2D6 phenotype, though future research is warranted to investigate the impact of a wider range of CYP2D6 phenotypes. While a statically significant difference in bradycardia between CYP2D6 NMs and PMs was found, CYP2D6 major inhibitors did not produce the same effect in this study. Additional research into the impact of CYP2D6 phenoconversion and the role drug\u2013drug interactions play on metoprolol is also needed.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"bradycardia|bisoprolol|celiprolol|alpha-hydroxymetoprolol|metoprolol\\\" /app/papers/PMC10058912.md\"}"
+      }
+    },
+    {
+      "step_id": 10,
+      "timestamp": "2026-02-20T13:21:29.089Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_PgZ5oIKoJIB6c2mMI8zXXRpT",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_PgZ5oIKoJIB6c2mMI8zXXRpT",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "completed",
+                "step": "List and skim /app/papers"
+              },
+              {
+                "status": "in_progress",
+                "step": "Extract findings on CYP2D6 & bradycardia"
+              },
+              {
+                "status": "pending",
+                "step": "Select correct options per question"
+              },
+              {
+                "status": "pending",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_PgZ5oIKoJIB6c2mMI8zXXRpT",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"completed\",\"step\":\"List and skim /app/papers\"},{\"status\":\"in_progress\",\"step\":\"Extract findings on CYP2D6 & bradycardia\"},{\"status\":\"pending\",\"step\":\"Select correct options per question\"},{\"status\":\"pending\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 11,
+      "timestamp": "2026-02-20T13:21:32.283Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_VlhaMf6W1wPkkXVSg74JktQ1",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_VlhaMf6W1wPkkXVSg74JktQ1",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "python - << 'PY'\nfrom pathlib import Path\np=Path('/app/papers/PMC10058912.md').read_text()\n# quick sanity checks for evidence strings\nimport re\nhits=re.findall(r\"CYP2D6 PMs? taking metoprolol.*bradycardia|increase in bradycardia\", p, re.I)\nprint('Evidence hits:', len(hits))\nPY"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_VlhaMf6W1wPkkXVSg74JktQ1",
+            "content": "Chunk ID: de652c\nWall time: 0.0523 seconds\nProcess exited with code 127\nOriginal token count: 12\nOutput:\n/bin/bash: line 1: python: command not found\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"python - << 'PY'\\nfrom pathlib import Path\\np=Path('/app/papers/PMC10058912.md').read_text()\\n# quick sanity checks for evidence strings\\nimport re\\nhits=re.findall(r\\\"CYP2D6 PMs? taking metoprolol.*bradycardia|increase in bradycardia\\\", p, re.I)\\nprint('Evidence hits:', len(hits))\\nPY\"}"
+      }
+    },
+    {
+      "step_id": 12,
+      "timestamp": "2026-02-20T13:21:34.700Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_zUA6waC9BnEnhPAyZEanoP8h",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_zUA6waC9BnEnhPAyZEanoP8h",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "completed",
+                "step": "List and skim /app/papers"
+              },
+              {
+                "status": "completed",
+                "step": "Extract findings on CYP2D6 & bradycardia"
+              },
+              {
+                "status": "in_progress",
+                "step": "Select correct options per question"
+              },
+              {
+                "status": "pending",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_zUA6waC9BnEnhPAyZEanoP8h",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"completed\",\"step\":\"List and skim /app/papers\"},{\"status\":\"completed\",\"step\":\"Extract findings on CYP2D6 & bradycardia\"},{\"status\":\"in_progress\",\"step\":\"Select correct options per question\"},{\"status\":\"pending\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 13,
+      "timestamp": "2026-02-20T13:21:36.346Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_MlFppFNC9UjpXtuWu4S9YFNk",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_MlFppFNC9UjpXtuWu4S9YFNk",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "cat > /app/answers.json << 'JSON'\n{\n  \"1\": \"c\",\n  \"2\": \"a\"\n}\nJSON\nls -l /app/answers.json && echo && cat /app/answers.json"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_MlFppFNC9UjpXtuWu4S9YFNk",
+            "content": "Chunk ID: 10e468\nWall time: 0.0555 seconds\nProcess exited with code 0\nOriginal token count: 22\nOutput:\n-rw-r--r-- 1 root root 27 Feb 20 13:21 /app/answers.json\n\n{\n  \"1\": \"c\",\n  \"2\": \"a\"\n}\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"cat > /app/answers.json << 'JSON'\\n{\\n  \\\"1\\\": \\\"c\\\",\\n  \\\"2\\\": \\\"a\\\"\\n}\\nJSON\\nls -l /app/answers.json && echo && cat /app/answers.json\"}"
+      }
+    },
+    {
+      "step_id": 14,
+      "timestamp": "2026-02-20T13:21:37.759Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_qQJe0ZQy0ZxaPyoFsSLzXjLh",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_qQJe0ZQy0ZxaPyoFsSLzXjLh",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "completed",
+                "step": "List and skim /app/papers"
+              },
+              {
+                "status": "completed",
+                "step": "Extract findings on CYP2D6 & bradycardia"
+              },
+              {
+                "status": "completed",
+                "step": "Select correct options per question"
+              },
+              {
+                "status": "completed",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_qQJe0ZQy0ZxaPyoFsSLzXjLh",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"completed\",\"step\":\"List and skim /app/papers\"},{\"status\":\"completed\",\"step\":\"Extract findings on CYP2D6 & bradycardia\"},{\"status\":\"completed\",\"step\":\"Select correct options per question\"},{\"status\":\"completed\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 15,
+      "timestamp": "2026-02-20T13:21:40.052Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Answers saved to /app/answers.json.\n\n- Evidence: The paper in papers/PMC10058912.md concludes \u201cCYP2D6 PMs taking metoprolol had a significant increase in the incidence of symptomatic bradycardia compared to genotypic NMs,\u201d supporting metoprolol for Q1 and \u201cNone of the options\u201d for Q2 since metoprolol isn\u2019t listed there."
+    }
+  ],
+  "final_metrics": {
+    "total_prompt_tokens": 156245,
+    "total_completion_tokens": 1555,
+    "total_cached_tokens": 104960,
+    "total_steps": 15,
+    "extra": {
+      "reasoning_output_tokens": 640,
+      "total_tokens": 157800,
+      "last_token_usage": {
+        "input_tokens": 18496,
+        "cached_input_tokens": 18176,
+        "output_tokens": 89,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 18585
+      }
+    }
+  }
+}

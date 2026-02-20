@@ -1,0 +1,489 @@
+{
+  "schema_version": "ATIF-v1.5",
+  "session_id": "019c7aad-23e6-7000-b49d-1e869ea0f807",
+  "agent": {
+    "name": "codex",
+    "version": "0.104.0",
+    "model_name": "gpt-5",
+    "extra": {
+      "originator": "codex_exec",
+      "cwd": "/app"
+    }
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "timestamp": "2026-02-20T10:51:33.227Z",
+      "source": "system",
+      "message": "<permissions instructions>\nFilesystem sandboxing defines which files can be read or written. `sandbox_mode` is `danger-full-access`: No filesystem sandboxing - all commands are permitted. Network access is enabled.\nApproval policy is currently never. Do not provide the `sandbox_permissions` for any reason, commands will be rejected.\n</permissions instructions>"
+    },
+    {
+      "step_id": 2,
+      "timestamp": "2026-02-20T10:51:33.227Z",
+      "source": "user",
+      "message": "# AGENTS.md instructions for /app\n\n<INSTRUCTIONS>\n## Skills\nA skill is a set of local instructions to follow that is stored in a `SKILL.md` file. Below is the list of skills that can be used. Each entry includes a name, description, and file path so you can open the source for full instructions when using a specific skill.\n### Available skills\n- skill-creator: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Codex's capabilities with specialized knowledge, workflows, or tool integrations. (file: /logs/agent/skills/.system/skill-creator/SKILL.md)\n- skill-installer: Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable skills, install a curated skill, or install a skill from another repo (including private repos). (file: /logs/agent/skills/.system/skill-installer/SKILL.md)\n### How to use skills\n- Discovery: The list above is the skills available in this session (name + description + file path). Skill bodies live on disk at the listed paths.\n- Trigger rules: If the user names a skill (with `$SkillName` or plain text) OR the task clearly matches a skill's description shown above, you must use that skill for that turn. Multiple mentions mean use them all. Do not carry skills across turns unless re-mentioned.\n- Missing/blocked: If a named skill isn't in the list or the path can't be read, say so briefly and continue with the best fallback.\n- How to use a skill (progressive disclosure):\n  1) After deciding to use a skill, open its `SKILL.md`. Read only enough to follow the workflow.\n  2) When `SKILL.md` references relative paths (e.g., `scripts/foo.py`), resolve them relative to the skill directory listed above first, and only consider other paths if needed.\n  3) If `SKILL.md` points to extra folders such as `references/`, load only the specific files needed for the request; don't bulk-load everything.\n  4) If `scripts/` exist, prefer running or patching them instead of retyping large code blocks.\n  5) If `assets/` or templates exist, reuse them instead of recreating from scratch.\n- Coordination and sequencing:\n  - If multiple skills apply, choose the minimal set that covers the request and state the order you'll use them.\n  - Announce which skill(s) you're using and why (one short line). If you skip an obvious skill, say why.\n- Context hygiene:\n  - Keep context small: summarize long sections instead of pasting them; only load extra files when needed.\n  - Avoid deep reference-chasing: prefer opening only files directly linked from `SKILL.md` unless you're blocked.\n  - When variants exist (frameworks, providers, domains), pick only the relevant reference file(s) and note that choice.\n- Safety and fallback: If a skill can't be applied cleanly (missing files, unclear instructions), state the issue, pick the next-best approach, and continue.\n</INSTRUCTIONS>"
+    },
+    {
+      "step_id": 3,
+      "timestamp": "2026-02-20T10:51:33.227Z",
+      "source": "user",
+      "message": "<environment_context>\n  <cwd>/app</cwd>\n  <shell>bash</shell>\n</environment_context>"
+    },
+    {
+      "step_id": 4,
+      "timestamp": "2026-02-20T10:51:33.228Z",
+      "source": "user",
+      "message": "You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` \u2014 read them to find the answers.\n\nThere are **4 questions** below. For each question, determine the correct answer letter.\n\n## Question 1\n\nAllele A is not associated with response to ______ in people with Arthritis, Rheumatoid as compared to allele G.\n\nWhich drug correctly fills in the blank?\n\n- a) pralatrexate\n- b) trimethoprim\n- c) methotrexate\n- d) pemetrexed\n\n## Question 2\n\nAllele A is not associated with response to ______ in people with Arthritis, Rheumatoid as compared to allele G.\n\nWhich drug correctly fills in the blank?\n\n- a) None of the options\n- b) trimethoprim\n- c) pralatrexate\n- d) pemetrexed\n\n## Question 3\n\nGenotype GT is associated with increased response to ______ in people with Arthritis, Rheumatoid as compared to genotype TT.\n\nWhich drug correctly fills in the blank?\n\n- a) methotrexate\n- b) pralatrexate\n- c) pemetrexed\n- d) trimethoprim\n\n## Question 4\n\nGenotype GT is associated with increased response to ______ in people with Arthritis, Rheumatoid as compared to genotype TT.\n\nWhich drug correctly fills in the blank?\n\n- a) trimethoprim\n- b) None of the options\n- c) pemetrexed\n- d) pralatrexate\n\n---\n\nWrite your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:\n\n```json\n{\n  \"1\": \"a\",\n  \"2\": \"a\",\n  \"3\": \"a\"\n}\n```\n\nYou must answer all 4 questions (keys \"1\" through \"4\").\n"
+    },
+    {
+      "step_id": 5,
+      "timestamp": "2026-02-20T10:51:45.261Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "I\u2019ll scan the papers in /app/papers and grep for RA response associations to identify the correct drugs."
+    },
+    {
+      "step_id": 6,
+      "timestamp": "2026-02-20T10:51:45.541Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_8zbYHEfaUVQE6psgGKNdu65U",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_8zbYHEfaUVQE6psgGKNdu65U",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"ls -la /app/papers\"",
+            "timeout": 120000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_8zbYHEfaUVQE6psgGKNdu65U",
+            "content": "Chunk ID: 0df762\nWall time: 0.0543 seconds\nProcess exited with code 0\nOriginal token count: 39\nOutput:\ntotal 92\ndrwxr-xr-x 2 root root  4096 Feb 17 21:53 .\ndrwxr-xr-x 1 root root  4096 Feb 17 21:53 ..\n-rw-r--r-- 1 root root 82041 Feb 17 05:19 PMC10163902.md\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"ls -la /app/papers\\\"\",\"timeout\":120000}"
+      }
+    },
+    {
+      "step_id": 7,
+      "timestamp": "2026-02-20T10:51:47.052Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_rluEgKOrZhKswruWMEltwP1G",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_rluEgKOrZhKswruWMEltwP1G",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"sed -n '1,200p' /app/papers/PMC10163902.md\"",
+            "timeout": 120000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_rluEgKOrZhKswruWMEltwP1G",
+            "content": "Chunk ID: 62d035\nWall time: 0.0525 seconds\nProcess exited with code 0\nOriginal token count: 6777\nOutput:\n# MTHFR and MTRR Genetic Polymorphism of Methotrexate Therapy Outcomes in Early Rheumatoid Arthritis\n\n## Metadata\n**Authors:** Qian Zhang, Pan Fu, Zhanglei Cao, Hua Huang, Qinwen Wen, Kaizhe Wang, Tong Kong, Xiudi Wu, Jianping Zheng\n**Journal:** Pharmacogenomics and Personalized Medicine\n**Date:** 2023 May 2\n**DOI:** [10.2147/PGPM.S404949](https://doi.org/10.2147/PGPM.S404949)\n**PMID:** 37159804\n**PMCID:** PMC10163902\n**URL:** https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10163902/\n**PDF:** [https://pmc.ncbi.nlm.nih.gov/articles/PMC10163902/pdf/pgpm-16-407.pdf](https://pmc.ncbi.nlm.nih.gov/articles/PMC10163902/pdf/pgpm-16-407.pdf)\n\n## Abstract\n\n**Purpose:** \nMethotrexate (MTX) is used as an anchor drug for the treatment of rheumatoid arthritis (RA) and there may be differences in drug action between genotypes. The purpose of this study was to investigate the relationship between clinical efficacy response and disease activity of MTX monotherapy with methylenetetrahydrofolate reductase (MTHFR) and methionine synthase reductase (MTRR) polymorphisms.\n\n**Patients and Methods:** \nIn the study, a population of 32 patients in East China with early RA fulfilling the diagnostic standards of the American College of Rheumatology (ACR) were enrolled, all of them received MTX monotherapy. Genotyping of patients MTHFR C677T and A1298C, MTRR A66G using tetra-primer ARMS-PCR method and sanger sequencing to verify its accuracy.\n\n**Results:** \nThe distribution of three polymorphic genotypes that were studied is in accordance with the Hardy-Weinberg genetic equilibrium. The patient pathology variables smoke (OR = 0.088, P = 0.037), drink alcohol (OR = 0.039, P = 0.016) and males (OR = 0.088, P = 0.037) were significantly associated with non-response to MTX. Genotype, allele distribution and genetic statistical models were not found to be related to MTX treatment response and disease activity in both the response groups and non-response groups.\n\n**Conclusion:** \nOur findings suggest that the MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms may not predict MTX clinical treatment response and disease activity in patients with early RA. The study revealed that smoke, alcohol, and males were possible influential factors for MTX non-response.\n\nKeywords: MTHFR, MTRR, methotrexate, rheumatoid arthritis, DAS28\n\n### Purpose\n\nMethotrexate (MTX) is used as an anchor drug for the treatment of rheumatoid arthritis (RA) and there may be differences in drug action between genotypes. The purpose of this study was to investigate the relationship between clinical efficacy response and disease activity of MTX monotherapy with methylenetetrahydrofolate reductase (MTHFR) and methionine synthase reductase (MTRR) polymorphisms.\n\n### Patients and Methods\n\nIn the study, a population of 32 patients in East China with early RA fulfilling the diagnostic standards of the American College of Rheumatology (ACR) were enrolled, all of them received MTX monotherapy. Genotyping of patients MTHFR C677T and A1298C, MTRR A66G using tetra-primer ARMS-PCR method and sanger sequencing to verify its accuracy.\n\n### Results\n\nThe distribution of three polymorphic genotypes that were studied is in accordance with the Hardy-Weinberg genetic equilibrium. The patient pathology variables smoke (OR = 0.088, P = 0.037), drink alcohol (OR = 0.039, P = 0.016) and males (OR = 0.088, P = 0.037) were significantly associated with non-response to MTX. Genotype, allele distribution and genetic statistical models were not found to be related to MTX treatment response and disease activity in both the response groups and non-response groups.\n\n### Conclusion\n\nOur findings suggest that the MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms may not predict MTX clinical treatment response and disease activity in patients with early RA. The study revealed that smoke, alcohol, and males were possible influential factors for MTX non-response.\n\n## Introduction\n\nRheumatoid arthritis (RA) is a chronic systemic autoimmune disease, mainly characterised by symmetrical pain and swelling of small joints in the hands and the feet.[1](#cit0001) When chronic inflammation is not properly controlled over a long period of time, it can eventually lead to irreversible damage to the joint structures. Methotrexate (MTX) is a folic acid inhibitor with structural and physicochemical properties similar to folic acid, which acts as an anti-inflammatory and anti-proliferative agent in the body.[2](#cit0002) MTX is used extensively for the treatment of RA because of its efficacy, safety profile and affordability. The European League Against Rheumatism (EULAR) recommended MTX monotherapy for patients with early RA, and MTX in combination with other disease-modifying antirheumatic drugs (DMARDs) for patients with moderate or severe disease activity.[3](#cit0003) However, 30\u201350% of patients with RA still have poor response to MTX treatment or relapse with inadequate response to re-treatment, resulting in drug resistance, and have to stop treatment or change to other medicines.[4](#cit0004) The personalized response between patients may be due to differences in the gene expression or activity in the folic acid-MTX metabolic pathway, and such differences may arise to alter drug pharmacokinetics and affect MTX response.[5](#cit0005)\n\nThe methylenetetrahydrofolate reductase (MTHFR) and methionine synthase reductase (MTRR) are closely related to the folic acid metabolic pathway. MTHFR catalyzes the transformation of 5,10-methylenetetrahydrofolate (5,10-CH2-THF) into 5-methyltetrahydrofolate (5-MTHF), which provides methionine-methylation for homocysteine (Hcy).[6](#cit0006) MTRR generates functionally active methionine synthase (MTR), and allows it to catalyse the conversion of Hcy to methionine, maintaining normal levels of Hcy.[7](#cit0007) These two enzymes are significant regulation factors, each regulated by its separate gene, and their associated regulatory genes are essential for folic acid metabolism and have therefore been extensively studied.\n\nThe MTHFR gene is located on chromosome 1p36.3 and the encoded production is a key enzyme in the metabolic process of the body. In existing studies, multiple polymorphic sites in the MTHFR gene have been reported, with the most widely studied SNP sites being mainly C677T (rs1801133) and A1298C (rs1801131). The early studies showed that the C677T mutation causes a decrease in enzyme activity, with carriers of the 677TT genotype and 677CT genotype having 30% and 65% of the enzyme activity of the 677CC genotype, respectively.[8](#cit0008) Ashfield-Watt et al reported that the C677T mutation resulted in reduced levels of ingested folic acid, and that 677TT had lower levels of folic acid than the 677CT or 677CC genotypes, requiring higher intake to achieve equilibrium Hcy concentrations.[9](#cit0009) Whether the enzyme activity was altered by the A1298C mutation remains controversial.[10](#cit0010)^,^[11](#cit0011) Neither homozygote nor heterozygote of A1298C resulted in increased or decreased in folic acid concentrations.[12](#cit0012) MTRR gene mutations are one of the main causes of Hcy and abnormal folic acid metabolism, with A66G (rs1801394) as the most prominent and most studied mutation site. MTRR gene is located on chromosome 5p15.2\u201315.3, and A66G mutation results in methionine substitution at the 22nd isoleucine. The ability to metabolize folic acid and folic acid deficiency were associated with MTRR gene polymorphisms.[13](#cit0013) MTRR A66G mutation leads to abnormal plasma hcy levels, with significantly higher hcy concentrations in the 66AG and 66GG genotypes than in the 66AA genotype, which may have an impact on MTX treatment response.[14](#cit0014) In exploring the relationship between MTX therapeutic response with MTHFR C677T and MTHFR A1298C polymorphisms, it produced remarkably heterogeneous results, making this influential relationship full of uncertainty.\n\nTherefore, in this study, we investigated a potential correlation between clinical efficacy response and disease activity of MTX monotherapy and MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms in RA patients in East China for the first time, hoping to provide a possibility to achieve personalized treatment for RA patients.\n\n## Materials and Methods\n\n### Workflow Chart\n\n[Figure 1](#f0001) demonstrates the general design of this study.\n\n### Figure 1.\n\n![Figure 1](https://cdn.ncbi.nlm.nih.gov/pmc/blobs/7467/10163902/d1d2c4992489/PGPM-16-407-g0001.jpg)\n\n[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10163902_PGPM-16-407-g0001.jpg)\n\nWorkflow chart of the relationship between clinical efficacy response and disease activity of methotrexate (MTX) monotherapy with MTHFR C677T, MTHFR A1298C and MTRR A66G SNPs polymorphisms.\n\n### Characteristics of the Population\n\nDuring 2019\u20132021, we diagnosed 32 patients with RA in the Department of Rheumatology and Immunology of the Ningbo First Hospital according to the 1987 diagnostic standards of the ACR,[15](#cit0015) and all patients were diagnosed with RA for the first time. The early patients included in this study were treated with methotrexate monotherapy (no other DMARDs in combination) and initial methotrexate treatment dose was 7.5mg \u00b1 2.5mg/week. To relieve the methotrexate negative effects, patients were supplemented with folic acid 10mg/week during treatment. The average treatment period was three months, according to the DAS28 score method and the standards for evaluating the degree of rheumatoid arthritis disease of ACR.[16](#cit0016) Quantitative indicators to assess patients at baseline and post-treatment, including tender joints counts (TJC), swollen joints counts (SJC), erythrocyte sedimentation rate (ESR) and pain visual analogue scales (VAS). Based on EULAR\u2019s response criteria according to DAS28,[17](#cit0017) MTX treatment response was determined by a combination of the DAS28 difference between the baseline and post-treatment periods, the \u0394DAS28, and the DAS28 at post-treatment period, with \u0394DAS28\u22640.6 and \u0394DAS28 > 0.6\u22641.2 but DAS28 > 5.1 defined as treatment ineffective and the rest as moderate or good response. In this study, we divided patients into response and non-response groups according to treatment response, with moderate or good effect patients in the response group and ineffective patients in the non-response group. To explore the correlation between genotypes and response to MTX treatment by comparing the genotype distribution of patients in the response and non-response groups. The study was approved by the local ethics committee, complied with the standard procedures of the Declaration of Helsinki, and informed consent was obtained from all subjects.\n\n### DNA Extraction\n\nWhole blood samples were taken intravenously from patients with EDTA anticoagulated blood collection tubes and marked with the date and patient information. Genomic DNA was extracted according to the kit manufacturer\u2019s recommendations (DNeasy Blood&Tissue Kit, QIAGEN, Germany). DNA was quantified using NanoDrop 2000 (Thermo Fisher Scientific, Massachusetts, US) and Qubit 2.0 (Thermo Fisher Scientific, Massachusetts, US). DNA integrity was tested by agarose gel electrophoresis. Purified gDNA samples were stored at \u221280\u00b0C.\n\n### Genotype Identification\n\nIdentification of allelic genotypes for the MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms by primers designed based on the tetra-primer amplification refractory mutation system PCR (ARMS-PCR) proposed by Ye et al.[18](#cit0018) The 3' terminus of the inner primer was designed according to the mutation site, and allele-specific bases were introduced, as well as a mismatched base at the penultimate third of the 3' terminus to enhance the specificity of the PCR amplification. The primers sequences and working concentrations, and annealing temperatures are shown in [Table S1](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx). Both outer primer and inner primer concentrations were optimized for the system, and the amplification of the two shorter allele-specific products was enhanced at a final concentration ratio of 1:4, with clear genotyping results. The 10 \u00b5L PCR reaction system includes 10ng DNA, outer primer final concentration of 0.1\u20130.2\u00b5M, inter primer final concentration of 0.4\u20130.8\u00b5M, and 0.5U Taq polymerase (AmpliTaq Gold\u2122 360 DNA polymerase, Thermo Fisher Scientific, Massachusetts, US). The PCR amplification procedure was an initial denaturation at 95\u00b0C for 5 minutes, cycle conditions of denaturation at 95\u00b0C for 30 seconds, annealing temperature for 30 seconds depending on the polymorphic site, extension at 72\u00b0C for 30 seconds and final extension at 72\u00b0C for 7 minutes. Mixed 4\u00b5L of PCR products with 2\u00b5L of loading dye and analyzed genotypes in 8% polyacrylamide gel electrophoresis (PAGE).\n\n### Meta-Analysis\n\nThis section of the study was searched for literature using PubMed and Web of Science databases. Searches were conducted using the combination of keywords: \u201cmethotrexate\u201d AND \u201crheumatoid arthritis\u201d AND \u201cpolymorphism\u201d. The title and abstract were used to obtain information related to the study for literature screening. The criteria for inclusion in the literature were: (1) study of the association of MTHFR C677T, MTHFR A1298C and MTRR A66G with MTX treatment outcomes in RA patients; (2) literature publication date in the last decade; (3) use of a case-control or cohort design and inclusion of detailed genotype data, clinical characteristics of patients and baseline drugs in the literature.\n\n### Statistical Analysis\n\nStatistical analysis of data was performed with IBM SPSS Statistics for Windows, version 26 (IBM Corp., Armonk, NY, USA). The chi-square test assessed whether the genotype distribution was consistent with Hardy-Weinberg equilibrium (HWE), P > 0.05 indicated genetic equilibrium and the sample was statistically significant. Patients' sample measurement data were described with the means and standard deviations (\u00b1SD) or interquartile ranges (IQRs). Results were compared between two groups using the Student\u2019s *t*-test and between multiple groups (or three different SNPs analyzed in the same sample) with Kruskal\u2013Wallis test. When the frequency was less than 5, we used Fisher\u2019s exact test instead of the chi-square test. P values were considered statistically significant at p < 0.05. Genotype and allele frequencies were compared based on chi-square tests, and allelic and genotypic risks were assessed with used odds ratios (ORs) and 95% confidence intervals (CIs).\n\nMeta-analysis was conducted using STATA 17.0 (Stata Corporation, TX, USA) software. The Mantel-Haenszel test was used to statistically analyze the genetic models such as dominant model, recessive model and co-dominant model to determine the correlation between MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms and MTX treatment efficacy. Risk estimates were expressed using OR and 95% CIs, and *Z*-test P values <0.05 were considered statistically significant.\n\n## Results\n\n### Patient Genotype\n\nTo determine the patient genotype, we designed outer and inner primers for the C677T, A1298C and A66G sites, respectively. In the tetra-primer ARMS-PCR method, optimization of the inner and outer primer concentrations was essential for accurate genotyping. To further determine the optimal primer concentration, we used PCR amplification with different ratios of outer primers and inner primers of 1:1, 1:2, 1:4 and 1:10, respectively, and found that at the primer ratio of 1:4, the PCR products obtained by 8% PAGE resulted in clear separation of each genotype ([Figure 2A\u2013C](#f0002)) (size of PCR amplification products refer to [Table S1](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx)). The genotype identification results of 32 patients with regard to C677T, A1298C and A66G are shown in [Table S2](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx). To verify the genotyping accuracy, PCR amplification was done using outer primers for each SNP site and sanger sequencing was performed on all samples. From further comparison, we found that the patient genotype obtained by the tetra-primer amplification method was 100% consistent with the sanger sequencing results ([Figure 2D\u2013F](#f0002)). Therefore, we identified the genotype of the patient and provided a basis for subsequent correlation analysis.\n\n### Figure 2.\n\n![Figure 2](https://cdn.ncbi.nlm.nih.gov/pmc/blobs/7467/10163902/92d440c6b4f0/PGPM-16-407-g0002.jpg)\n\n[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10163902_PGPM-16-407-g0002.jpg)\n\nGenotyping results of patients with MTHFR C677T, A1298C and MTRR A66G and validation of PCR product sanger sequencing. (A): The SNP of MTHFR C677T (rs1801133). M: Markers: 20bp; lanes 1, 3, 4, 5, 7, 9 heterozygotes alleles (CT); lanes 2, 6, 7 mutant homozygotes alleles (TT); (B): The SNP of MTHFR A1298C (rs1801131). M: Markers: 20bp; lanes 1, 2, 4, 6, 8 wild type homozygotes (AA); lanes 3, 5, 7, 9 heterozygotes alleles (AC); (C): The SNP of MTRR CA66G (rs1801394). M: Markers: 20bp; lanes 1, 2, 3, 4, 8, 9 wild type homozygotes (AA); lanes 3,6,7 heterozygotes alleles (AG). (D): Sanger sequencing chromatogram of patient samples in the MTHFR C677T polymorphism showing three genotypes (CC, CT, TT). (E): Direct sequencing chromatogram of patient samples in the MTHFR A1298C polymorphism showing two genotypes (AA, AC). (F): Direct sequencing chromatogram of patient samples in the MTRR A66G polymorphism showing two genotypes (AA, AG).\n\n### Clinical Features of the Patients\n\nA total of 32 patients with early RA were reported in this study, and the clinical characteristics of the patients at baseline and the variables assessed by DAS28 post-treatment period are listed in [Table 1](#t0001). All patients were treated with MTX monotherapy from the first date of diagnosis of RA, with a mean treatment period of 86 days. Based on \u0394DAS28, 21 of the 32 patients were determined to be in the response group and 11 in the non-response group. Our results revealed no significant differences in age, BMI, Anti-CCP positivity, RF positivity, MTX treatment measures, or treatment duration between the response and non-response groups (p > 0.05). In contrast, smoke (current smokers at the time of data collection, OR = 0.088, P = 0.037), drink (alcohol consumption \u22651 unit, OR = 0.039, P = 0.016) and male (OR = 0.088, P = 0.037) were significantly associated with non-response to MTX. The average levels of TJC, SJC, ESR and DAS28 after the post-treatment in patients were 1 (0\u20132), 0 (0\u20131), 19.5 (10\u201333) mm/h and 3.12\u00b11.55, respectively, which were clearly different in the response and non-response groups, but not statistically significant (P > 0.05).\n\n### Table 1.\n\n| Characteristics | RA Patients (n=32) | Responders (n=21) | Non-Responders (n=11) | OR (95% CI) | P-value |\n| --- | --- | --- | --- | --- | --- |\n| Patients-related |   |   |   |   |   |\n| Gender (Female/Male) | 27/5 | 20/1 | 7/4 | 0.088 (0.008\u20130.921) | 0.037 |\n| Age (years) (mean \u00b1 SD) | 50.4 \u00b1 13.28 | 49.81 \u00b1 12.6 | 51.55 \u00b1 15.06 |   | 0.748 |\n| BMI median (IQR) kg/m2 | 21.9 (17.6\u201328.3) | 21.83 (20.0\u201323.1) | 22.04 (19.4\u201324.7) |   | 0.329 |\n| Height (cm) (mean \u00b1 SD) | 162.1 \u00b1 5.85 | 160.37 \u00b1 4.55 | 164.64 \u00b1 6.96 |   | 0.089 |\n| Weight (kg) (mean \u00b1 SD) | 57.4 \u00b1 8.56 | 55.11 \u00b1 6.09 | 61.45 \u00b1 10.84 |   | 0.1 |\n| Current smoking, n (%) | 5 (15.6) | 1 (4.8) | 4 (36.36) | 0.088 (0.008\u20130.921) | 0.037 |\n| Alcohol consumption (\u22651 unit per week), n (%) | 4 (12.5) | 0 (0) | 4 (36.36) | 0.039 (0.002\u20130.808) | 0.016 |\n| Disease-related |   |   |   |   |   |\n| Anti-CCP positivity, n (%) | 29 (90.63) | 19 (90.48) | 10 (90.91) | 0.950 (0.076\u201311.803) | 0.968 |\n| RF positivity, n (%) | 30 (93.75) | 20 (95.24) | 10 (90.91) | 2.000 (0.113\u201335.411) | 0.636 |\n| Treatment related |   |   |   |   |   |\n| MTX dose (mg/week) (mean \u00b1 SD) | 9.6 \u00b1 0.92 | 9.52 \u00b1 1.0 | 9.77 \u00b1 0.75 |   | 0.297 |\n| Treatment duration, median (IQR), days | 86 (82\u201391) | 86 (84\u201391) | 84 (73\u2013106) |   | 0.504 |\n| Folic acid dose (mg/week) (mean \u00b1 SD) | 8.9 \u00b1 2.1 | 8.57 \u00b1 2.31 | 9.55 \u00b1 1.51 |   | 0.163 |\n| Individual variable of DAS28 (post-treatment) |   |   |   |   |   |\n| TJC (out of 28), median (IQR) | 1 (0\u20132) | 0 (0\u20131) | 2 (1\u20134) |   | 0.158 |\n| SJC (out of 28), median (IQR) | 0 (0\u20131) | 0 (0\u20131) | 2 (1\u20133) |   | 0.130 |\n| ESR, median (IQR) | 19.5 (10\u201333) | 19 (9\u201328) | 23 (10\u201367) |   | 0.330 |\n| DAS 28 (mean \u00b1 SD) | 3.12 \u00b1 1.55 | 2.21 \u00b1 0.70 | 3.93 \u00b1 1.6 |   | 0.061 |\n\nTable 1 Caption: Clinical Characteristics Variables of the RA Patients Studied\n\n### Association of MTX Clinical Response with C677T, A1298C and A66G Polymorphisms\n\n[Table 2](#t0002) shows the distribution of MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphism genotypes between the response and non-response groups and comparison of statistical models. The results indicated that the genotypes, alleles and the distribution of the three statistical models (recessive model, dominant model and co-dominant model) at each SNP site were not significantly correlated with MTX clinical treatment response.\n\n### Table 2.\n\n|   | Responders n (%) | Non-Respondersn (%) | P-value | Compared Model | P-value | OR (95% CI) |\n| --- | --- | --- | --- | --- | --- | --- |\n| MTHFR C677T | n = 21 | n = 11 |   |   |   |   |\n| Genotypes |   |   |   |   |   |   |\n| CC | 8 (38.10) | 3 (27.27) | Ref. | CC vs CT+TT | 0.703 | 1.641 (0.334\u20138.068) |\n| CT | 9 (42.86) | 6 (54.55) | 0.402 | CT vs CC+TT | 0.530 | 0.625 (0.144\u20132.713) |\n| TT | 4 (19.05) | 2 (18.18) | 0.605 | TT vs CC+CT | 1 | 1.059 (0.162\u20136.938) |\n| Allele |   |   |   |   |   |   |\n| C | 25 (59.52) | 12 (54.55) | Ref. |   |   |   |\n| T | 17 (40.48) | 10 (45.45) | 0.702 |   |   |   |\n| MTHFR A1298C |   |   |   |   |   |   |\n| AA | 13 (61.90) | 9 (81.82) | Ref. | AA vs AC+CC | 0.425 | 0.361 (0.062\u20132.114) |\n| AC | 8 (38.10) | 2 (18.18) | 0.229 | AC vs.AA+CC | 0.425 | 2.769 (0.473\u201316.213) |\n| Allele |   |   |   |   |   |   |\n| A | 34 (80.95) | 20 (90.90) | Ref. |   |   |   |\n| C | 8 (19.05) | 2 (9.09) | 0.254 |   |   |   |\n| MTRR A66G |   |   |   |   |   |   |\n| AA | 13 (61.90) | 8 (72.73) | Ref. | AA vs.AG+GG | 0.703 | 0.609 (0.124\u20132.996) |\n| AG | 7 (33.33) | 3 (27.27) | 0.490 | AG vs.AA+GG | 1 | 1.333 (0.267\u20136.653) |\n| GG | 1 (4.76) | 0 (0) | 0.636 | GG vs.AA+AG | 1 | 1.683 (0.063\u201344.772) |\n| Allele |   |   |   |   |   |   |\n| A | 33 (78.57) | 19 (86.36) | Ref. |   |   |   |\n| G | 9 (21.43) | 3 (13.64) | 0.521 |   |   |   |\n\nTable 2 Caption: Distribution of Polymorphic Genotypes, Alleles and Genetic Statistical Models in Response and Non-Response Groups\n\n### Association of Disease Activity with C677T, A1298C and A66G Polymorphisms\n\nTo determine the relationship between different genotypes and disease activity in patients, the distribution between MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms genotypes and disease activity parameters were compared, as shown in [Table 3](#t0003). The results showed that ESR levels were not remarkably different across the C677T genotypes and were reduced in the 1298AC and 66GG genotypes (P > 0.05). DAS28 was decreased after the post-treatment in 677TT and 1298AC, but was not statistically significant. TJC and SJC were not found to be significantly different across genotypes in the three SNPs. To further compare the differences in each disease activity parameter between the response and non-response groups at baseline and after the post-treatment, [Figure S1](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx) shows that ESR, TJC, SJC and DAS28 were remarkably lower in the response group (p < 0.001), while the differences were not statistically significant in the non-response group.\n\n### Table 3.\n\n|   | ESR |  | TJC |  | SJC |  | DAS28 |  |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|   | Mean \u00b1 SD | K-W | Median (IQR) | K-W | Median (IQR) | K-W | Mean \u00b1 SD | K-W |\n| MTHFR C677T genotype |   |   |   |   |   |   |   |   |\n| CC | 26.45 \u00b1 24.65 | 0.302 | 1 (0\u20132) | 0.867 | 1 (0\u20131) | 0.868 | 3.03 \u00b1 1.23 | 0.975 |\n| CT | 26.73 \u00b1 20.20 | 0.302 | 1 (0\u20132) | 0.867 | 0 (0\u20131) | 0.868 | 3.24 \u00b1 1.50 | 0.975 |\n| TT | 22.17 \u00b1 14.88 | 0.302 | 1 (0\u20135) | 0.867 | 0 (0\u20132) | 0.868 | 2.98 \u00b1 1.03 | 0.975 |\n| MTHFR A1298C genotype |   |   |   |   |   |   |   |   |\n| AA | 30.41 \u00b1 21.95 | 0.056 | 1 (0\u20132) | 1 | 0 (0\u20132) | 0.571 | 3.35 \u00b1 1.42 | 0.186 |\n| AC | 15.60 \u00b1 12.34 | 0.056 | 1.5 (0\u20132) | 1 | 0 (0\u20131) | 0.571 | 2.61 \u00b1 0.66 | 0.186 |\n| MTRR A66G genotype |   |   |   |   |   |   |   |   |\n| AA | 26.52 \u00b1 20.80 | 0.766 | 1 (0\u20132) | 0.666 | 0 (0\u20131) | 0.591 | 3.10 \u00b1 1.36 | 0.883 |\n| AG | 25.50 \u00b1 21.51 | 0.766 | 1 (0\u20132) | 0.666 | 0.5 (0\u20131) | 0.591 | 3.14 \u00b1 1.22 | 0.883 |\n| GG | 13 | 0.766 | 2 | 0.666 | 1 | 0.591 | 3.26 | 0.883 |\n\nTable 3 Caption: Disease Activity Parameters Related to Polymorphic Genotypes\n\n### Meta-Analysis\n\nA total of 373 publications were identified after the initial search, and 37 publications were included after analysis of titles and abstracts. The full literature was interpreted in detail, and 13 of these publications met our inclusion criteria, with reasons for exclusion: (1) no detailed data for genotype; (2) letter or comment.\n\nMTHFR C677T: The meta-analysis of MTHFR C677T included 12 studies,[19\u201330](#cit0019) which included 958 responders and 840 non-responders, and the main characteristic information is presented in [Table 4](#t0004). For all samples, dominant model (OR = 1.095, 95% CI = 0.81\u20131.362, P = 0.412) ([Figure 3](#f0003)), recessive model (OR = 0.701, 95% CI = 0.81\u20131.362, P = 0.087) ([Figure S2A](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx)) and codominant model (OR = 1.059, 95% CI = 0.844\u20131.329, P = 0.621) ([Figure S2B](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx)) did not observe an association between the C677T polymorphism and MTX treatment response, nor was significant heterogeneity observed between studies. Study cohort stratified by ethnicity found that C677T polymorphism was significantly associated with MTX treatment response in the recessive model (OR = 0.497, 95% CI = 0.279\u20130.886, P = 0.018) and codominant model (OR = 1.492, 95% CI = 1.046\u20132.126, P = 0.027) in the European population, no association was found in other models and populations ([Table 5](#t0005)).\n\n### Table 4.\n\n| Study | Year | Ethnicity | Genotyping Method | Responders |  |  | Nonresponders |  |  | Mean Age, Years | Mean Disease Duration (Years) | Sex (Female/Male) (%) | MTX Dose (mg/Week) | Therapy Method | Date of End Point (Week) |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"sed -n '1,200p' /app/papers/PMC10163902.md\\\"\",\"timeout\":120000}"
+      }
+    },
+    {
+      "step_id": 8,
+      "timestamp": "2026-02-20T10:52:00.410Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_a3LdjJLoTQSmmsuOdWmLnUYF",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_a3LdjJLoTQSmmsuOdWmLnUYF",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"rg -n --no-heading -e 'GT' -e 'genotype TT' -e 'TT vs' -e 'increased response' -e 'allele A' -e 'A66G' -e 'response to MTX' /app/papers/PMC10163902.md | sed -n '1,200p'\"}  \u0627\u062f  Unknown json"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_a3LdjJLoTQSmmsuOdWmLnUYF",
+            "content": "Chunk ID: aeaa33\nWall time: 0.0520 seconds\nProcess exited with code 1\nOriginal token count: 12\nOutput:\nsed: -e expression #1, char 7: unexpected `}'\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"rg -n --no-heading -e 'GT' -e 'genotype TT' -e 'TT vs' -e 'increased response' -e 'allele A' -e 'A66G' -e 'response to MTX' /app/papers/PMC10163902.md | sed -n '1,200p'\\\"}  \u0627\u062f  Unknown json\"}"
+      }
+    },
+    {
+      "step_id": 9,
+      "timestamp": "2026-02-20T10:52:01.923Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_NGlfMzR6IJp8ukPDziIFT9vO",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_NGlfMzR6IJp8ukPDziIFT9vO",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"rg -n --no-heading 'GT' /app/papers/PMC10163902.md | sed -n '1,120p'\"",
+            "timeout": 120000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_NGlfMzR6IJp8ukPDziIFT9vO",
+            "content": "Chunk ID: 6ef12b\nWall time: 0.0524 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"rg -n --no-heading 'GT' /app/papers/PMC10163902.md | sed -n '1,120p'\\\"\",\"timeout\":120000}"
+      }
+    },
+    {
+      "step_id": 10,
+      "timestamp": "2026-02-20T10:52:03.976Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_NehVu0o9psGlv3vM4n0yuVWD",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_NehVu0o9psGlv3vM4n0yuVWD",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"rg -n --no-heading 'TT' /app/papers/PMC10163902.md | sed -n '1,200p'\"",
+            "timeout": 120000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_NehVu0o9psGlv3vM4n0yuVWD",
+            "content": "Chunk ID: c522b1\nWall time: 0.0516 seconds\nProcess exited with code 0\nOriginal token count: 2063\nOutput:\n51:The MTHFR gene is located on chromosome 1p36.3 and the encoded production is a key enzyme in the metabolic process of the body. In existing studies, multiple polymorphic sites in the MTHFR gene have been reported, with the most widely studied SNP sites being mainly C677T (rs1801133) and A1298C (rs1801131). The early studies showed that the C677T mutation causes a decrease in enzyme activity, with carriers of the 677TT genotype and 677CT genotype having 30% and 65% of the enzyme activity of the 677CC genotype, respectively.[8](#cit0008) Ashfield-Watt et al reported that the C677T mutation resulted in reduced levels of ingested folic acid, and that 677TT had lower levels of folic acid than the 677CT or 677CC genotypes, requiring higher intake to achieve equilibrium Hcy concentrations.[9](#cit0009) Whether the enzyme activity was altered by the A1298C mutation remains controversial.[10](#cit0010)^,^[11](#cit0011) Neither homozygote nor heterozygote of A1298C resulted in increased or decreased in folic acid concentrations.[12](#cit0012) MTRR gene mutations are one of the main causes of Hcy and abnormal folic acid metabolism, with A66G (rs1801394) as the most prominent and most studied mutation site. MTRR gene is located on chromosome 5p15.2\u201315.3, and A66G mutation results in methionine substitution at the 22nd isoleucine. The ability to metabolize folic acid and folic acid deficiency were associated with MTRR gene polymorphisms.[13](#cit0013) MTRR A66G mutation leads to abnormal plasma hcy levels, with significantly higher hcy concentrations in the 66AG and 66GG genotypes than in the 66AA genotype, which may have an impact on MTX treatment response.[14](#cit0014) In exploring the relationship between MTX therapeutic response with MTHFR C677T and MTHFR A1298C polymorphisms, it produced remarkably heterogeneous results, making this influential relationship full of uncertainty.\n103:Genotyping results of patients with MTHFR C677T, A1298C and MTRR A66G and validation of PCR product sanger sequencing. (A): The SNP of MTHFR C677T (rs1801133). M: Markers: 20bp; lanes 1, 3, 4, 5, 7, 9 heterozygotes alleles (CT); lanes 2, 6, 7 mutant homozygotes alleles (TT); (B): The SNP of MTHFR A1298C (rs1801131). M: Markers: 20bp; lanes 1, 2, 4, 6, 8 wild type homozygotes (AA); lanes 3, 5, 7, 9 heterozygotes alleles (AC); (C): The SNP of MTRR CA66G (rs1801394). M: Markers: 20bp; lanes 1, 2, 3, 4, 8, 9 wild type homozygotes (AA); lanes 3,6,7 heterozygotes alleles (AG). (D): Sanger sequencing chromatogram of patient samples in the MTHFR C677T polymorphism showing three genotypes (CC, CT, TT). (E): Direct sequencing chromatogram of patient samples in the MTHFR A1298C polymorphism showing two genotypes (AA, AC). (F): Direct sequencing chromatogram of patient samples in the MTRR A66G polymorphism showing two genotypes (AA, AG).\n146:| CC | 8 (38.10) | 3 (27.27) | Ref. | CC vs CT+TT | 0.703 | 1.641 (0.334\u20138.068) |\n147:| CT | 9 (42.86) | 6 (54.55) | 0.402 | CT vs CC+TT | 0.530 | 0.625 (0.144\u20132.713) |\n148:| TT | 4 (19.05) | 2 (18.18) | 0.605 | TT vs CC+CT | 1 | 1.059 (0.162\u20136.938) |\n170:To determine the relationship between different genotypes and disease activity in patients, the distribution between MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms genotypes and disease activity parameters were compared, as shown in [Table 3](#t0003). The results showed that ESR levels were not remarkably different across the C677T genotypes and were reduced in the 1298AC and 66GG genotypes (P > 0.05). DAS28 was decreased after the post-treatment in 677TT and 1298AC, but was not statistically significant. TJC and SJC were not found to be significantly different across genotypes in the three SNPs. To further compare the differences in each disease activity parameter between the response and non-response groups at baseline and after the post-treatment, [Figure S1](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx) shows that ESR, TJC, SJC and DAS28 were remarkably lower in the response group (p < 0.001), while the differences were not statistically significant in the non-response group.\n180:| TT | 22.17 \u00b1 14.88 | 0.302 | 1 (0\u20135) | 0.867 | 0 (0\u20132) | 0.868 | 2.98 \u00b1 1.03 | 0.975 |\n201:| CC | CT | TT | CC | CT | TT |  |  |  |  |  |  |  |  |  |  |\n223:Forest plot of the correlation between MTHFR C677T polymorphism and the efficacy of MTX in RA patients (CC vs CT+TT (dominant model)). Abbreviations: OR, odds ratio; Cis, confidence interval.\n230:| CC vs CT+TT (Dominant model) |  |  |  |  |  |\n237:| TT vs CC+CT (Recessive model) |  |  |  |  |  |\n244:| CT vs CC+TT (Codominant model) |  |  |  |  |  |\n343:Our study and meta-analysis displayed that genetic polymorphisms in MTHFR C677T and MTHFR A1298C were not associated with clinical efficacy response of MTX, and appeared consistent with our results in many studies.[20](#cit0020)^,^[37](#cit0037) In Western Algerian population studies, it was concluded that C677T and A1298C cannot predict clinical response and adverse drug reactions to MTX treatment outcomes.[22](#cit0022) Research on 120 patients with RA in the East Bohemian population has not found any correlation between the genotypes C677T and A1298C and ineffectiveness of MTX treatment in the respective genetic statistical models.[26](#cit0026) In an early study of the efficacy of MTX with folic acid supplementation, the C677T polymorphism was found to have failed to predicted toxicity or efficacy response to MTX treatment in patients with RA who received folic acid supplementation. At the same time, the authors gave the explanation that it is possible that the anti-inflammatory effects are greater than the anti-proliferative properties in the mechanism of action of low-dose MTX for the treatment of RA patients.[38](#cit0038) However, Lima et al in a Portuguese cohort of RA patients have found that 677TT was associated with an approximately more than 3-fold increased risk of non-response to MTX when compared to MTHFR 677CC and 677C carriers.[30](#cit0030) A recent meta-analysis describing MTX kinetics and efficacy characteristics, it was shown that genotypes 677CT and 677TT carriers had 30% and 65% lower enzyme activity, respectively, when the C677T allele was present, and both genotypes were associated with reduced MTX efficacy and increased toxicity.[39](#cit0039) Very few studies have shown that the A1298C SNP is associated with MTX efficacy. One of the studies was Lilya et al who observed that the A allele of the A1298C polymorphism was related to good and moderate response to MTX treatment.[23](#cit0023) Although marked differences in the frequency distribution of MTHFR A1298C genotypes were observed in our study, they were not correlated with MTX treatment response.\n347:On the study of the association of the three SNP sites with disease activity, we observed that ESR levels were not significantly different in the C677T polymorphism and were reduced in the 1298AC and 66GG genotypes. DAS28 was lowered in 677TT and 1298AC, TJC and SJC were not different among all genotypes, but neither was statistically different. Instead, each disease activity parameter was significantly lower in the response patient group compared to the baseline period (p < 0.001). Kurzawski et al found that ESR levels in the 677TT and 1298CC genotypes and TJC, SJC and DAS28 in patients with the 677TT and 1298AC genotypes were both significantly reduced.[43](#cit0043) Similar to our observed DAS28 with genotypes distribution changes. The current findings on the relationship between genetic polymorphisms and disease activity are varied, which may be related to factors such as patient cohorts, MTX dosage and different indicators of disease activity evaluation. Studies of Japanese RA patients reported that average DAS28 levels were markedly lower in patients with the MTHFR 1298AA genotype than in patients with the 1298AC/CC genotype.[44](#cit0044) Gonz\u00e1lez-Mercado et al evaluated the differences between polymorphic genotypes and DAS28, found a modest trend towards increased disease activity in patients heterozygous for A1298C and A66G (p > 0.05). There was no considerable difference between MTX monotherapy and combination therapy.[40](#cit0040)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"rg -n --no-heading 'TT' /app/papers/PMC10163902.md | sed -n '1,200p'\\\"\",\"timeout\":120000}"
+      }
+    },
+    {
+      "step_id": 11,
+      "timestamp": "2026-02-20T10:52:13.431Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_6GZwqNolRmzOwYqyO9ibkWUO",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_6GZwqNolRmzOwYqyO9ibkWUO",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"rg -n --no-heading -e 'associated' -e 'response' -e 'good response' -e 'non-response' -e 'genotype' /app/papers/PMC10163902.md | sed -n '1,200p'\"}"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_6GZwqNolRmzOwYqyO9ibkWUO",
+            "content": "Chunk ID: b9758d\nWall time: 0.0538 seconds\nProcess exited with code 1\nOriginal token count: 12\nOutput:\nsed: -e expression #1, char 7: unexpected `}'\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"rg -n --no-heading -e 'associated' -e 'response' -e 'good response' -e 'non-response' -e 'genotype' /app/papers/PMC10163902.md | sed -n '1,200p'\\\"}\"}"
+      }
+    },
+    {
+      "step_id": 12,
+      "timestamp": "2026-02-20T10:52:14.731Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_1TG4I0yZ2PacC2aFMQcpFQpi",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_1TG4I0yZ2PacC2aFMQcpFQpi",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"rg -n --no-heading 'associated|response|good response|non-response|genotype' /app/papers/PMC10163902.md | sed -n '1,200p'\"}"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_1TG4I0yZ2PacC2aFMQcpFQpi",
+            "content": "Chunk ID: aecd10\nWall time: 0.0522 seconds\nProcess exited with code 1\nOriginal token count: 12\nOutput:\nsed: -e expression #1, char 7: unexpected `}'\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"rg -n --no-heading 'associated|response|good response|non-response|genotype' /app/papers/PMC10163902.md | sed -n '1,200p'\\\"}\"}"
+      }
+    },
+    {
+      "step_id": 13,
+      "timestamp": "2026-02-20T10:52:17.082Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_N6VkuGm5kWs67qT5MunBiDQ5",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_N6VkuGm5kWs67qT5MunBiDQ5",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"rg -n --no-heading 'response' /app/papers/PMC10163902.md | sed -n '1,200p'\"}"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_N6VkuGm5kWs67qT5MunBiDQ5",
+            "content": "Chunk ID: 2e9974\nWall time: 0.0506 seconds\nProcess exited with code 1\nOriginal token count: 12\nOutput:\nsed: -e expression #1, char 7: unexpected `}'\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"rg -n --no-heading 'response' /app/papers/PMC10163902.md | sed -n '1,200p'\\\"}\"}"
+      }
+    },
+    {
+      "step_id": 14,
+      "timestamp": "2026-02-20T10:52:18.313Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_Dku0TrtnP4PHALJtY8T3oCmk",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_Dku0TrtnP4PHALJtY8T3oCmk",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"rg -n --no-heading 'response' /app/papers/PMC10163902.md | head -n 200\""
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_Dku0TrtnP4PHALJtY8T3oCmk",
+            "content": "Chunk ID: 66e7bf\nWall time: 0.0532 seconds\nProcess exited with code 0\nOriginal token count: 6859\nOutput:\n16:Methotrexate (MTX) is used as an anchor drug for the treatment of rheumatoid arthritis (RA) and there may be differences in drug action between genotypes. The purpose of this study was to investigate the relationship between clinical efficacy response and disease activity of MTX monotherapy with methylenetetrahydrofolate reductase (MTHFR) and methionine synthase reductase (MTRR) polymorphisms.\n22:The distribution of three polymorphic genotypes that were studied is in accordance with the Hardy-Weinberg genetic equilibrium. The patient pathology variables smoke (OR = 0.088, P = 0.037), drink alcohol (OR = 0.039, P = 0.016) and males (OR = 0.088, P = 0.037) were significantly associated with non-response to MTX. Genotype, allele distribution and genetic statistical models were not found to be related to MTX treatment response and disease activity in both the response groups and non-response groups.\n25:Our findings suggest that the MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms may not predict MTX clinical treatment response and disease activity in patients with early RA. The study revealed that smoke, alcohol, and males were possible influential factors for MTX non-response.\n31:Methotrexate (MTX) is used as an anchor drug for the treatment of rheumatoid arthritis (RA) and there may be differences in drug action between genotypes. The purpose of this study was to investigate the relationship between clinical efficacy response and disease activity of MTX monotherapy with methylenetetrahydrofolate reductase (MTHFR) and methionine synthase reductase (MTRR) polymorphisms.\n39:The distribution of three polymorphic genotypes that were studied is in accordance with the Hardy-Weinberg genetic equilibrium. The patient pathology variables smoke (OR = 0.088, P = 0.037), drink alcohol (OR = 0.039, P = 0.016) and males (OR = 0.088, P = 0.037) were significantly associated with non-response to MTX. Genotype, allele distribution and genetic statistical models were not found to be related to MTX treatment response and disease activity in both the response groups and non-response groups.\n43:Our findings suggest that the MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms may not predict MTX clinical treatment response and disease activity in patients with early RA. The study revealed that smoke, alcohol, and males were possible influential factors for MTX non-response.\n47:Rheumatoid arthritis (RA) is a chronic systemic autoimmune disease, mainly characterised by symmetrical pain and swelling of small joints in the hands and the feet.[1](#cit0001) When chronic inflammation is not properly controlled over a long period of time, it can eventually lead to irreversible damage to the joint structures. Methotrexate (MTX) is a folic acid inhibitor with structural and physicochemical properties similar to folic acid, which acts as an anti-inflammatory and anti-proliferative agent in the body.[2](#cit0002) MTX is used extensively for the treatment of RA because of its efficacy, safety profile and affordability. The European League Against Rheumatism (EULAR) recommended MTX monotherapy for patients with early RA, and MTX in combination with other disease-modifying antirheumatic drugs (DMARDs) for patients with moderate or severe disease activity.[3](#cit0003) However, 30\u201350% of patients with RA still have poor response to MTX treatment or relapse with inadequate response to re-treatment, resulting in drug resistance, and have to stop treatment or change to other medicines.[4](#cit0004) The personalized response between patients may be due to differences in the gene expression or activity in the folic acid-MTX metabolic pathway, and such differences may arise to alter drug pharmacokinetics and affect MTX response.[5](#cit0005)\n51:The MTHFR gene is located on chromosome 1p36.3 and the encoded production is a key enzyme in the metabolic process of the body. In existing studies, multiple polymorphic sites in the MTHFR gene have been reported, with the most widely studied SNP sites being mainly C677T (rs1801133) and A1298C (rs1801131). The early studies showed that the C677T mutation causes a decrease in enzyme activity, with carriers of the 677TT genotype and 677CT genotype having 30% and 65% of the enzyme activity of the 677CC genotype, respectively.[8](#cit0008) Ashfield-Watt et al reported that the C677T mutation resulted in reduced levels of ingested folic acid, and that 677TT had lower levels of folic acid than the 677CT or 677CC genotypes, requiring higher intake to achieve equilibrium Hcy concentrations.[9](#cit0009) Whether the enzyme activity was altered by the A1298C mutation remains controversial.[10](#cit0010)^,^[11](#cit0011) Neither homozygote nor heterozygote of A1298C resulted in increased or decreased in folic acid concentrations.[12](#cit0012) MTRR gene mutations are one of the main causes of Hcy and abnormal folic acid metabolism, with A66G (rs1801394) as the most prominent and most studied mutation site. MTRR gene is located on chromosome 5p15.2\u201315.3, and A66G mutation results in methionine substitution at the 22nd isoleucine. The ability to metabolize folic acid and folic acid deficiency were associated with MTRR gene polymorphisms.[13](#cit0013) MTRR A66G mutation leads to abnormal plasma hcy levels, with significantly higher hcy concentrations in the 66AG and 66GG genotypes than in the 66AA genotype, which may have an impact on MTX treatment response.[14](#cit0014) In exploring the relationship between MTX therapeutic response with MTHFR C677T and MTHFR A1298C polymorphisms, it produced remarkably heterogeneous results, making this influential relationship full of uncertainty.\n53:Therefore, in this study, we investigated a potential correlation between clinical efficacy response and disease activity of MTX monotherapy and MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms in RA patients in East China for the first time, hoping to provide a possibility to achieve personalized treatment for RA patients.\n67:Workflow chart of the relationship between clinical efficacy response and disease activity of methotrexate (MTX) monotherapy with MTHFR C677T, MTHFR A1298C and MTRR A66G SNPs polymorphisms.\n71:During 2019\u20132021, we diagnosed 32 patients with RA in the Department of Rheumatology and Immunology of the Ningbo First Hospital according to the 1987 diagnostic standards of the ACR,[15](#cit0015) and all patients were diagnosed with RA for the first time. The early patients included in this study were treated with methotrexate monotherapy (no other DMARDs in combination) and initial methotrexate treatment dose was 7.5mg \u00b1 2.5mg/week. To relieve the methotrexate negative effects, patients were supplemented with folic acid 10mg/week during treatment. The average treatment period was three months, according to the DAS28 score method and the standards for evaluating the degree of rheumatoid arthritis disease of ACR.[16](#cit0016) Quantitative indicators to assess patients at baseline and post-treatment, including tender joints counts (TJC), swollen joints counts (SJC), erythrocyte sedimentation rate (ESR) and pain visual analogue scales (VAS). Based on EULAR\u2019s response criteria according to DAS28,[17](#cit0017) MTX treatment response was determined by a combination of the DAS28 difference between the baseline and post-treatment periods, the \u0394DAS28, and the DAS28 at post-treatment period, with \u0394DAS28\u22640.6 and \u0394DAS28 > 0.6\u22641.2 but DAS28 > 5.1 defined as treatment ineffective and the rest as moderate or good response. In this study, we divided patients into response and non-response groups according to treatment response, with moderate or good effect patients in the response group and ineffective patients in the non-response group. To explore the correlation between genotypes and response to MTX treatment by comparing the genotype distribution of patients in the response and non-response groups. The study was approved by the local ethics committee, complied with the standard procedures of the Declaration of Helsinki, and informed consent was obtained from all subjects.\n107:A total of 32 patients with early RA were reported in this study, and the clinical characteristics of the patients at baseline and the variables assessed by DAS28 post-treatment period are listed in [Table 1](#t0001). All patients were treated with MTX monotherapy from the first date of diagnosis of RA, with a mean treatment period of 86 days. Based on \u0394DAS28, 21 of the 32 patients were determined to be in the response group and 11 in the non-response group. Our results revealed no significant differences in age, BMI, Anti-CCP positivity, RF positivity, MTX treatment measures, or treatment duration between the response and non-response groups (p > 0.05). In contrast, smoke (current smokers at the time of data collection, OR = 0.088, P = 0.037), drink (alcohol consumption \u22651 unit, OR = 0.039, P = 0.016) and male (OR = 0.088, P = 0.037) were significantly associated with non-response to MTX. The average levels of TJC, SJC, ESR and DAS28 after the post-treatment in patients were 1 (0\u20132), 0 (0\u20131), 19.5 (10\u201333) mm/h and 3.12\u00b11.55, respectively, which were clearly different in the response and non-response groups, but not statistically significant (P > 0.05).\n138:[Table 2](#t0002) shows the distribution of MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphism genotypes between the response and non-response groups and comparison of statistical models. The results indicated that the genotypes, alleles and the distribution of the three statistical models (recessive model, dominant model and co-dominant model) at each SNP site were not significantly correlated with MTX clinical treatment response.\n170:To determine the relationship between different genotypes and disease activity in patients, the distribution between MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms genotypes and disease activity parameters were compared, as shown in [Table 3](#t0003). The results showed that ESR levels were not remarkably different across the C677T genotypes and were reduced in the 1298AC and 66GG genotypes (P > 0.05). DAS28 was decreased after the post-treatment in 677TT and 1298AC, but was not statistically significant. TJC and SJC were not found to be significantly different across genotypes in the three SNPs. To further compare the differences in each disease activity parameter between the response and non-response groups at baseline and after the post-treatment, [Figure S1](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx) shows that ESR, TJC, SJC and DAS28 were remarkably lower in the response group (p < 0.001), while the differences were not statistically significant in the non-response group.\n195:MTHFR C677T: The meta-analysis of MTHFR C677T included 12 studies,[19\u201330](#cit0019) which included 958 responders and 840 non-responders, and the main characteristic information is presented in [Table 4](#t0004). For all samples, dominant model (OR = 1.095, 95% CI = 0.81\u20131.362, P = 0.412) ([Figure 3](#f0003)), recessive model (OR = 0.701, 95% CI = 0.81\u20131.362, P = 0.087) ([Figure S2A](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx)) and codominant model (OR = 1.059, 95% CI = 0.844\u20131.329, P = 0.621) ([Figure S2B](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx)) did not observe an association between the C677T polymorphism and MTX treatment response, nor was significant heterogeneity observed between studies. Study cohort stratified by ethnicity found that C677T polymorphism was significantly associated with MTX treatment response in the recessive model (OR = 0.497, 95% CI = 0.279\u20130.886, P = 0.018) and codominant model (OR = 1.492, 95% CI = 1.046\u20132.126, P = 0.027) in the European population, no association was found in other models and populations ([Table 5](#t0005)).\n289:MTHFR A1298C: The meta-analysis of MTHFR A1298C included 9 studies,[20\u201324](#cit0020)^,^[26\u201329](#cit0026) which included 688 responders and 615 non-responders, and the main characteristic information is presented in [Table 6](#t0006). For all samples, dominant model (OR = 1.023, 95% CI = 0.730\u20131.435, P = 0.894) ([Figure S3A](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx)), recessive model (OR = 0.784, 95% CI = 0.390\u20131.578, P = 0.495) ([Figure S3B](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx)) and codominant model (OR = 1.075, 95% CI = 0.760\u20131.520, P = 0.682) ([Figure 4](#f0004)) did not observe an association between the A1298C polymorphism and MTX treatment response. The study cohort was stratified by ethnicity, and there was a significant association between the A1298C polymorphism and MTX treatment response in the recessive model (OR = 0.432, 95% CI = 0.201\u20130.926, P = 0.031) and the codominant model (OR = 1.981, 95% CI=0.1.108\u20133.543, P = 0.021) in the South Asian population. In addition, there was significant between study heterogeneity in the recessive model (I^2^=55%, P = 0.023) ([Table 5](#t0005)).\n316:MTRR A66G: The meta-analysis of MTRR A66G included 3 studies,[21](#cit0021)^,^[28](#cit0028)^,^[31](#cit0031) which included 376 responders and 338 non-responders, and the main characteristic information is presented in [Table 7](#t0007). For all samples, dominant model (OR = 0.879, 95% CI = 0.619\u20131.249, P = 0.473) ([Figure S4A](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx)), recessive model (OR = 0.910, 95% CI = 0.594\u20131.392, P = 0.663) ([Figure S4B](https://www.dovepress.com/get_supplementary_file.php?f=404949.docx)) and codominant model (OR = 1.177, 95% CI = 0.850\u20131.629, P = 0.327) ([Figure 5](#f0005)) did not observe an association between the A1298C polymorphism and MTX treatment response. No significant heterogeneity between studies was observed in any of the three genetic models ([Table 5](#t0005)).\n339:Since 1988, when the US Food and Drug Administration approved MTX as therapy for RA,[32](#cit0032) till the EULAR recognized it to be the anchor drug for the treatment of RA,[3](#cit0003) MTX has played an important role in the treatment of RA. Low-dose MTX has long been considered an effective and safe anti-rheumatic drug, as well as a base drug for other DMARDs combinations.[33](#cit0033) However, because of individual differences in clinical response to MTX, at least one-third of patients with RA have no response or significantly lower efficacy when they take it.[34](#cit0034) Similar differences in clinical response were observed in our study cohort of the Zhejiang, East China population, with 34.4% of patients with early RA poorly treated with MTX monotherapy. In this study, we explored the correlations between MTX therapy response and disease activity with MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms.\n341:Our patient clinical pathology characteristic statistics demonstrated that age and BMI were not relevant to clinical response to MTX, while smoke status, drink and male may be factors associated with non-response to MTX. In early studies, pathological variables were used as measures of MTX response prediction models, but with varying results. Among patient-related factors, males were connected with a good response to MTX treatment.[35](#cit0035) Smoking, alcohol, and high BMI may be risk factors for non-response to MTX in RA patients.[36](#cit0036) Whereas in our study, males had a poorer response to treatment. In addition, BMI was at normal levels in both the MTX response and non-response patient groups. Of the disease-related factors, the proportion of Anti-CCP positivity and RF positivity was similar in both groups initially.\n343:Our study and meta-analysis displayed that genetic polymorphisms in MTHFR C677T and MTHFR A1298C were not associated with clinical efficacy response of MTX, and appeared consistent with our results in many studies.[20](#cit0020)^,^[37](#cit0037) In Western Algerian population studies, it was concluded that C677T and A1298C cannot predict clinical response and adverse drug reactions to MTX treatment outcomes.[22](#cit0022) Research on 120 patients with RA in the East Bohemian population has not found any correlation between the genotypes C677T and A1298C and ineffectiveness of MTX treatment in the respective genetic statistical models.[26](#cit0026) In an early study of the efficacy of MTX with folic acid supplementation, the C677T polymorphism was found to have failed to predicted toxicity or efficacy response to MTX treatment in patients with RA who received folic acid supplementation. At the same time, the authors gave the explanation that it is possible that the anti-inflammatory effects are greater than the anti-proliferative properties in the mechanism of action of low-dose MTX for the treatment of RA patients.[38](#cit0038) However, Lima et al in a Portuguese cohort of RA patients have found that 677TT was associated with an approximately more than 3-fold increased risk of non-response to MTX when compared to MTHFR 677CC and 677C carriers.[30](#cit0030) A recent meta-analysis describing MTX kinetics and efficacy characteristics, it was shown that genotypes 677CT and 677TT carriers had 30% and 65% lower enzyme activity, respectively, when the C677T allele was present, and both genotypes were associated with reduced MTX efficacy and increased toxicity.[39](#cit0039) Very few studies have shown that the A1298C SNP is associated with MTX efficacy. One of the studies was Lilya et al who observed that the A allele of the A1298C polymorphism was related to good and moderate response to MTX treatment.[23](#cit0023) Although marked differences in the frequency distribution of MTHFR A1298C genotypes were observed in our study, they were not correlated with MTX treatment response.\n345:Furthermore, the results of this study and the meta-analysis showed that the genotype frequency distribution of the MTRR A66G polymorphism was not significantly different between the response and non-response groups and could not predict response to MTX treatment. Consistent with our results, in the study of Chinese RA patients, Lv et al found no significant differences in the frequency distribution of MTRR A66G genotypes, alleles and haplotypes in the MTX response and non-response groups. Similarly, no differences were found in the five genetic statistical models.[21](#cit0021) Separate studies of RA patients and healthy people groups in Mexican and South Indian Tamil populations also did not find any association between the MTRR A66G polymorphism and response to MTX treatment.[31](#cit0031)^,^[40](#cit0040) In contrast to our findings, L\u00f3pez-Rodr\u00edguez et al selected 25 relevant SNP sites and studied 956 RA patients from four regional groups, with the result that only MTRR A66G showed close correlation with response to MTX monotherapy.[41](#cit0041) Among Portuguese RA patients, MTRR 66A carriers are associated with an approximately 2-fold increased risk of MTX non-response.[24](#cit0024) Chaabane et al suggested that the MTRR A66G polymorphism may produce different MTX treatment responses and toxic effects in RA patients from different ethnic groups.[42](#cit0042) Our report of the correlation between the MTRR A66G SNP and MTX efficacy offers a possibility for studies in the Zhejiang RA population of China.\n347:On the study of the association of the three SNP sites with disease activity, we observed that ESR levels were not significantly different in the C677T polymorphism and were reduced in the 1298AC and 66GG genotypes. DAS28 was lowered in 677TT and 1298AC, TJC and SJC were not different among all genotypes, but neither was statistically different. Instead, each disease activity parameter was significantly lower in the response patient group compared to the baseline period (p < 0.001). Kurzawski et al found that ESR levels in the 677TT and 1298CC genotypes and TJC, SJC and DAS28 in patients with the 677TT and 1298AC genotypes were both significantly reduced.[43](#cit0043) Similar to our observed DAS28 with genotypes distribution changes. The current findings on the relationship between genetic polymorphisms and disease activity are varied, which may be related to factors such as patient cohorts, MTX dosage and different indicators of disease activity evaluation. Studies of Japanese RA patients reported that average DAS28 levels were markedly lower in patients with the MTHFR 1298AA genotype than in patients with the 1298AC/CC genotype.[44](#cit0044) Gonz\u00e1lez-Mercado et al evaluated the differences between polymorphic genotypes and DAS28, found a modest trend towards increased disease activity in patients heterozygous for A1298C and A66G (p > 0.05). There was no considerable difference between MTX monotherapy and combination therapy.[40](#cit0040)\n349:Gender, BMI, smoke status, RF-positive status, and age at onset all affect the response of RA patients to MTX treatment, leading to different levels of treatment response and disease activity.[45](#cit0045)^,^[46](#cit0046) This may also explain the heterogeneous results that occurred when explored SNP genotypes and MTX disease response. The small number of participants in our study makes the results have some limitations. To explore our findings further, we also look forward to confirming our findings in a larger sample size.\n353:This study reported the association of MTHFR C677T, MTHFR A1298C and MTRR A66G polymorphisms with MTX treatment response and disease activity in early RA patients in the Chinese population of Zhejiang. We observed that smoke, alcohol consumption, and males were possible influential factors for MTX non-response. In contrast, the SNP sites we studied showed no correlation with MTX response and disease activity, and whether they can predict MTX treatment response needs to be repeated in a larger sample size. We also hope that this study may provide a possibility for personalized treatment of MTX in RA patients.\n385:9. Ashfield-Watt PA, Pullin CH, Whiting JM, et al. Methylenetetrahydrofolate reductase 677C-->T genotype modulates homocysteine responses to a folate-rich diet or a low-dose folic acid supplement: a randomized controlled trial. Am J Clin Nutr. 2002;76(1):180\u2013186.  [DOI](https://doi.org/10.1093/ajcn/76.1.180) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/12081832/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Am%20J%20Clin%20Nutr&title=Methylenetetrahydrofolate%20reductase%20677C-->T%20genotype%20modulates%20homocysteine%20responses%20to%20a%20folate-rich%20diet%20or%20a%20low-dose%20folic%20acid%20supplement:%20a%20randomized%20controlled%20trial&author=PA%20Ashfield-Watt&author=CH%20Pullin&author=JM%20Whiting&volume=76&issue=1&publication_year=2002&pages=180-186&pmid=12081832&doi=10.1093/ajcn/76.1.180&)\n401:17. Fransen J, van Riel PL. The disease activity score and the EULAR response criteria. Rheum Dis Clin North Am. 2009;35(4):745\u2013757. doi: 10.1016/j.rdc.2009.10.001  [DOI](https://doi.org/10.1016/j.rdc.2009.10.001) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/19962619/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Rheum%20Dis%20Clin%20North%20Am&title=The%20disease%20activity%20score%20and%20the%20EULAR%20response%20criteria&author=J%20Fransen&author=PL%20van%20Riel&volume=35&issue=4&publication_year=2009&pages=745-757&pmid=19962619&doi=10.1016/j.rdc.2009.10.001&)\n419:26. Soukup T, Dosedel M, Pavek P, et al. The impact of C677T and A1298C MTHFR polymorphisms on methotrexate therapeutic response in East Bohemian region rheumatoid arthritis patients. Rheumatol Int. 2015;35(7):1149\u20131161. doi: 10.1007/s00296-015-3219-z  [DOI](https://doi.org/10.1007/s00296-015-3219-z) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/25618758/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Rheumatol%20Int&title=The%20impact%20of%20C677T%20and%20A1298C%20MTHFR%20polymorphisms%20on%20methotrexate%20therapeutic%20response%20in%20East%20Bohemian%20region%20rheumatoid%20arthritis%20patients&author=T%20Soukup&author=M%20Dosedel&author=P%20Pavek&volume=35&issue=7&publication_year=2015&pages=1149-1161&pmid=25618758&doi=10.1007/s00296-015-3219-z&)\n421:27. Iqbal MP, Ali AA, Mehboobali N, et al. Short Communication: lack of association between MTHFR gene polymorphisms and response to methotrexate treatment in Pakistani patients with rheumatoid arthritis. Pak J Pharm Sci. 2015;28(5):1789\u20131792.  [PubMed](https://pubmed.ncbi.nlm.nih.gov/26408898/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Pak%20J%20Pharm%20Sci&title=Short%20Communication:%20lack%20of%20association%20between%20MTHFR%20gene%20polymorphisms%20and%20response%20to%20methotrexate%20treatment%20in%20Pakistani%20patients%20with%20rheumatoid%20arthritis&author=MP%20Iqbal&author=AA%20Ali&author=N%20Mehboobali&volume=28&issue=5&publication_year=2015&pages=1789-1792&pmid=26408898&)\n423:28. Ghodke-Puranik Y, Puranik AS, Shintre P, et al. Folate metabolic pathway single nucleotide polymorphisms: a predictive pharmacogenetic marker of methotrexate response in Indian (Asian) patients with rheumatoid arthritis. Pharmacogenomics. 2015;16(18):2019\u20132034. doi: 10.2217/pgs.15.145  [DOI](https://doi.org/10.2217/pgs.15.145) | [PMC free article](/articles/PMC4976849/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/26616421/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Pharmacogenomics&title=Folate%20metabolic%20pathway%20single%20nucleotide%20polymorphisms:%20a%20predictive%20pharmacogenetic%20marker%20of%20methotrexate%20response%20in%20Indian%20(Asian)%20patients%20with%20rheumatoid%20arthritis&author=Y%20Ghodke-Puranik&author=AS%20Puranik&author=P%20Shintre&volume=16&issue=18&publication_year=2015&pages=2019-2034&pmid=26616421&doi=10.2217/pgs.15.145&)\n427:30. Lima A, Monteiro J, Bernardes M, et al. Prediction of methotrexate clinical response in Portuguese rheumatoid arthritis patients: implication of MTHFR rs1801133 and ATIC rs4673993 polymorphisms. Biomed Res Int. 2014;2014:368681.  [DOI](https://doi.org/10.1155/2014/368681) | [PMC free article](/articles/PMC4055378/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/24967362/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Biomed%20Res%20Int&title=Prediction%20of%20methotrexate%20clinical%20response%20in%20Portuguese%20rheumatoid%20arthritis%20patients:%20implication%20of%20MTHFR%20rs1801133%20and%20ATIC%20rs4673993%20polymorphisms&author=A%20Lima&author=J%20Monteiro&author=M%20Bernardes&volume=2014&publication_year=2014&pages=368681&pmid=24967362&doi=10.1155/2014/368681&)\n449:41. L\u00f3pez-Rodr\u00edguez R, Ferreiro-Iglesias A, Lima A, et al. Replication study of polymorphisms associated with response to methotrexate in patients with rheumatoid arthritis. Sci Rep. 2018;8(1):7342.  [DOI](https://doi.org/10.1038/s41598-018-25634-y) | [PMC free article](/articles/PMC5943457/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/29743634/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Sci%20Rep&title=Replication%20study%20of%20polymorphisms%20associated%20with%20response%20to%20methotrexate%20in%20patients%20with%20rheumatoid%20arthritis&author=R%20L%C3%B3pez-Rodr%C3%ADguez&author=A%20Ferreiro-Iglesias&author=A%20Lima&volume=8&issue=1&publication_year=2018&pages=7342&pmid=29743634&doi=10.1038/s41598-018-25634-y&)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"rg -n --no-heading 'response' /app/papers/PMC10163902.md | head -n 200\\\"\"}"
+      }
+    },
+    {
+      "step_id": 15,
+      "timestamp": "2026-02-20T10:52:28.002Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_lM8vTbbmMLn4qsQZpWrcUtFw",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_lM8vTbbmMLn4qsQZpWrcUtFw",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"rg -n --no-heading 'ATIC|rs4673993|rs 4673993|rs2372536' /app/papers/PMC10163902.md | sed -n '1,120p'\"}"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_lM8vTbbmMLn4qsQZpWrcUtFw",
+            "content": "Chunk ID: 2cdd78\nWall time: 0.0524 seconds\nProcess exited with code 1\nOriginal token count: 12\nOutput:\nsed: -e expression #1, char 7: unexpected `}'\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"rg -n --no-heading 'ATIC|rs4673993|rs 4673993|rs2372536' /app/papers/PMC10163902.md | sed -n '1,120p'\\\"}\"}"
+      }
+    },
+    {
+      "step_id": 16,
+      "timestamp": "2026-02-20T10:52:29.421Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_NcR0puHs2Kl1xAui8XhOqSPz",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_NcR0puHs2Kl1xAui8XhOqSPz",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"rg -n --no-heading 'ATIC|rs4673993|rs 4673993|rs2372536' /app/papers/PMC10163902.md | head -n 120\"}"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_NcR0puHs2Kl1xAui8XhOqSPz",
+            "content": "Chunk ID: 23fe55\nWall time: 0.0564 seconds\nProcess exited with code 1\nOriginal token count: 11\nOutput:\nhead: invalid number of lines: \u2018120}\u2019\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"rg -n --no-heading 'ATIC|rs4673993|rs 4673993|rs2372536' /app/papers/PMC10163902.md | head -n 120\\\"}\"}"
+      }
+    },
+    {
+      "step_id": 17,
+      "timestamp": "2026-02-20T10:52:30.691Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_sdFY0bop2aNbkGQ8yuISHhDq",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_sdFY0bop2aNbkGQ8yuISHhDq",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"rg -n --no-heading 'ATIC|rs4673993|rs 4673993|rs2372536' /app/papers/PMC10163902.md\""
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_sdFY0bop2aNbkGQ8yuISHhDq",
+            "content": "Chunk ID: b5c404\nWall time: 0.0553 seconds\nProcess exited with code 0\nOriginal token count: 408\nOutput:\n409:21. Lv S, Fan H, Li J, et al. Genetic Polymorphisms of TYMS, MTHFR, ATIC, MTR, and MTRR are related to the outcome of methotrexate therapy for rheumatoid arthritis in a Chinese population. Front Pharmacol. 2018;9:1390. doi: 10.3389/fphar.2018.01390  [DOI](https://doi.org/10.3389/fphar.2018.01390) | [PMC free article](/articles/PMC6279856/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/30546311/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Front%20Pharmacol&title=Genetic%20Polymorphisms%20of%20TYMS,%20MTHFR,%20ATIC,%20MTR,%20and%20MTRR%20are%20related%20to%20the%20outcome%20of%20methotrexate%20therapy%20for%20rheumatoid%20arthritis%20in%20a%20Chinese%20population&author=S%20Lv&author=H%20Fan&author=J%20Li&volume=9&publication_year=2018&pages=1390&pmid=30546311&doi=10.3389/fphar.2018.01390&)\n427:30. Lima A, Monteiro J, Bernardes M, et al. Prediction of methotrexate clinical response in Portuguese rheumatoid arthritis patients: implication of MTHFR rs1801133 and ATIC rs4673993 polymorphisms. Biomed Res Int. 2014;2014:368681.  [DOI](https://doi.org/10.1155/2014/368681) | [PMC free article](/articles/PMC4055378/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/24967362/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Biomed%20Res%20Int&title=Prediction%20of%20methotrexate%20clinical%20response%20in%20Portuguese%20rheumatoid%20arthritis%20patients:%20implication%20of%20MTHFR%20rs1801133%20and%20ATIC%20rs4673993%20polymorphisms&author=A%20Lima&author=J%20Monteiro&author=M%20Bernardes&volume=2014&publication_year=2014&pages=368681&pmid=24967362&doi=10.1155/2014/368681&)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"rg -n --no-heading 'ATIC|rs4673993|rs 4673993|rs2372536' /app/papers/PMC10163902.md\\\"\"}"
+      }
+    },
+    {
+      "step_id": 18,
+      "timestamp": "2026-02-20T10:52:34.901Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_bd7a3k56VUGMJ0IACxJzSlaO",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_bd7a3k56VUGMJ0IACxJzSlaO",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"rg -n --no-heading '\\bGT\\b|\\bTT\\b|rs4673993|ATIC' /app/papers/PMC10163902.md\"",
+            "timeout": 120000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_bd7a3k56VUGMJ0IACxJzSlaO",
+            "content": "Chunk ID: 1218f3\nWall time: 0.0624 seconds\nProcess exited with code 0\nOriginal token count: 840\nOutput:\n103:Genotyping results of patients with MTHFR C677T, A1298C and MTRR A66G and validation of PCR product sanger sequencing. (A): The SNP of MTHFR C677T (rs1801133). M: Markers: 20bp; lanes 1, 3, 4, 5, 7, 9 heterozygotes alleles (CT); lanes 2, 6, 7 mutant homozygotes alleles (TT); (B): The SNP of MTHFR A1298C (rs1801131). M: Markers: 20bp; lanes 1, 2, 4, 6, 8 wild type homozygotes (AA); lanes 3, 5, 7, 9 heterozygotes alleles (AC); (C): The SNP of MTRR CA66G (rs1801394). M: Markers: 20bp; lanes 1, 2, 3, 4, 8, 9 wild type homozygotes (AA); lanes 3,6,7 heterozygotes alleles (AG). (D): Sanger sequencing chromatogram of patient samples in the MTHFR C677T polymorphism showing three genotypes (CC, CT, TT). (E): Direct sequencing chromatogram of patient samples in the MTHFR A1298C polymorphism showing two genotypes (AA, AC). (F): Direct sequencing chromatogram of patient samples in the MTRR A66G polymorphism showing two genotypes (AA, AG).\n146:| CC | 8 (38.10) | 3 (27.27) | Ref. | CC vs CT+TT | 0.703 | 1.641 (0.334\u20138.068) |\n147:| CT | 9 (42.86) | 6 (54.55) | 0.402 | CT vs CC+TT | 0.530 | 0.625 (0.144\u20132.713) |\n148:| TT | 4 (19.05) | 2 (18.18) | 0.605 | TT vs CC+CT | 1 | 1.059 (0.162\u20136.938) |\n180:| TT | 22.17 \u00b1 14.88 | 0.302 | 1 (0\u20135) | 0.867 | 0 (0\u20132) | 0.868 | 2.98 \u00b1 1.03 | 0.975 |\n201:| CC | CT | TT | CC | CT | TT |  |  |  |  |  |  |  |  |  |  |\n223:Forest plot of the correlation between MTHFR C677T polymorphism and the efficacy of MTX in RA patients (CC vs CT+TT (dominant model)). Abbreviations: OR, odds ratio; Cis, confidence interval.\n230:| CC vs CT+TT (Dominant model) |  |  |  |  |  |\n237:| TT vs CC+CT (Recessive model) |  |  |  |  |  |\n244:| CT vs CC+TT (Codominant model) |  |  |  |  |  |\n409:21. Lv S, Fan H, Li J, et al. Genetic Polymorphisms of TYMS, MTHFR, ATIC, MTR, and MTRR are related to the outcome of methotrexate therapy for rheumatoid arthritis in a Chinese population. Front Pharmacol. 2018;9:1390. doi: 10.3389/fphar.2018.01390  [DOI](https://doi.org/10.3389/fphar.2018.01390) | [PMC free article](/articles/PMC6279856/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/30546311/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Front%20Pharmacol&title=Genetic%20Polymorphisms%20of%20TYMS,%20MTHFR,%20ATIC,%20MTR,%20and%20MTRR%20are%20related%20to%20the%20outcome%20of%20methotrexate%20therapy%20for%20rheumatoid%20arthritis%20in%20a%20Chinese%20population&author=S%20Lv&author=H%20Fan&author=J%20Li&volume=9&publication_year=2018&pages=1390&pmid=30546311&doi=10.3389/fphar.2018.01390&)\n427:30. Lima A, Monteiro J, Bernardes M, et al. Prediction of methotrexate clinical response in Portuguese rheumatoid arthritis patients: implication of MTHFR rs1801133 and ATIC rs4673993 polymorphisms. Biomed Res Int. 2014;2014:368681.  [DOI](https://doi.org/10.1155/2014/368681) | [PMC free article](/articles/PMC4055378/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/24967362/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Biomed%20Res%20Int&title=Prediction%20of%20methotrexate%20clinical%20response%20in%20Portuguese%20rheumatoid%20arthritis%20patients:%20implication%20of%20MTHFR%20rs1801133%20and%20ATIC%20rs4673993%20polymorphisms&author=A%20Lima&author=J%20Monteiro&author=M%20Bernardes&volume=2014&publication_year=2014&pages=368681&pmid=24967362&doi=10.1155/2014/368681&)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"rg -n --no-heading '\\\\bGT\\\\b|\\\\bTT\\\\b|rs4673993|ATIC' /app/papers/PMC10163902.md\\\"\",\"timeout\":120000}"
+      }
+    },
+    {
+      "step_id": 19,
+      "timestamp": "2026-02-20T10:52:45.832Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "I\u2019ll write the selected answers to /app/answers.json now."
+    },
+    {
+      "step_id": 20,
+      "timestamp": "2026-02-20T10:52:46.705Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_2aWSCno3lBp0PZpOYpM8cuH6",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_2aWSCno3lBp0PZpOYpM8cuH6",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"cat > /app/answers.json << 'JSON'\\n{\\n  \\\"1\\\": \\\"c\\\",\\n  \\\"2\\\": \\\"a\\\",\\n  \\\"3\\\": \\\"a\\\",\\n  \\\"4\\\": \\\"b\\\"\\n}\\nJSON\\n\\ncat /app/answers.json\"",
+            "timeout": 120000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_2aWSCno3lBp0PZpOYpM8cuH6",
+            "content": "Chunk ID: 5a288c\nWall time: 0.0531 seconds\nProcess exited with code 1\nOriginal token count: 99\nOutput:\nbash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted `JSONn{n')\ncat: '1:': No such file or directory\ncat: c,n: No such file or directory\ncat: '2:': No such file or directory\ncat: a,n: No such file or directory\ncat: '3:': No such file or directory\ncat: a,n: No such file or directory\ncat: '4:': No such file or directory\ncat: bn}nJSONnncat: No such file or directory\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"cat > /app/answers.json << 'JSON'\\\\n{\\\\n  \\\\\\\"1\\\\\\\": \\\\\\\"c\\\\\\\",\\\\n  \\\\\\\"2\\\\\\\": \\\\\\\"a\\\\\\\",\\\\n  \\\\\\\"3\\\\\\\": \\\\\\\"a\\\\\\\",\\\\n  \\\\\\\"4\\\\\\\": \\\\\\\"b\\\\\\\"\\\\n}\\\\nJSON\\\\n\\\\ncat /app/answers.json\\\"\",\"timeout\":120000}"
+      }
+    },
+    {
+      "step_id": 21,
+      "timestamp": "2026-02-20T10:52:51.026Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_L09tpneVnu8Y6eTxfgm5BRu5",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_L09tpneVnu8Y6eTxfgm5BRu5",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "bash -lc \"printf '{\\n  \\\"1\\\": \\\"c\\\",\\n  \\\"2\\\": \\\"a\\\",\\n  \\\"3\\\": \\\"a\\\",\\n  \\\"4\\\": \\\"b\\\"\\n}\\n' > /app/answers.json && cat /app/answers.json\"",
+            "timeout": 120000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_L09tpneVnu8Y6eTxfgm5BRu5",
+            "content": "Chunk ID: 3e8730\nWall time: 0.0545 seconds\nProcess exited with code 0\nOriginal token count: 13\nOutput:\n{\n  \"1\": \"c\",\n  \"2\": \"a\",\n  \"3\": \"a\",\n  \"4\": \"b\"\n}\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"bash -lc \\\"printf '{\\\\n  \\\\\\\"1\\\\\\\": \\\\\\\"c\\\\\\\",\\\\n  \\\\\\\"2\\\\\\\": \\\\\\\"a\\\\\\\",\\\\n  \\\\\\\"3\\\\\\\": \\\\\\\"a\\\\\\\",\\\\n  \\\\\\\"4\\\\\\\": \\\\\\\"b\\\\\\\"\\\\n}\\\\n' > /app/answers.json && cat /app/answers.json\\\"\",\"timeout\":120000}"
+      }
+    },
+    {
+      "step_id": 22,
+      "timestamp": "2026-02-20T10:52:52.113Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Wrote answers to /app/answers.json.\n\n- 1: c\n- 2: a\n- 3: a\n- 4: b"
+    }
+  ],
+  "final_metrics": {
+    "total_prompt_tokens": 330724,
+    "total_completion_tokens": 4976,
+    "total_cached_tokens": 315904,
+    "total_steps": 22,
+    "extra": {
+      "reasoning_output_tokens": 3584,
+      "total_tokens": 335700,
+      "last_token_usage": {
+        "input_tokens": 28081,
+        "cached_input_tokens": 27904,
+        "output_tokens": 37,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 28118
+      }
+    }
+  }
+}

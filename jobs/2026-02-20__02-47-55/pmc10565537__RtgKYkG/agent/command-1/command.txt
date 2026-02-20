@@ -1,0 +1,84 @@
+trap 'rm -rf /tmp/codex-secrets "$CODEX_HOME/auth.json"' EXIT TERM INT; codex exec --dangerously-bypass-approvals-and-sandbox --skip-git-repo-check --model gpt-5 --json --enable unified_exec -c model_reasoning_effort=high -- 'You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **6 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+CYP2C9 intermediate metabolizer and poor metabolizer is associated with increased concentrations of ______ in people with Breast Neoplasms and Neoplasm Metastasis as compared to CYP2C9 normal metabolizer and ultrarapid metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) estradiol
+- b) anastrozole
+- c) fulvestrant
+- d) estrone
+
+## Question 2
+
+CYP2C9 intermediate metabolizer and poor metabolizer is associated with increased concentrations of ______ in people with Breast Neoplasms and Neoplasm Metastasis as compared to CYP2C9 normal metabolizer and ultrarapid metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) anastrozole
+- c) estrone
+- d) estradiol
+
+## Question 3
+
+CYP2C9 intermediate metabolizer and poor metabolizer is associated with decreased concentrations of ______ in people with Breast Neoplasms and Neoplasm Metastasis as compared to CYP2C9 normal metabolizer and ultrarapid metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) metronidazole
+- b) anastrozole
+- c) fulvestrant
+- d) letrozole
+
+## Question 4
+
+CYP2C9 intermediate metabolizer and poor metabolizer is associated with decreased concentrations of ______ in people with Breast Neoplasms and Neoplasm Metastasis as compared to CYP2C9 normal metabolizer and ultrarapid metabolizer.
+
+Which drug correctly fills in the blank?
+
+- a) metronidazole
+- b) letrozole
+- c) None of the options
+- d) fulvestrant
+
+## Question 5
+
+CYP3A4 *1/*22 (assigned as intermediate metabolizer phenotype) is associated with decreased concentrations of ______ in people with Breast Neoplasms and Neoplasm Metastasis as compared to CYP3A4 *1/*1 (assigned as normal metabolizer phenotype) .
+
+Which drug correctly fills in the blank?
+
+- a) fulvestrant
+- b) anastrozole
+- c) metronidazole
+- d) letrozole
+
+## Question 6
+
+CYP3A4 *1/*22 (assigned as intermediate metabolizer phenotype) is associated with decreased concentrations of ______ in people with Breast Neoplasms and Neoplasm Metastasis as compared to CYP3A4 *1/*1 (assigned as normal metabolizer phenotype) .
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) metronidazole
+- c) fulvestrant
+- d) letrozole
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 6 questions (keys "1" through "6").
+' 2>&1 </dev/null | tee /logs/agent/codex.txt

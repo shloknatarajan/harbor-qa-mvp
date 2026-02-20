@@ -1,0 +1,62 @@
+trap 'rm -rf /tmp/codex-secrets "$CODEX_HOME/auth.json"' EXIT TERM INT; codex exec --dangerously-bypass-approvals-and-sandbox --skip-git-repo-check --model gpt-5 --json --enable unified_exec -c model_reasoning_effort=high -- 'You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **4 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+TPMT deficiency is associated with increased concentrations of ______ and thioguanosine triphosphate in children with Precursor Cell Lymphoblastic Leukemia-Lymphoma.
+
+Which drug correctly fills in the blank?
+
+- a) deoxy-thioguanosine triphosphate, thioguanosine triphosphate
+- b) mercaptopurine
+- c) thioguanosine diphosphate
+- d) thioguanosine monophosphate
+
+## Question 2
+
+TPMT deficiency is associated with increased concentrations of ______ and thioguanosine triphosphate in children with Precursor Cell Lymphoblastic Leukemia-Lymphoma.
+
+Which drug correctly fills in the blank?
+
+- a) thioguanosine diphosphate
+- b) mercaptopurine
+- c) thioguanosine monophosphate
+- d) None of the options
+
+## Question 3
+
+TPMT deficiency is associated with increased severity of Myelosuppression when treated with ______ in children with Precursor Cell Lymphoblastic Leukemia-Lymphoma.
+
+Which drug correctly fills in the blank?
+
+- a) mercaptopurine
+- b) captopril
+- c) methylmercaptopurine
+- d) deoxy-thioguanosine triphosphate, thioguanosine triphosphate
+
+## Question 4
+
+TPMT deficiency is associated with increased severity of Myelosuppression when treated with ______ in children with Precursor Cell Lymphoblastic Leukemia-Lymphoma.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) captopril
+- c) methylmercaptopurine
+- d) deoxy-thioguanosine triphosphate, thioguanosine triphosphate
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 4 questions (keys "1" through "4").
+' 2>&1 </dev/null | tee /logs/agent/codex.txt
