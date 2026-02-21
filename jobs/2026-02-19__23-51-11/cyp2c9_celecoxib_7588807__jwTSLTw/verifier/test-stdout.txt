@@ -1,0 +1,61 @@
+Hit:1 http://ports.ubuntu.com/ubuntu-ports noble InRelease
+Hit:2 http://ports.ubuntu.com/ubuntu-ports noble-updates InRelease
+Hit:3 http://ports.ubuntu.com/ubuntu-ports noble-backports InRelease
+Hit:4 http://ports.ubuntu.com/ubuntu-ports noble-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (8.5.0-2ubuntu10.6).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
+downloading uv 0.9.7 aarch64-unknown-linux-gnu
+no checksums to verify
+installing to /root/.local/bin
+  uv
+  uvx
+everything's installed!
+/tests/test.sh: line 8: /root/.local/bin/env: No such file or directory
+Downloading cpython-3.14.0-linux-aarch64-gnu (download) (28.6MiB)
+ Downloading cpython-3.14.0-linux-aarch64-gnu (download)
+Downloading pygments (1.2MiB)
+Downloading pydantic-core (1.8MiB)
+ Downloading pydantic-core
+ Downloading pygments
+Installed 21 packages in 18ms
+============================= test session starts ==============================
+platform linux -- Python 3.14.0, pytest-8.4.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.3.5, anyio-4.12.1
+collected 4 items
+
+../tests/test_outputs.py ..F.                                            [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_recommendation_completeness _______________________
+
+judge_scores = {'action_correctness': 4, 'implication_accuracy': 4, 'rationale': "The agent correctly recommends initiating at the lo...though uses slightly different terminology than CPIC's 'mildly reduced metabolism.'", 'recommendation_completeness': 3}
+
+    def test_recommendation_completeness(judge_scores):
+        """LLM judge: does the recommendation capture all critical clinical details?"""
+        score = judge_scores["recommendation_completeness"]
+>       assert score >= 4, (
+            f"Recommendation completeness {score}/5 (need >= 4). "
+            f"Rationale: {judge_scores.get('rationale', '')}"
+        )
+E       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly recommends initiating at the lowest starting dose and using the shortest duration, but adds monitoring details not specified in CPIC guidelines. The implication accurately describes intermediate metabolizer status with reduced clearance, though uses slightly different terminology than CPIC's 'mildly reduced metabolism.'
+E       assert 3 >= 4
+
+/tests/test_outputs.py:87: AssertionError
+=============================== warnings summary ===============================
+test_outputs.py::test_action_correctness
+  /root/.cache/uv/archive-v0/MwKwF96dElDtQNuHndimI/lib/python3.14/site-packages/anthropic/_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+    from pydantic.v1.typing import (
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_classification
+PASSED ../tests/test_outputs.py::test_action_correctness
+PASSED ../tests/test_outputs.py::test_implication_accuracy
+FAILED ../tests/test_outputs.py::test_recommendation_completeness - Assertion...
+==================== 1 failed, 3 passed, 1 warning in 4.48s ====================

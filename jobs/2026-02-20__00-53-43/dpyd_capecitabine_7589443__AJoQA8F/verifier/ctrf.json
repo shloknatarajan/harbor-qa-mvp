@@ -1,0 +1,77 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 1,
+            "failed": 4,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771577937.5779138,
+            "stop": 1771577940.7045212
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.00032283399991683837,
+                "start": 1771577937.6022809,
+                "stop": 1771577937.6027417,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.065743334999979,
+                "start": 1771577937.6028447,
+                "stop": 1771577940.6982374,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 1, 'rationale': 'The agent recommends standard dosing for DPYD 1.0 w...activity, creating a completely opposite and potentially fatal recommendation.', 'recommendation_completeness': 1, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 1/5 (need >= 4). Rationale: The agent recommends standard dosing for DPYD 1.0 when CPIC requires 50% dose reduction due to decreased DPD activity, creating a completely opposite and potentially fatal recommendation.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00042237599996042263,
+                "start": 1771577940.698622,
+                "stop": 1771577940.700668,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 1, 'rationale': 'The agent recommends standard dosing for DPYD 1.0 w...activity, creating a completely opposite and potentially fatal recommendation.', 'recommendation_completeness': 1, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 1/5 (need >= 4). Rationale: The agent recommends standard dosing for DPYD 1.0 when CPIC requires 50% dose reduction due to decreased DPD activity, creating a completely opposite and potentially fatal recommendation.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0003142900002330862,
+                "start": 1771577940.7008264,
+                "stop": 1771577940.7025266,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 1, 'rationale': 'The agent recommends standard dosing for DPYD 1.0 w...activity, creating a completely opposite and potentially fatal recommendation.', 'recommendation_completeness': 1, ...}\n\n    def test_implication_accuracy(judge_scores):\n        \"\"\"LLM judge: is the stated implication correct for this genotype?\"\"\"\n        score = judge_scores[\"implication_accuracy\"]\n>       assert score >= 4, (\n            f\"Implication accuracy {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Implication accuracy 1/5 (need >= 4). Rationale: The agent recommends standard dosing for DPYD 1.0 when CPIC requires 50% dose reduction due to decreased DPD activity, creating a completely opposite and potentially fatal recommendation.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:96: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00029875000018364517,
+                "start": 1771577940.7026486,
+                "stop": 1771577940.7043333,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 1, 'rationale': 'The agent recommends standard dosing for DPYD 1.0 w...activity, creating a completely opposite and potentially fatal recommendation.', 'recommendation_completeness': 1, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 1/5 (need >= 4). Rationale: The agent recommends standard dosing for DPYD 1.0 when CPIC requires 50% dose reduction due to decreased DPD activity, creating a completely opposite and potentially fatal recommendation.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

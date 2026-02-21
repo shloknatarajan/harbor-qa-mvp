@@ -1,56 +1,19 @@
+import os
 import json
-import re
 from pathlib import Path
 
 import pytest
 
 
-EXPECTED_ACTION_CATEGORY = "standard_dosing"
-EXPECTED_CLASSIFICATION = "Strong"
-EXPECTED_KEY_TERMS = ["at standard doses", "standard dose", "monitor"]
 EXPECTED_RECOMMENDATION = "Use aminoglycoside antibiotics at standard doses for the shortest feasible course with therapeutic dose monitoring. Evaluate regularly for hearing loss in line with local guidance."
+EXPECTED_CLASSIFICATION = "Strong"
+EXPECTED_IMPLICATION = "MT-RNR1: Normal risk of developing hearing loss if administered an aminoglycoside antibiotic."
+DRUG = "dibekacin"
+GENE = "MT-RNR1"
+VARIANT = "MT-RNR1 normal risk of aminoglycoside-induced hearing loss"
 
 
-# Action category keyword mapping
-ACTION_KEYWORDS = {
-    "avoid": ["contraindicated", "not recommended", "avoid", "do not use"],
-    "standard_dosing": [
-        "per standard dosing",
-        "standard dosing",
-        "at standard doses",
-        "standard dose",
-        "label-recommended",
-    ],
-    "dose_reduction": [
-        "reduce dose",
-        "reduced dose",
-        "decrease dose",
-        "decreased dose",
-        "lower dose",
-        "dose decrease",
-        "dose reduction",
-        "50% reduction",
-        "50% of standard",
-    ],
-    "dose_increase": [
-        "increase dose",
-        "increased dose",
-        "higher dose",
-        "dose increase",
-    ],
-    "alternative": ["alternative", "consider other", "select alternative"],
-    "monitor": ["monitor", "caution", "therapeutic drug monitoring"],
-}
-
-
-def classify_recommendation(text: str) -> str:
-    """Classify a recommendation into an action category."""
-    text_lower = text.lower()
-    for category, keywords in ACTION_KEYWORDS.items():
-        for kw in keywords:
-            if kw in text_lower:
-                return category
-    return "other"
+JUDGE_PROMPT = "You are a STRICT pharmacogenomics evaluation judge. You are comparing an AI agent's clinical recommendation against the official CPIC guideline. Be rigorous \u2014 clinical details matter and vague or incomplete answers should score low. Do NOT give the benefit of the doubt.\n\n## Ground Truth (CPIC Guideline)\n- **Drug:** {drug}\n- **Gene:** {gene}\n- **Patient Genotype:** {variant}\n- **CPIC Recommendation:** {expected_rec}\n- **Classification Strength:** {expected_class}\n- **CPIC Implication:** {expected_impl}\n\n## Agent's Answer\n- **Recommendation:** {agent_rec}\n- **Classification:** {agent_class}\n- **Implication:** {agent_impl}\n\n## Evaluation Criteria\n\nScore EACH dimension on a 1-5 scale. Be strict: a score of 5 means essentially perfect, 4 means correct with only trivial omissions. Anything missing a clinically meaningful detail should be 3 or below.\n\n1. **action_correctness**: Does the agent recommend the SAME clinical action?\n   - 5: Exact same action (e.g., both say \"avoid\", both say \"reduce dose by 50%\")\n   - 4: Same core action with only trivial wording differences\n   - 3: Right direction but missing critical qualifiers (e.g., \"reduce dose\" when guideline says \"reduce dose by 50%\" \u2014 the percentage matters)\n   - 2: Partially overlapping but meaningfully different action\n   - 1: Wrong action (e.g., \"use standard dose\" vs \"avoid\")\n\n2. **recommendation_completeness**: Does the agent capture ALL clinically significant details from the CPIC recommendation?\n   - 5: All specific details present (dosing percentages, monitoring requirements, alternative drug suggestions, caveats)\n   - 4: All major details present, at most one minor detail missing\n   - 3: Core action correct but missing important specifics (e.g., omits TDM requirement, omits specific dose adjustment percentage)\n   - 2: Vague or generic \u2014 gives broad direction without actionable detail\n   - 1: Missing or wrong details\n\n3. **implication_accuracy**: Does the agent's stated implication correctly describe the pharmacogenomic phenotype for this genotype?\n   - 5: Correctly identifies the metabolizer status/phenotype and its clinical consequence (e.g., \"poor metabolizer \u2014 reduced conversion to active metabolite\")\n   - 4: Correct phenotype with minor imprecision in clinical consequence\n   - 3: Partially correct (e.g., right metabolizer status but wrong or missing clinical consequence, or vice versa)\n   - 2: Vague or generic implication not specific to this genotype\n   - 1: Wrong phenotype or wrong clinical consequence\n\n4. **safety**: Is the recommendation safe for the patient?\n   - 5: Fully safe, matches guideline\n   - 4: Safe with minor omissions (e.g., missing a secondary monitoring note)\n   - 3: Mostly safe but missing important caveats (e.g., omits critical drug interaction warning or contraindication)\n   - 2: Could lead to suboptimal care\n   - 1: Potentially dangerous (e.g., recommending standard dose when drug should be avoided)\n\nRespond with ONLY a JSON object. No markdown fences, no explanation:\n{{\"action_correctness\": <1-5>, \"recommendation_completeness\": <1-5>, \"implication_accuracy\": <1-5>, \"safety\": <1-5>, \"rationale\": \"<1-2 sentences>\"}}"
 
 
 @pytest.fixture(scope="module")
@@ -60,37 +23,86 @@ def answers():
     return json.loads(f.read_text())
 
 
-def test_action_category(answers):
-    """Check that the recommendation maps to the correct action category."""
-    rec_text = answers.get("recommendation", "")
-    got_category = classify_recommendation(rec_text)
-    assert got_category == EXPECTED_ACTION_CATEGORY, (
-        f"Expected action category '{EXPECTED_ACTION_CATEGORY}', got '{got_category}' "
-        f"from recommendation: {rec_text}"
+@pytest.fixture(scope="module")
+def judge_scores(answers):
+    """Call LLM judge to evaluate the agent's recommendation."""
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        pytest.skip("ANTHROPIC_API_KEY not set — cannot run LLM judge")
+
+    from anthropic import Anthropic
+
+    client = Anthropic(api_key=api_key)
+
+    prompt = JUDGE_PROMPT.format(
+        drug=DRUG,
+        gene=GENE,
+        variant=VARIANT,
+        expected_rec=EXPECTED_RECOMMENDATION,
+        expected_class=EXPECTED_CLASSIFICATION,
+        expected_impl=EXPECTED_IMPLICATION,
+        agent_rec=answers.get("recommendation", ""),
+        agent_class=answers.get("classification", ""),
+        agent_impl=answers.get("implication", ""),
     )
+
+    response = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=300,
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    text = response.content[0].text.strip()
+    if text.startswith("```"):
+        text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+    return json.loads(text)
+
+
+# ── Deterministic test ────────────────────────────────────────────────
 
 
 def test_classification(answers):
-    """Check that the classification strength matches."""
+    """Check that the classification strength matches exactly."""
     got = answers.get("classification", "").strip()
     assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (
         f"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'"
     )
 
 
-def test_key_terms(answers):
-    """Check that at least one key term from CPIC rec appears in output."""
-    if not EXPECTED_KEY_TERMS:
-        pytest.skip("No key terms defined for this recommendation")
-    # Combine all text fields from the agent's answer
-    all_text = " ".join(
-        [
-            answers.get("recommendation", ""),
-            answers.get("implication", ""),
-        ]
-    ).lower()
-    found = [t for t in EXPECTED_KEY_TERMS if t.lower() in all_text]
-    assert found, (
-        f"None of the expected key terms found in agent output. "
-        f"Expected one of: {EXPECTED_KEY_TERMS}"
+# ── LLM judge tests (strict: require >= 4/5) ─────────────────────────
+
+
+def test_action_correctness(judge_scores):
+    """LLM judge: does the recommendation match the correct clinical action?"""
+    score = judge_scores["action_correctness"]
+    assert score >= 4, (
+        f"Action correctness {score}/5 (need >= 4). "
+        f"Rationale: {judge_scores.get('rationale', '')}"
+    )
+
+
+def test_recommendation_completeness(judge_scores):
+    """LLM judge: does the recommendation capture all critical clinical details?"""
+    score = judge_scores["recommendation_completeness"]
+    assert score >= 4, (
+        f"Recommendation completeness {score}/5 (need >= 4). "
+        f"Rationale: {judge_scores.get('rationale', '')}"
+    )
+
+
+def test_implication_accuracy(judge_scores):
+    """LLM judge: is the stated implication correct for this genotype?"""
+    score = judge_scores["implication_accuracy"]
+    assert score >= 4, (
+        f"Implication accuracy {score}/5 (need >= 4). "
+        f"Rationale: {judge_scores.get('rationale', '')}"
+    )
+
+
+def test_safety(judge_scores):
+    """LLM judge: is the recommendation safe for the patient?"""
+    score = judge_scores["safety"]
+    assert score >= 4, (
+        f"Safety {score}/5 (need >= 4). "
+        f"Rationale: {judge_scores.get('rationale', '')}"
     )

@@ -1,0 +1,62 @@
+trap 'rm -rf /tmp/codex-secrets "$CODEX_HOME/auth.json"' EXIT TERM INT; codex exec --dangerously-bypass-approvals-and-sandbox --skip-git-repo-check --model gpt-5 --json --enable unified_exec -c model_reasoning_effort=high -- 'You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **4 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Allele C is not associated with response to ______ in people with Nasopharyngeal Neoplasms as compared to allele T.
+
+Which drug correctly fills in the blank?
+
+- a) estradiol
+- b) artemether
+- c) verapamil
+- d) radiotherapy
+
+## Question 2
+
+Allele C is not associated with response to ______ in people with Nasopharyngeal Neoplasms as compared to allele T.
+
+Which drug correctly fills in the blank?
+
+- a) estradiol
+- b) verapamil
+- c) artemether
+- d) None of the options
+
+## Question 3
+
+Allele A is not associated with response to ______ in people with Nasopharyngeal Neoplasms as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) artemether
+- b) estradiol
+- c) verapamil
+- d) radiotherapy
+
+## Question 4
+
+Allele A is not associated with response to ______ in people with Nasopharyngeal Neoplasms as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) artemether
+- b) estradiol
+- c) None of the options
+- d) verapamil
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 4 questions (keys "1" through "4").
+' 2>&1 </dev/null | tee /logs/agent/codex.txt

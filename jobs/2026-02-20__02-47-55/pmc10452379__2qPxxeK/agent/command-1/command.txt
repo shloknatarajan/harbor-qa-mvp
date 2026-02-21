@@ -1,0 +1,106 @@
+trap 'rm -rf /tmp/codex-secrets "$CODEX_HOME/auth.json"' EXIT TERM INT; codex exec --dangerously-bypass-approvals-and-sandbox --skip-git-repo-check --model gpt-5 --json --enable unified_exec -c model_reasoning_effort=high -- 'You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **8 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Genotype GG is associated with increased dose of ______ in people with heart valve replacement as compared to genotypes AA + AG.
+
+Which drug correctly fills in the blank?
+
+- a) warfarin
+- b) 6-hydroxy r-warfarin
+- c) heparin
+- d) coumarin
+
+## Question 2
+
+Genotype GG is associated with increased dose of ______ in people with heart valve replacement as compared to genotypes AA + AG.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) 6-hydroxy r-warfarin
+- c) heparin
+- d) coumarin
+
+## Question 3
+
+Genotypes AG + GG is associated with increased dose of ______ in people with heart valve replacement as compared to genotype AA.
+
+Which drug correctly fills in the blank?
+
+- a) 6-hydroxy r-warfarin
+- b) heparin
+- c) coumarin
+- d) warfarin
+
+## Question 4
+
+Genotypes AG + GG is associated with increased dose of ______ in people with heart valve replacement as compared to genotype AA.
+
+Which drug correctly fills in the blank?
+
+- a) heparin
+- b) coumarin
+- c) 6-hydroxy r-warfarin
+- d) None of the options
+
+## Question 5
+
+Genotypes AA + AG is associated with increased dose of ______ in people with heart valve replacement as compared to genotype GG.
+
+Which drug correctly fills in the blank?
+
+- a) heparin
+- b) warfarin
+- c) coumarin
+- d) 6-hydroxy r-warfarin
+
+## Question 6
+
+Genotypes AA + AG is associated with increased dose of ______ in people with heart valve replacement as compared to genotype GG.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) heparin
+- c) coumarin
+- d) 6-hydroxy r-warfarin
+
+## Question 7
+
+Genotypes AG + GG is associated with increased dose of ______ in people with heart valve replacement as compared to genotype AA.
+
+Which drug correctly fills in the blank?
+
+- a) heparin
+- b) 6-hydroxy r-warfarin
+- c) warfarin
+- d) coumarin
+
+## Question 8
+
+Genotypes AG + GG is associated with increased dose of ______ in people with heart valve replacement as compared to genotype AA.
+
+Which drug correctly fills in the blank?
+
+- a) coumarin
+- b) 6-hydroxy r-warfarin
+- c) heparin
+- d) None of the options
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 8 questions (keys "1" through "8").
+' 2>&1 </dev/null | tee /logs/agent/codex.txt

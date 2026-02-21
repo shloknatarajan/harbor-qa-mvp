@@ -1,0 +1,62 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 2,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771574741.303224,
+            "stop": 1771574745.2253082
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.00030425099998865335,
+                "start": 1771574741.329938,
+                "stop": 1771574741.3303614,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.8747099600000183,
+                "start": 1771574741.3304725,
+                "stop": 1771574745.2218468,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': \"The agent correctly recommends standard starting do...h slightly over-emphasizes the magnitude compared to CPIC's more measured language.\", 'recommendation_completeness': 3}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 3/5 (need >= 4). Rationale: The agent correctly recommends standard starting dose and mentions dose reduction for chronic therapy, but fails to specify the critical '50% reduction' detail from CPIC guidelines. The implication accurately describes the poor metabolizer phenotype and increased plasma concentrations, though slightly over-emphasizes the magnitude compared to CPIC's more measured language.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00038554199988993787,
+                "start": 1771574745.2221575,
+                "stop": 1771574745.224156,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': \"The agent correctly recommends standard starting do...h slightly over-emphasizes the magnitude compared to CPIC's more measured language.\", 'recommendation_completeness': 3}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly recommends standard starting dose and mentions dose reduction for chronic therapy, but fails to specify the critical '50% reduction' detail from CPIC guidelines. The implication accurately describes the poor metabolizer phenotype and increased plasma concentrations, though slightly over-emphasizes the magnitude compared to CPIC's more measured language.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00028512499989119533,
+                "start": 1771574745.224808,
+                "stop": 1771574745.2251809,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

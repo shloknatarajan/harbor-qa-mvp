@@ -1,0 +1,62 @@
+trap 'rm -rf /tmp/codex-secrets "$CODEX_HOME/auth.json"' EXIT TERM INT; codex exec --dangerously-bypass-approvals-and-sandbox --skip-git-repo-check --model gpt-5 --json --enable unified_exec -c model_reasoning_effort=high -- 'You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **4 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Allele T is associated with increased improvement over the first 2 weeks when treated with ______ in people with Depressive Disorder, Major as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) 1-hydroxymidazolam
+- b) citalopram, escitalopram
+- c) 10-monohydroxy oxcarbazepine
+- d) Selective serotonin reuptake inhibitors
+
+## Question 2
+
+Allele T is associated with increased improvement over the first 2 weeks when treated with ______ in people with Depressive Disorder, Major as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) 10-monohydroxy oxcarbazepine
+- b) Selective serotonin reuptake inhibitors
+- c) None of the options
+- d) 1-hydroxymidazolam
+
+## Question 3
+
+Allele T is not associated with improvement over the first 2 weeks when treated with ______ in people with Depressive Disorder, Major as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) Ace Inhibitors
+- b) Selective serotonin (5HT1) agonists
+- c) citalopram, escitalopram
+- d) Selective serotonin reuptake inhibitors
+
+## Question 4
+
+Allele T is not associated with improvement over the first 2 weeks when treated with ______ in people with Depressive Disorder, Major as compared to allele G.
+
+Which drug correctly fills in the blank?
+
+- a) citalopram, escitalopram
+- b) None of the options
+- c) Ace Inhibitors
+- d) Selective serotonin (5HT1) agonists
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 4 questions (keys "1" through "4").
+' 2>&1 </dev/null | tee /logs/agent/codex.txt

@@ -1,0 +1,371 @@
+{
+  "schema_version": "ATIF-v1.5",
+  "session_id": "019c7b86-6b08-7dc2-8cf5-933fa09774ae",
+  "agent": {
+    "name": "codex",
+    "version": "0.104.0",
+    "model_name": "gpt-5",
+    "extra": {
+      "originator": "codex_exec",
+      "cwd": "/app"
+    }
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "timestamp": "2026-02-20T14:48:52.747Z",
+      "source": "system",
+      "message": "<permissions instructions>\nFilesystem sandboxing defines which files can be read or written. `sandbox_mode` is `danger-full-access`: No filesystem sandboxing - all commands are permitted. Network access is enabled.\nApproval policy is currently never. Do not provide the `sandbox_permissions` for any reason, commands will be rejected.\n</permissions instructions>"
+    },
+    {
+      "step_id": 2,
+      "timestamp": "2026-02-20T14:48:52.747Z",
+      "source": "user",
+      "message": "# AGENTS.md instructions for /app\n\n<INSTRUCTIONS>\n## Skills\nA skill is a set of local instructions to follow that is stored in a `SKILL.md` file. Below is the list of skills that can be used. Each entry includes a name, description, and file path so you can open the source for full instructions when using a specific skill.\n### Available skills\n- skill-creator: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Codex's capabilities with specialized knowledge, workflows, or tool integrations. (file: /logs/agent/skills/.system/skill-creator/SKILL.md)\n- skill-installer: Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable skills, install a curated skill, or install a skill from another repo (including private repos). (file: /logs/agent/skills/.system/skill-installer/SKILL.md)\n### How to use skills\n- Discovery: The list above is the skills available in this session (name + description + file path). Skill bodies live on disk at the listed paths.\n- Trigger rules: If the user names a skill (with `$SkillName` or plain text) OR the task clearly matches a skill's description shown above, you must use that skill for that turn. Multiple mentions mean use them all. Do not carry skills across turns unless re-mentioned.\n- Missing/blocked: If a named skill isn't in the list or the path can't be read, say so briefly and continue with the best fallback.\n- How to use a skill (progressive disclosure):\n  1) After deciding to use a skill, open its `SKILL.md`. Read only enough to follow the workflow.\n  2) When `SKILL.md` references relative paths (e.g., `scripts/foo.py`), resolve them relative to the skill directory listed above first, and only consider other paths if needed.\n  3) If `SKILL.md` points to extra folders such as `references/`, load only the specific files needed for the request; don't bulk-load everything.\n  4) If `scripts/` exist, prefer running or patching them instead of retyping large code blocks.\n  5) If `assets/` or templates exist, reuse them instead of recreating from scratch.\n- Coordination and sequencing:\n  - If multiple skills apply, choose the minimal set that covers the request and state the order you'll use them.\n  - Announce which skill(s) you're using and why (one short line). If you skip an obvious skill, say why.\n- Context hygiene:\n  - Keep context small: summarize long sections instead of pasting them; only load extra files when needed.\n  - Avoid deep reference-chasing: prefer opening only files directly linked from `SKILL.md` unless you're blocked.\n  - When variants exist (frameworks, providers, domains), pick only the relevant reference file(s) and note that choice.\n- Safety and fallback: If a skill can't be applied cleanly (missing files, unclear instructions), state the issue, pick the next-best approach, and continue.\n</INSTRUCTIONS>"
+    },
+    {
+      "step_id": 3,
+      "timestamp": "2026-02-20T14:48:52.748Z",
+      "source": "user",
+      "message": "<environment_context>\n  <cwd>/app</cwd>\n  <shell>bash</shell>\n</environment_context>"
+    },
+    {
+      "step_id": 4,
+      "timestamp": "2026-02-20T14:48:52.748Z",
+      "source": "user",
+      "message": "You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` \u2014 read them to find the answers.\n\nThere are **4 questions** below. For each question, determine the correct answer letter.\n\n## Question 1\n\nCYP2D6 *4 + *5 + *68 (assigned as poor metabolizer phenotype) is associated with increased severity of Dystonia when treated with ______.\n\nWhich drug correctly fills in the blank?\n\n- a) 10-monohydroxy oxcarbazepine\n- b) cimetidine, metoclopramide\n- c) 1-hydroxymidazolam\n- d) 2-aminoheptanoate\n\n## Question 2\n\nCYP2D6 *4 + *5 + *68 (assigned as poor metabolizer phenotype) is associated with increased severity of Dystonia when treated with ______.\n\nWhich drug correctly fills in the blank?\n\n- a) 2-aminoheptanoate\n- b) 1-hydroxymidazolam\n- c) None of the options\n- d) 10-monohydroxy oxcarbazepine\n\n## Question 3\n\nCYP2D6 *4 + *68 (assigned as poor metabolizer phenotype) is associated with increased severity of Dystonia, Torticollis and extrapyramidal symptoms when treated with ______.\n\nWhich drug correctly fills in the blank?\n\n- a) metoclopramide\n- b) cyclophosphamide\n- c) loperamide\n- d) citalopram\n\n## Question 4\n\nCYP2D6 *4 + *68 (assigned as poor metabolizer phenotype) is associated with increased severity of Dystonia, Torticollis and extrapyramidal symptoms when treated with ______.\n\nWhich drug correctly fills in the blank?\n\n- a) cyclophosphamide\n- b) citalopram\n- c) loperamide\n- d) None of the options\n\n---\n\nWrite your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:\n\n```json\n{\n  \"1\": \"a\",\n  \"2\": \"a\",\n  \"3\": \"a\"\n}\n```\n\nYou must answer all 4 questions (keys \"1\" through \"4\").\n"
+    },
+    {
+      "step_id": 5,
+      "timestamp": "2026-02-20T14:49:02.186Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "I\u2019ll scan the papers for CYP2D6, dystonia, and the listed drugs, then write the answers file."
+    },
+    {
+      "step_id": 6,
+      "timestamp": "2026-02-20T14:49:02.954Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_PvvIWVRLS9BynGgdwENBfC2i",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_PvvIWVRLS9BynGgdwENBfC2i",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "in_progress",
+                "step": "List and scan papers"
+              },
+              {
+                "status": "pending",
+                "step": "Extract relevant associations"
+              },
+              {
+                "status": "pending",
+                "step": "Choose answers per question"
+              },
+              {
+                "status": "pending",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_PvvIWVRLS9BynGgdwENBfC2i",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"in_progress\",\"step\":\"List and scan papers\"},{\"status\":\"pending\",\"step\":\"Extract relevant associations\"},{\"status\":\"pending\",\"step\":\"Choose answers per question\"},{\"status\":\"pending\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 7,
+      "timestamp": "2026-02-20T14:49:04.098Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_SqjTzLQZ15F1ZVxZ21Ee93hl",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_SqjTzLQZ15F1ZVxZ21Ee93hl",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg --files /app/papers || ls -la /app/papers"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_SqjTzLQZ15F1ZVxZ21Ee93hl",
+            "content": "Chunk ID: b55dca\nWall time: 0.0614 seconds\nProcess exited with code 0\nOriginal token count: 7\nOutput:\n/app/papers/PMC10366597.md\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg --files /app/papers || ls -la /app/papers\"}"
+      }
+    },
+    {
+      "step_id": 8,
+      "timestamp": "2026-02-20T14:49:07.898Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_0geoky4hTgJETo0SxFD2sdSR",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_0geoky4hTgJETo0SxFD2sdSR",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"CYP2D6|dystonia|metoclopramide|torticollis|extrapyramidal|cimetidine|oxcarbazepine|midazolam|loperamide|cyclophosphamide|citalopram|10-monohydroxy|1-hydroxymidazolam|2-aminoheptanoate|*4|*5|*68\" /app/papers/PMC10366597.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_0geoky4hTgJETo0SxFD2sdSR",
+            "content": "Chunk ID: 5ebc5e\nWall time: 0.0550 seconds\nProcess exited with code 2\nOriginal token count: 116\nOutput:\nrg: regex parse error:\n    (?:CYP2D6|dystonia|metoclopramide|torticollis|extrapyramidal|cimetidine|oxcarbazepine|midazolam|loperamide|cyclophosphamide|citalopram|10-monohydroxy|1-hydroxymidazolam|2-aminoheptanoate|*4|*5|*68)\n                                                                                                                                                                                               ^\nerror: repetition operator missing expression\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"CYP2D6|dystonia|metoclopramide|torticollis|extrapyramidal|cimetidine|oxcarbazepine|midazolam|loperamide|cyclophosphamide|citalopram|10-monohydroxy|1-hydroxymidazolam|2-aminoheptanoate|*4|*5|*68\\\" /app/papers/PMC10366597.md\"}"
+      }
+    },
+    {
+      "step_id": 9,
+      "timestamp": "2026-02-20T14:49:11.571Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_ntpWQZdcmTVBcZbzxd8XdYH7",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_ntpWQZdcmTVBcZbzxd8XdYH7",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"CYP2D6|dystonia|metoclopramide|torticollis|extrapyramidal|cimetidine|oxcarbazepine|midazolam|loperamide|cyclophosphamide|citalopram|10-monohydroxy|1-hydroxymidazolam|2-aminoheptanoate\" /app/papers/PMC10366597.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_ntpWQZdcmTVBcZbzxd8XdYH7",
+            "content": "Chunk ID: b1799a\nWall time: 0.0564 seconds\nProcess exited with code 0\nOriginal token count: 5381\nOutput:\n1:# Case report: metoclopramide induced acute dystonic reaction in adolescent CYP2D6 poor metabolizers\n15:Metoclopramide is indicated for the management of gastroesophageal reflux, gastric stasis, nausea, and vomiting. Metoclopramide-induced acute dystonic reactions (MIADRs), along with repetitive involuntary protrusion of the tongue, are well-known phenomena in children and young adults that may appear after the first dose. The drug is primarily metabolized via oxidation by the cytochrome P450 enzyme CYP2D6 and to a lesser extent by CYP3A4 and CYP1A2. A recommendation to decrease metoclopramide dosing in patients with severely limited to no CYP2D6 activity (i.e., poor metabolizers, PMs) is included in the drug label. It is important to note, however, that a requirement or recommendation for pre-emptive testing for CYP2D6 metabolizer status is not included in the drug label. We present two cases of acute dystonia in two non-consanguineous male adolescents: one following metoclopramide and cimetidine administration in a 14-year-old to treat gastroesophageal reflux, and another following metoclopramide and pantoprazole administration in a 17-year-old with acute gastroenteritis. A retrospective pharmacogenetic analysis revealed both patients as CYP2D6 PMs.\n17:Keywords: CYP2D6, poor metabolizer, metoclopramide, acute dystonia, metoclopramide-induced acute dystonic reactions, pharmacogenetics, pharmacogenomics\n21:Metoclopramide is a dopamine receptor antagonist approved for the management of gastrointestinal distress (nausea, vomiting, *etc.*) with an i) increase in the lower esophageal sphincter pressure, ii) increase in the amplitude of both the esophageal and gastric antrum peristalsis, iii) relaxation of the pyloric sphincter, and iv) increase in the small-bowel transit via its significant modulation of the cholinergic nervous system ([Schulze-Delrieu, 1981](#B13); [Desmond and Watson, 1986](#B6)). The drug also has a central effect on the chemoreceptor trigger zone and effects on the release of various hormones ([Schulze-Delrieu, 1981](#B13); [Desmond and Watson, 1986](#B6)). It is rapidly absorbed into the gastrointestinal tract with a bioavailability varying between 35% and 100% depending on the extent of first-pass metabolism, the elimination half-life varies between 3 and 6 hours, and protein binding is low ([Desmond and Watson, 1986](#B6)). Metoclopramide metabolism involves oxidation (by the cytochrome P450 enzymes CYP2D6, CYP3A4, and CYP1A2) and, albeit to a lesser extent, glucuronide and sulfate conjugation by the UDP-glucuronosyltransferase (UGT) and sulfotransferase (SULT) ([Argikar et al., 2010](#B1); [Parkman et al., 2012](#B12); [Livezey et al., 2014](#B10); [Ge et al., 2020](#B9)).\n23:Metoclopramide-induced acute dystonic reactions (MIADRs), along with repetitive involuntary protrusion of the tongue, is a well-known phenomenon in children and young adults that may appear after the first dose, and includes involuntary movements of limbs, facial grimacing, torticollis, oculogyric crisis, bulbar type of speech, trismus, opisthotonus (tetanus-like reactions), and, rarely, stridor and dyspnea possibly due to laryngospasm ([Bateman et al., 1989](#B3)).\n25:It is well known that underlying single nucleotide variants (SNVs) and other structural variations in *CYP2D6* contribute to altered metabolizing capacities for this enzyme in some individuals ([Nofziger et al., 2020](#B11)). As such, oxidative metoclopramide metabolism could be reduced in patients without full CYP2D6 enzyme function. This is supported by the recommendation within the drug\u2019s label that its dose should be reduced in CYP2D6 PMs, other case reports describing metoclopramide-induced adverse side effects in CYP2D6 PMs ([van der Padt et al., 2006](#B15); [Chua et al., 2019](#B5)), and pharmacokinetic studies of metoclopramide and CYP2D6 ([Bae et al., 2020](#B2)).\n27:Here, we describe additional cases of MIADR in adolescent CYP2D6 PMs.\n33:A 14-year-old, 62 kg male of Caucasian ancestry was admitted to the hospital with suspected seizures. He presented cooperative and fully conscious but with slurred speech and facial hypotonia with open mouth most of the time and repeated involuntary protrusion of the tongue ([Figure 1](#F1)). In addition, he complained of dystonic muscular spasms in the left side of the neck with intermittent retroflexion of the head. Because of the negation of any drug intake, the differential diagnostic spectrum included neurologic (paroxysmal dystonia) and psychiatric disease. A 3.4 mg oral dose of diazepam terminated the bizarre clinical episode. Then, 12 h later, after a calm night, the patient was well and without any clinical signs of disease. Only now the patient disclosed that 3 days before the hospital admission, he was started on metoclopramide (10 mg twice daily) and cimetidine (400 mg once daily) for gastroesophageal reflux. Exposure to metoclopramide prior to this case was not reported. A retrospective pharmacogenetic analysis was recommended to identify the reason for the suspected seizures and dystonia, and revealed a *CYP2D6* diplotype of *68+*4/*5, which confers a PM phenotype (no residual function of CYP2D6).\n43:A 17-year-old, 63 kg male of Caucasian ancestry with acute gastroenteritis was administered metoclopramide OTC from the pharmacy. Immediately following the first 10 mg dose, the patient vomited. The consulted physician prescribed three doses of 10 mg metoclopramide, which were taken 4 and 5 h apart, respectively, together with 40 mg pantoprazole once daily. After the second dose of metoclopramide, mild torticollis was recognized by the patient\u2019s father. In the evening of the same day, 2 hours after the third metoclopramide dose, the patient presented at an outpatient emergency center with a stiff neck and cervical muscle spasms, abnormal eye movements, and bilateral blepharospasm. Metoclopramide-induced acute dystonia with facial grimacing, torticollis, muscle spasms, and oculogyric crisis was diagnosed. A 3.4 mg oral dose of diazepam terminated the extrapyramidal movement disorder. Exposure to metoclopramide prior to this case was not reported. A retrospective pharmacogenetic analysis revealed that this patient was also a CYP2D6 PM, with a diplotype of *4/*68+*4.\n47:MIADRs are well-known adverse drug reactions (ADRs) in children and young adults. The respective summary of product characteristics (SmPCs) in different regulatory environments (United States of America, EU, *etc.*) mentions the important role of metoclopramide metabolism for the occurrence of ADRs. Metoclopramide is predominantly metabolized by the liver enzyme CYP2D6 ([Livezey et al., 2014](#B10)). As such, oxidative metoclopramide metabolism is expected to be reduced in patients without CYP2D6 enzyme function (i.e., PMs), which is underscored by the recommendation from the FDA that metoclopramide dosing should be reduced in CYP2D6 PMs, and should not be co-administered with strong CYP2D6 inhibitors ([U.S. Food and Drug Administration, 2017](#B14)). In 2014, the European Medicines Agency (EMA) issued a press release restricting the use of metoclopramide to short-term only (up to 5 days) due to \u201c\u2026well-known risks of neurological effects such as short-term extrapyramidal disorders \u2026 \u201d and recommended that the drug should not be used in children below 1 year of age and that in older children it should be used only as a second choice treatment for chemotherapy-induced emesis ([European Medicines Agency, 2013](#B7)). Interestingly, the press release made no mention of dosing guidance with respect to the CYP2D6 metabolizing capacity.\n49:It may also be important to note that the role of UGTs and SULTs, both important for the metabolism of various xenobiotics (i.e., paracetamol, anticancer drugs, etc.), in metoclopramide-related toxicities was highlighted as the main detoxifying metabolic pathways of the drug, followed by renal elimination of the more soluble metabolites (including 20% of the unchanged drug) ([Ge et al., 2020](#B9)). However, recent data, including that presented here from patients with no function of CYP2D6 (i.e., CYP2D6 PMs), underline the importance of CYP2D6 function for the development of metoclopramide-induced ADRs and is further substantiated by a recent case report describing metoclopramide-associated dystonia in a patient with an intermediate CYP2D6-metabolizing phenotype ([Wong and Fogel, 2021](#B16)), as well as a separate study showing increased metoclopramide plasma concentrations in CYP2D6 PMs and IMs compared to normal metabolizers ([Bae et al., 2020](#B2)). The observed frequency of CYP2D6 PMs in Europeans is as high as 8.45%, and the predicted frequency of CYP2D6 IMs in Europeans is as high as 35.3% ([Gaedigk et al., 2017](#B8)). However, 2 years after this publication, the method for calculating activity scores for CYP2D6 IMs changed, and the activity value of the relatively common *CYP2D6*10* allele was lowered from 0.5 to 0.25 ([Caudle et al., 2020](#B4)). Therefore, the frequency of CYP2D6 IMs in Europeans reported by [Gaedigk et al. (2017)](#B8) may be underestimated.\n51:The PM status of CYP2D6 in the aforementioned patients was likely the primary driver of the observed metoclopramide-induced acute dystonic episodes. Co-administration of cytochrome P450 inhibitors may transform NMs into IMs or PMs (phenoconversion) ([Klomp et al., 2020](#B17)). In both patients, the co-administration of cimetidine (inhibitor of CYP2D6, CYP3A4, and CYP1A2) and pantoprazole (inhibitor of CYP3A4), in case 1 and 2, respectively, may have further augmented the MIADR by decreasing the ability of the patients to metabolize metoclopramide ([Martinez et al., 1999](#B18); [Li et al., 2004](#B19)).\n55:With such a high percentage of the European population expected to have significant deficiencies in CYP2D6 function, the risk for developing ADRs after taking metoclopramide is notable, especially in the vulnerable population of children. Therefore, it seems warranted that the European regulatory environment adopts respective specific information regarding the importance of CYP2D6 function for the risk of development of metoclopramide-associated ADRs.\n57:A pharmacogenetic test for CYP2D6 phenotype prediction enables the physician to adopt the prescription of drugs which are likely not well-tolerated. Based on this genetic information, dose reduction or the choice of an alternative drug might have prevented the ADRs described in this case report. In addition, whenever two or more drugs are administered simultaneously, the risk of phenoconversion should be considered.\n99:1. Argikar U. A., Gomez J., Ung D., Parkman H. P., Nagar S. (2010). Identification of novel metoclopramide metabolites in humans: In vitro and in vivo studies. Drug Metab. Dispos. 38 (8), 1295\u20131307. 10.1124/dmd.110.033357  [DOI](https://doi.org/10.1124/dmd.110.033357) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/20423954/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Drug%20Metab.%20Dispos.&title=Identification%20of%20novel%20metoclopramide%20metabolites%20in%20humans:%20In%20vitro%20and%20in%20vivo%20studies&author=U.%20A.%20Argikar&author=J.%20Gomez&author=D.%20Ung&author=H.%20P.%20Parkman&author=S.%20Nagar&volume=38&issue=8&publication_year=2010&pages=1295-1307&pmid=20423954&doi=10.1124/dmd.110.033357&)\n101:2. Bae J. W., Oh K. Y., Yoon S. J., Shin H. B., Jung E. H., Cho C. K., et al. (2020). Effects of CYP2D6 genetic polymorphism on the pharmacokinetics of metoclopramide. Arch. Pharm. Res. 43 (11), 1207\u20131213. 10.1007/s12272-020-01293-4  [DOI](https://doi.org/10.1007/s12272-020-01293-4) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/33247397/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Arch.%20Pharm.%20Res.&title=Effects%20of%20CYP2D6%20genetic%20polymorphism%20on%20the%20pharmacokinetics%20of%20metoclopramide&author=J.%20W.%20Bae&author=K.%20Y.%20Oh&author=S.%20J.%20Yoon&author=H.%20B.%20Shin&author=E.%20H.%20Jung&volume=43&issue=11&publication_year=2020&pages=1207-1213&pmid=33247397&doi=10.1007/s12272-020-01293-4&)\n103:3. Bateman D. N., Darling W. M., Boys R., Rawlins M. D. (1989). Extrapyramidal reactions to metoclopramide and prochlorperazine. Q. J. Med. 71 (264), 307\u2013311.  [PubMed](https://pubmed.ncbi.nlm.nih.gov/2594960/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Q.%20J.%20Med.&title=Extrapyramidal%20reactions%20to%20metoclopramide%20and%20prochlorperazine&author=D.%20N.%20Bateman&author=W.%20M.%20Darling&author=R.%20Boys&author=M.%20D.%20Rawlins&volume=71&issue=264&publication_year=1989&pages=307-311&pmid=2594960&)\n105:4. Caudle K. E., Sangkuhl K., Whirl-Carrillo M., Swen J. J., Haidar C. E., Klein T. E., et al. (2020). Standardizing CYP2D6 genotype to phenotype translation: Consensus recommendations from the clinical pharmacogenetics implementation consortium and Dutch pharmacogenetics working group. Clin. Transl. Sci. 13 (1), 116\u2013124. 10.1111/cts.12692  [DOI](https://doi.org/10.1111/cts.12692) | [PMC free article](/articles/PMC6951851/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/31647186/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin.%20Transl.%20Sci.&title=Standardizing%20CYP2D6%20genotype%20to%20phenotype%20translation:%20Consensus%20recommendations%20from%20the%20clinical%20pharmacogenetics%20implementation%20consortium%20and%20Dutch%20pharmacogenetics%20working%20group&author=K.%20E.%20Caudle&author=K.%20Sangkuhl&author=M.%20Whirl-Carrillo&author=J.%20J.%20Swen&author=C.%20E.%20Haidar&volume=13&issue=1&publication_year=2020&pages=116-124&pmid=31647186&doi=10.1111/cts.12692&)\n107:5. Chua E. W., Harger S. P., Kennedy M. A. (2019). Metoclopramide-induced acute dystonic reactions may Be associated with the CYP2D6 poor metabolizer status and pregnancy-related hormonal changes. Front. Pharmacol. 10, 931. 10.3389/fphar.2019.00931  [DOI](https://doi.org/10.3389/fphar.2019.00931) | [PMC free article](/articles/PMC6713716/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/31507424/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Front.%20Pharmacol.&title=Metoclopramide-induced%20acute%20dystonic%20reactions%20may%20Be%20associated%20with%20the%20CYP2D6%20poor%20metabolizer%20status%20and%20pregnancy-related%20hormonal%20changes&author=E.%20W.%20Chua&author=S.%20P.%20Harger&author=M.%20A.%20Kennedy&volume=10&publication_year=2019&pages=931&pmid=31507424&doi=10.3389/fphar.2019.00931&)\n111:7. European Medicines Agency (2013). European Medicines Agency recommends changes to the use of metoclopramide. Press release Available at: https://www.ema.europa.eu/en/news/european-medicines-agency-recommends-changes-use-metoclopramide.  [https://www.ema.europa.eu/en/news/european-medicines-agency-recommends-changes-use-metoclopramide](https://www.ema.europa.eu/en/news/european-medicines-agency-recommends-changes-use-metoclopramide)\n113:8. Gaedigk A., Sangkuhl K., Whirl-Carrillo M., Klein T., Leeder J. S. (2017). Prediction of CYP2D6 phenotype from genotype across world populations. Genet. Med. 19 (1), 69\u201376. 10.1038/gim.2016.80  [DOI](https://doi.org/10.1038/gim.2016.80) | [PMC free article](/articles/PMC5292679/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/27388693/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Genet.%20Med.&title=Prediction%20of%20CYP2D6%20phenotype%20from%20genotype%20across%20world%20populations&author=A.%20Gaedigk&author=K.%20Sangkuhl&author=M.%20Whirl-Carrillo&author=T.%20Klein&author=J.%20S.%20Leeder&volume=19&issue=1&publication_year=2017&pages=69-76&pmid=27388693&doi=10.1038/gim.2016.80&)\n115:9. Ge S., Mendley S. R., Gerhart J. G., Melloni C., Hornik C. P., Sullivan J. E., et al. (2020). Population pharmacokinetics of metoclopramide in infants, children, and adolescents. Clin. Transl. Sci. 13 (6), 1189\u20131198. 10.1111/cts.12803  [DOI](https://doi.org/10.1111/cts.12803) | [PMC free article](/articles/PMC7719387/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/32324313/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin.%20Transl.%20Sci.&title=Population%20pharmacokinetics%20of%20metoclopramide%20in%20infants,%20children,%20and%20adolescents&author=S.%20Ge&author=S.%20R.%20Mendley&author=J.%20G.%20Gerhart&author=C.%20Melloni&author=C.%20P.%20Hornik&volume=13&issue=6&publication_year=2020&pages=1189-1198&pmid=32324313&doi=10.1111/cts.12803&)\n121:12. Livezey M. R., Briggs E. D., Bolles A. K., Nagy L. D., Fujiwara R., Furge L. L. (2014). Metoclopramide is metabolized by CYP2D6 and is a reversible inhibitor, but not inactivator, of CYP2D6. Xenobiotica 44 (4), 309\u2013319. 10.3109/00498254.2013.835885  [DOI](https://doi.org/10.3109/00498254.2013.835885) | [PMC free article](/articles/PMC4059401/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/24010633/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Xenobiotica&title=Metoclopramide%20is%20metabolized%20by%20CYP2D6%20and%20is%20a%20reversible%20inhibitor,%20but%20not%20inactivator,%20of%20CYP2D6&author=M.%20R.%20Livezey&author=E.%20D.%20Briggs&author=A.%20K.%20Bolles&author=L.%20D.%20Nagy&author=R.%20Fujiwara&volume=44&issue=4&publication_year=2014&pages=309-319&pmid=24010633&doi=10.3109/00498254.2013.835885&)\n123:13. Martinez C., Albet C., Agundez J. A., Herrero E., Carrillo J. A., Marquez M., et al. (1999). Comparative in vitro and in vivo inhibition of cytochrome P450 CYP1A2, CYP2D6, and CYP3A by H2-receptor antagonists. Clin. Pharmacol. Ther. 65 (4), 369\u2013376. 10.1016/S0009-9236(99)70129-3  [DOI](https://doi.org/10.1016/S0009-9236(99)70129-3) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/10223772/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin.%20Pharmacol.%20Ther.&title=Comparative%20in%20vitro%20and%20in%20vivo%20inhibition%20of%20cytochrome%20P450%20CYP1A2,%20CYP2D6,%20and%20CYP3A%20by%20H2-receptor%20antagonists&author=C.%20Martinez&author=C.%20Albet&author=J.%20A.%20Agundez&author=E.%20Herrero&author=J.%20A.%20Carrillo&volume=65&issue=4&publication_year=1999&pages=369-376&pmid=10223772&doi=10.1016/S0009-9236(99)70129-3&)\n125:14. Nofziger C., Turner A. J., Sangkuhl K., Whirl-Carrillo M., Ag\u00fandez J. A. G., Black J. L., et al. (2020). PharmVar GeneFocus: CYP2D6. Clin. Pharmacol. Ther. 107 (1), 154\u2013170. 10.1002/cpt.1643  [DOI](https://doi.org/10.1002/cpt.1643) | [PMC free article](/articles/PMC6925641/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/31544239/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Clin.%20Pharmacol.%20Ther.&title=PharmVar%20GeneFocus:%20CYP2D6&author=C.%20Nofziger&author=A.%20J.%20Turner&author=K.%20Sangkuhl&author=M.%20Whirl-Carrillo&author=J.%20A.%20G.%20Ag%C3%BAndez&volume=107&issue=1&publication_year=2020&pages=154-170&pmid=31544239&doi=10.1002/cpt.1643&)\n127:15. Parkman H. P., Mishra A., Jacobs M., Pathikonda M., Sachdeva P., Gaughan J., et al. (2012). Clinical response and side effects of metoclopramide: Associations with clinical, demographic, and pharmacogenetic parameters. J. Clin. Gastroenterol. 46 (6), 494\u2013503. 10.1097/MCG.0b013e3182522624  [DOI](https://doi.org/10.1097/MCG.0b013e3182522624) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/22688145/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=J.%20Clin.%20Gastroenterol.&title=Clinical%20response%20and%20side%20effects%20of%20metoclopramide:%20Associations%20with%20clinical,%20demographic,%20and%20pharmacogenetic%20parameters&author=H.%20P.%20Parkman&author=A.%20Mishra&author=M.%20Jacobs&author=M.%20Pathikonda&author=P.%20Sachdeva&volume=46&issue=6&publication_year=2012&pages=494-503&pmid=22688145&doi=10.1097/MCG.0b013e3182522624&)\n131:17. U.S. Food and Drug Administration (2017). Reglan (metoclopramide) [package insert]. U.S. Food and Drug Administration Available at: https://www.accessdata.fda.gov/drugsatfda_docs/label/2017/017854s062lbl.pdf (Accessed March 30, 2023).  [https://www.accessdata.fda.gov/drugsatfda_docs/label/2017/017854s062lbl.pdf](https://www.accessdata.fda.gov/drugsatfda_docs/label/2017/017854s062lbl.pdf)\n133:18. van der Padt A., van Schaik R. H., Sonneveld P. (2006). Acute dystonic reaction to metoclopramide in patients carrying homozygous cytochrome P450 2D6 genetic polymorphisms. Neth J. Med. 64 (5), 160\u2013162.  [PubMed](https://pubmed.ncbi.nlm.nih.gov/16702617/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Neth%20J.%20Med.&title=Acute%20dystonic%20reaction%20to%20metoclopramide%20in%20patients%20carrying%20homozygous%20cytochrome%20P450%202D6%20genetic%20polymorphisms&author=A.%20van%20der%20Padt&author=R.%20H.%20van%20Schaik&author=P.%20Sonneveld&volume=64&issue=5&publication_year=2006&pages=160-162&pmid=16702617&)\n135:19. Wong D. Y., Fogel B. L. (2021). Acute pharmacogenetic dystonic reactions in a family with the CYP2D6 *41 allele: A case report. J. Med. Case Rep. 15 (1), 432. 10.1186/s13256-021-03022-x  [DOI](https://doi.org/10.1186/s13256-021-03022-x) | [PMC free article](/articles/PMC8375217/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/34407866/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=J.%20Med.%20Case%20Rep.&title=Acute%20pharmacogenetic%20dystonic%20reactions%20in%20a%20family%20with%20the%20CYP2D6%20*41%20allele:%20A%20case%20report&author=D.%20Y.%20Wong&author=B.%20L.%20Fogel&volume=15&issue=1&publication_year=2021&pages=432&pmid=34407866&doi=10.1186/s13256-021-03022-x&)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"CYP2D6|dystonia|metoclopramide|torticollis|extrapyramidal|cimetidine|oxcarbazepine|midazolam|loperamide|cyclophosphamide|citalopram|10-monohydroxy|1-hydroxymidazolam|2-aminoheptanoate\\\" /app/papers/PMC10366597.md\"}"
+      }
+    },
+    {
+      "step_id": 10,
+      "timestamp": "2026-02-20T14:49:21.910Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_P0s8gytIZqx9X4DQVER52pd5",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_P0s8gytIZqx9X4DQVER52pd5",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"\\*68\\+\\*4/\\*5|\\*68\\+\\*4|\\*5\" /app/papers/PMC10366597.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_P0s8gytIZqx9X4DQVER52pd5",
+            "content": "Chunk ID: 69d225\nWall time: 0.0623 seconds\nProcess exited with code 0\nOriginal token count: 580\nOutput:\n33:A 14-year-old, 62 kg male of Caucasian ancestry was admitted to the hospital with suspected seizures. He presented cooperative and fully conscious but with slurred speech and facial hypotonia with open mouth most of the time and repeated involuntary protrusion of the tongue ([Figure 1](#F1)). In addition, he complained of dystonic muscular spasms in the left side of the neck with intermittent retroflexion of the head. Because of the negation of any drug intake, the differential diagnostic spectrum included neurologic (paroxysmal dystonia) and psychiatric disease. A 3.4 mg oral dose of diazepam terminated the bizarre clinical episode. Then, 12 h later, after a calm night, the patient was well and without any clinical signs of disease. Only now the patient disclosed that 3 days before the hospital admission, he was started on metoclopramide (10 mg twice daily) and cimetidine (400 mg once daily) for gastroesophageal reflux. Exposure to metoclopramide prior to this case was not reported. A retrospective pharmacogenetic analysis was recommended to identify the reason for the suspected seizures and dystonia, and revealed a *CYP2D6* diplotype of *68+*4/*5, which confers a PM phenotype (no residual function of CYP2D6).\n43:A 17-year-old, 63 kg male of Caucasian ancestry with acute gastroenteritis was administered metoclopramide OTC from the pharmacy. Immediately following the first 10 mg dose, the patient vomited. The consulted physician prescribed three doses of 10 mg metoclopramide, which were taken 4 and 5 h apart, respectively, together with 40 mg pantoprazole once daily. After the second dose of metoclopramide, mild torticollis was recognized by the patient\u2019s father. In the evening of the same day, 2 hours after the third metoclopramide dose, the patient presented at an outpatient emergency center with a stiff neck and cervical muscle spasms, abnormal eye movements, and bilateral blepharospasm. Metoclopramide-induced acute dystonia with facial grimacing, torticollis, muscle spasms, and oculogyric crisis was diagnosed. A 3.4 mg oral dose of diazepam terminated the extrapyramidal movement disorder. Exposure to metoclopramide prior to this case was not reported. A retrospective pharmacogenetic analysis revealed that this patient was also a CYP2D6 PM, with a diplotype of *4/*68+*4.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"\\\\*68\\\\+\\\\*4/\\\\*5|\\\\*68\\\\+\\\\*4|\\\\*5\\\" /app/papers/PMC10366597.md\"}"
+      }
+    },
+    {
+      "step_id": 11,
+      "timestamp": "2026-02-20T14:49:39.389Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Next, I\u2019ll extract the associations and write the answers file."
+    },
+    {
+      "step_id": 12,
+      "timestamp": "2026-02-20T14:49:41.820Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_gZ6HlohOvEyZRCHrYF8eZf7i",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_gZ6HlohOvEyZRCHrYF8eZf7i",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "completed",
+                "step": "List and scan papers"
+              },
+              {
+                "status": "in_progress",
+                "step": "Extract relevant associations"
+              },
+              {
+                "status": "pending",
+                "step": "Choose answers per question"
+              },
+              {
+                "status": "pending",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_gZ6HlohOvEyZRCHrYF8eZf7i",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"completed\",\"step\":\"List and scan papers\"},{\"status\":\"in_progress\",\"step\":\"Extract relevant associations\"},{\"status\":\"pending\",\"step\":\"Choose answers per question\"},{\"status\":\"pending\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 13,
+      "timestamp": "2026-02-20T14:49:54.883Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_jrYwG7fCMntA2DEwPZg3ZiYG",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_jrYwG7fCMntA2DEwPZg3ZiYG",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "python - << 'PY'\nimport json,sys\nanswers = {\"1\":\"b\",\"2\":\"c\",\"3\":\"a\",\"4\":\"d\"}\nopen('/app/answers.json','w').write(json.dumps(answers, indent=2)+\"\\n\")\nprint('Wrote /app/answers.json')\nPY"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_jrYwG7fCMntA2DEwPZg3ZiYG",
+            "content": "Chunk ID: 2cfaa5\nWall time: 0.0617 seconds\nProcess exited with code 127\nOriginal token count: 12\nOutput:\n/bin/bash: line 1: python: command not found\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"python - << 'PY'\\nimport json,sys\\nanswers = {\\\"1\\\":\\\"b\\\",\\\"2\\\":\\\"c\\\",\\\"3\\\":\\\"a\\\",\\\"4\\\":\\\"d\\\"}\\nopen('/app/answers.json','w').write(json.dumps(answers, indent=2)+\\\"\\\\n\\\")\\nprint('Wrote /app/answers.json')\\nPY\"}"
+      }
+    },
+    {
+      "step_id": 14,
+      "timestamp": "2026-02-20T14:50:05.567Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed exec_command call_rIhGjDKCp8XaJeWXDU9jpN0d",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_rIhGjDKCp8XaJeWXDU9jpN0d",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "cat > /app/answers.json << 'JSON'\n{\n  \"1\": \"b\",\n  \"2\": \"c\",\n  \"3\": \"a\",\n  \"4\": \"d\"\n}\nJSON\n\ncat /app/answers.json"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_rIhGjDKCp8XaJeWXDU9jpN0d",
+            "content": "Chunk ID: ee4bff\nWall time: 0.0525 seconds\nProcess exited with code 0\nOriginal token count: 13\nOutput:\n{\n  \"1\": \"b\",\n  \"2\": \"c\",\n  \"3\": \"a\",\n  \"4\": \"d\"\n}\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"cat > /app/answers.json << 'JSON'\\n{\\n  \\\"1\\\": \\\"b\\\",\\n  \\\"2\\\": \\\"c\\\",\\n  \\\"3\\\": \\\"a\\\",\\n  \\\"4\\\": \\\"d\\\"\\n}\\nJSON\\n\\ncat /app/answers.json\"}"
+      }
+    },
+    {
+      "step_id": 15,
+      "timestamp": "2026-02-20T14:50:07.444Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "Executed update_plan call_r2HhakS2oTG0HixuKqFXDgu0",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_r2HhakS2oTG0HixuKqFXDgu0",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "status": "completed",
+                "step": "List and scan papers"
+              },
+              {
+                "status": "completed",
+                "step": "Extract relevant associations"
+              },
+              {
+                "status": "completed",
+                "step": "Choose answers per question"
+              },
+              {
+                "status": "completed",
+                "step": "Write /app/answers.json"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_r2HhakS2oTG0HixuKqFXDgu0",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"status\":\"completed\",\"step\":\"List and scan papers\"},{\"status\":\"completed\",\"step\":\"Extract relevant associations\"},{\"status\":\"completed\",\"step\":\"Choose answers per question\"},{\"status\":\"completed\",\"step\":\"Write /app/answers.json\"}]}"
+      }
+    },
+    {
+      "step_id": 16,
+      "timestamp": "2026-02-20T14:50:09.072Z",
+      "source": "agent",
+      "model_name": "gpt-5",
+      "message": "All set. I read the paper in papers/PMC10366597.md and wrote the answers to /app/answers.json.\n\n- Q1: b\n- Q2: c\n- Q3: a\n- Q4: d"
+    }
+  ],
+  "final_metrics": {
+    "total_prompt_tokens": 151980,
+    "total_completion_tokens": 2780,
+    "total_cached_tokens": 135296,
+    "total_steps": 16,
+    "extra": {
+      "reasoning_output_tokens": 1856,
+      "total_tokens": 154760,
+      "last_token_usage": {
+        "input_tokens": 18430,
+        "cached_input_tokens": 18304,
+        "output_tokens": 53,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 18483
+      }
+    }
+  }
+}

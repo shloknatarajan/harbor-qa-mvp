@@ -1,0 +1,62 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 2,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771574507.6691551,
+            "stop": 1771574512.6135442
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.00032183300004362536,
+                "start": 1771574507.6976066,
+                "stop": 1771574507.698047,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4.876606294999988,
+                "start": 1771574507.6981409,
+                "stop": 1771574512.6106412,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': \"The agent correctly identifies starting with lowest...es slightly different terminology than the guideline's 'mildly reduced metabolism.'\", 'recommendation_completeness': 3}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 3/5 (need >= 4). Rationale: The agent correctly identifies starting with lowest effective dose but adds unauthorized recommendations about dose reduction and drug switching that exceed the CPIC guideline's scope. The implication accurately describes CYP2C9 1.5 as intermediate metabolizer with reduced activity, though uses slightly different terminology than the guideline's 'mildly reduced metabolism.'\nE       assert 3 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00036533200000121724,
+                "start": 1771574512.6111887,
+                "stop": 1771574512.6128857,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': \"The agent correctly identifies starting with lowest...es slightly different terminology than the guideline's 'mildly reduced metabolism.'\", 'recommendation_completeness': 3}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly identifies starting with lowest effective dose but adds unauthorized recommendations about dose reduction and drug switching that exceed the CPIC guideline's scope. The implication accurately describes CYP2C9 1.5 as intermediate metabolizer with reduced activity, though uses slightly different terminology than the guideline's 'mildly reduced metabolism.'\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00020637499994791142,
+                "start": 1771574512.612982,
+                "stop": 1771574512.613248,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

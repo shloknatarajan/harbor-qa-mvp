@@ -1,0 +1,62 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 2,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771574047.8744035,
+            "stop": 1771574051.8792129
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0006630829999778598,
+                "start": 1771574047.9115663,
+                "stop": 1771574047.918879,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Strong', 'implication': 'DPYD activity score of 1.5 indicates an intermediate metabolizer (IM) phe...and clinical response. Avoid standard full dosing without dose adjustment. Enhanced toxicity monitoring is warranted.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Moderate', got 'Strong'\nE       assert 'strong' == 'moderate'\nE         \nE         - moderate\nE         + strong\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "passed",
+                "duration": 3.9556874609999966,
+                "start": 1771574047.9189987,
+                "stop": 1771574051.8751562,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "passed",
+                "duration": 0.00023325000003637797,
+                "start": 1771574051.8757503,
+                "stop": 1771574051.8760662,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0004179590000035205,
+                "start": 1771574051.8761575,
+                "stop": 1771574051.879018,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 5, 'implication_accuracy': 2, 'rationale': \"The agent correctly recommends 50% dose reduction w...d states 50-75% DPD activity when CPIC specifies 30-70% activity for this genotype.\", 'recommendation_completeness': 5}\n\n    def test_implication_accuracy(judge_scores):\n        \"\"\"LLM judge: is the stated implication correct for this genotype?\"\"\"\n        score = judge_scores[\"implication_accuracy\"]\n>       assert score >= 4, (\n            f\"Implication accuracy {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Implication accuracy 2/5 (need >= 4). Rationale: The agent correctly recommends 50% dose reduction with titration and enhanced monitoring, capturing all key clinical details. However, the agent incorrectly classifies this as 'Strong' instead of 'Moderate' and states 50-75% DPD activity when CPIC specifies 30-70% activity for this genotype.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:96: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

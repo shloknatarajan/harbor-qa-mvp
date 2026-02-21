@@ -1,0 +1,62 @@
+trap 'rm -rf /tmp/codex-secrets "$CODEX_HOME/auth.json"' EXIT TERM INT; codex exec --dangerously-bypass-approvals-and-sandbox --skip-git-repo-check --model gpt-5 --json --enable unified_exec -c model_reasoning_effort=high -- 'You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.
+
+There are **4 questions** below. For each question, determine the correct answer letter.
+
+## Question 1
+
+Genotype GG is associated with increased likelihood of cardiotoxicity when treated with ______ in children with Neoplasms as compared to genotypes AA + AG.
+
+Which drug correctly fills in the blank?
+
+- a) Antiemetics And Antinauseants
+- b) Insulins And Analogues
+- c) Analgesics and anesthetics
+- d) anthracyclines and related substances
+
+## Question 2
+
+Genotype GG is associated with increased likelihood of cardiotoxicity when treated with ______ in children with Neoplasms as compared to genotypes AA + AG.
+
+Which drug correctly fills in the blank?
+
+- a) None of the options
+- b) Insulins And Analogues
+- c) Antiemetics And Antinauseants
+- d) Analgesics and anesthetics
+
+## Question 3
+
+Genotype GG is associated with increased likelihood of cardiotoxicity when treated with ______ in children with Neoplasms as compared to genotypes G/del + del/del.
+
+Which drug correctly fills in the blank?
+
+- a) Analgesics and anesthetics
+- b) Insulins And Analogues
+- c) Antiemetics And Antinauseants
+- d) anthracyclines and related substances
+
+## Question 4
+
+Genotype GG is associated with increased likelihood of cardiotoxicity when treated with ______ in children with Neoplasms as compared to genotypes G/del + del/del.
+
+Which drug correctly fills in the blank?
+
+- a) Insulins And Analogues
+- b) Analgesics and anesthetics
+- c) None of the options
+- d) Antiemetics And Antinauseants
+
+---
+
+Write your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:
+
+```json
+{
+  "1": "a",
+  "2": "a",
+  "3": "a"
+}
+```
+
+You must answer all 4 questions (keys "1" through "4").
+' 2>&1 </dev/null | tee /logs/agent/codex.txt

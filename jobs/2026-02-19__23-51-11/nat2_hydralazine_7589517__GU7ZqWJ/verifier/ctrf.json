@@ -1,0 +1,65 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 1,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771574639.8195696,
+            "stop": 1771574643.8288548
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.0004227489999948375,
+                "start": 1771574639.8467512,
+                "stop": 1771574639.8473089,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.948877168999843,
+                "start": 1771574639.8474116,
+                "stop": 1771574643.8248258,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 2, 'rationale': 'The agent recommends standard dosing while CPIC exp...uirements and focuses on DILE monitoring instead of dose optimization for efficacy.', 'recommendation_completeness': 1}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 1/5 (need >= 4). Rationale: The agent recommends standard dosing while CPIC explicitly requires starting with at least 75mg and titrating up to 300mg (50-100% higher than poor metabolizers). The agent completely misses the core dosing requirements and focuses on DILE monitoring instead of dose optimization for efficacy.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00044016600008944806,
+                "start": 1771574643.8252735,
+                "stop": 1771574643.8270378,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 2, 'rationale': 'The agent recommends standard dosing while CPIC exp...uirements and focuses on DILE monitoring instead of dose optimization for efficacy.', 'recommendation_completeness': 1}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 1/5 (need >= 4). Rationale: The agent recommends standard dosing while CPIC explicitly requires starting with at least 75mg and titrating up to 300mg (50-100% higher than poor metabolizers). The agent completely misses the core dosing requirements and focuses on DILE monitoring instead of dose optimization for efficacy.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0003365829998074332,
+                "start": 1771574643.8271735,
+                "stop": 1771574643.8286245,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 2, 'rationale': 'The agent recommends standard dosing while CPIC exp...uirements and focuses on DILE monitoring instead of dose optimization for efficacy.', 'recommendation_completeness': 1}\n\n    def test_implication_accuracy(judge_scores):\n        \"\"\"LLM judge: is the stated implication correct for this genotype?\"\"\"\n        score = judge_scores[\"implication_accuracy\"]\n>       assert score >= 4, (\n            f\"Implication accuracy {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Implication accuracy 2/5 (need >= 4). Rationale: The agent recommends standard dosing while CPIC explicitly requires starting with at least 75mg and titrating up to 300mg (50-100% higher than poor metabolizers). The agent completely misses the core dosing requirements and focuses on DILE monitoring instead of dose optimization for efficacy.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:96: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

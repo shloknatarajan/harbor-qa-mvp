@@ -1,0 +1,382 @@
+{
+  "schema_version": "ATIF-v1.2",
+  "session_id": "ba37c427-f802-4516-be61-5c529f015a55",
+  "agent": {
+    "name": "claude-code",
+    "version": "2.1.49",
+    "model_name": "claude-sonnet-4-6",
+    "extra": {
+      "cwds": [
+        "/app"
+      ],
+      "git_branches": [
+        "HEAD"
+      ]
+    }
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "timestamp": "2026-02-20T11:46:57.801Z",
+      "source": "user",
+      "message": "You are answering pharmacogenomics multiple-choice questions. One or more research papers are available in `/app/papers/` — read them to find the answers.\n\nThere are **2 questions** below. For each question, determine the correct answer letter.\n\n## Question 1\n\nHLA-B *15:02 is associated with increased likelihood of Stevens-Johnson Syndrome when treated with ______ in people with Epilepsy.\n\nWhich drug correctly fills in the blank?\n\n- a) dacarbazine\n- b) procarbazine\n- c) carbamazepine\n- d) oxcarbazepine\n\n## Question 2\n\nHLA-B *15:02 is associated with increased likelihood of Stevens-Johnson Syndrome when treated with ______ in people with Epilepsy.\n\nWhich drug correctly fills in the blank?\n\n- a) None of the options\n- b) oxcarbazepine\n- c) procarbazine\n- d) dacarbazine\n\n---\n\nWrite your answers to `/app/answers.json` as a JSON object mapping question numbers (as strings) to answer letters. For example:\n\n```json\n{\n  \"1\": \"a\",\n  \"2\": \"a\"\n}\n```\n\nYou must answer all 2 questions (keys \"1\" through \"2\").",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 2,
+      "timestamp": "2026-02-20T11:46:59.742Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "",
+      "reasoning_content": "null",
+      "metrics": {
+        "prompt_tokens": 18422,
+        "completion_tokens": 0,
+        "cached_tokens": 18420,
+        "extra": {
+          "cache_creation_input_tokens": 1117,
+          "cache_read_input_tokens": 18420,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 1117,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 3,
+      "timestamp": "2026-02-20T11:47:00.107Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "Executed Glob toolu_01NiE4QxpfX48FoKReXfVfQZ",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01NiE4QxpfX48FoKReXfVfQZ",
+          "function_name": "Glob",
+          "arguments": {
+            "pattern": "/app/papers/**/*"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01NiE4QxpfX48FoKReXfVfQZ",
+            "content": "/app/papers/PMC10374328.md\n\n[metadata] {\"filenames\": [\"/app/papers/PMC10374328.md\"], \"durationMs\": 131, \"numFiles\": 1, \"truncated\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 18422,
+        "completion_tokens": 0,
+        "cached_tokens": 18420,
+        "extra": {
+          "cache_creation_input_tokens": 1117,
+          "cache_read_input_tokens": 18420,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 1117,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false,
+        "tool_use_name": "Glob",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "filenames": [
+              "/app/papers/PMC10374328.md"
+            ],
+            "durationMs": 131,
+            "numFiles": 1,
+            "truncated": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01NiE4QxpfX48FoKReXfVfQZ",
+            "type": "tool_result",
+            "content": "/app/papers/PMC10374328.md"
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "filenames": [
+              "/app/papers/PMC10374328.md"
+            ],
+            "durationMs": 131,
+            "numFiles": 1,
+            "truncated": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01NiE4QxpfX48FoKReXfVfQZ",
+            "type": "tool_result",
+            "content": "/app/papers/PMC10374328.md"
+          }
+        },
+        "raw_arguments": {
+          "pattern": "/app/papers/**/*"
+        }
+      }
+    },
+    {
+      "step_id": 4,
+      "timestamp": "2026-02-20T11:47:02.660Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "Executed Grep toolu_018WcTwkP2gkCKrPxLSvwqkR",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_018WcTwkP2gkCKrPxLSvwqkR",
+          "function_name": "Grep",
+          "arguments": {
+            "pattern": "HLA-B.*15:02|Stevens-Johnson|carbamazepine|oxcarbazepine",
+            "path": "/app/papers/PMC10374328.md",
+            "output_mode": "content",
+            "context": 3
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_018WcTwkP2gkCKrPxLSvwqkR",
+            "content": "1:# The pharmacogenomics of carbamazepine-induced cutaneous adverse drug reaction in the South of Vietnam\n2-\n3-## Metadata\n4-**Authors:** Ai-Hoc Nguyen, Chonlaphat Sukasem, Quy Ngoc Nguyen, Hong Tham Pham\n--\n12-\n13-## Abstract\n14-\n15:Background: The relationship between HLA-B*15:02 and Severe Cutaneous Adverse Reactions was rigorously examined in Japanese, Han Chinese, Thais, and Caucasians. However, the number of studies about this topic in Vietnamese population is still limited and mostly focuses on the North of Vietnam.\n16-\n17-Objective: This study aims to clarify the genetic culprit of SCARs in Vietnamese population, particularly in the South of Vietnam, and to validate our result by a meta-analysis about this topic in Vietnamese.\n18-\n19:Method: A retrospective case-control study with 37 patients treated with carbamazepine monotherapy. Statistical calculation and meta-analysis were performed by R software.\n20-\n21:Result: HLA-B*15:02 increases the risk of SJS 12.5 times higher in CBZ-treated patients (p-value = 0.017). However, this allele has no impact on MCARs (Mild Cutaneous Adverse Reactions) of CBZ. The number needed to test and the number needed to genotype is two and nine patients respectively.\n22-\n23-Conclusion: This study recommends more investigations about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\n24-\n25:Keywords: pharmacogenomics, Vietnam, HLA-B*15:02, SJS, MCARs, SCARs, epileptic, carbamazepine\n26-\n27-## 1 Introduction\n28-\n29-[Omitted long context line]\n30-\n31:[Omitted long matching line]\n32-\n33-[Omitted long context line]\n34-\n35:*HLA-B*15:02* is not only important in the treatment of Carbamazepine, but also in its structural analog, Oxcarbazepine ([Phillips et al., 2018](#B20)). The cross-reactivity of *HLA-B*1502* contributes to the improvement in cost-effectiveness, making this allele a worthy investment for personalized therapy.\n36-\n37-In this study, we aimed to clarify the genetic culprit of SCARs in the Vietnamese population, particularly in the South of Vietnam. We also compare the associated risk and genetic patterns in the population between the south and the north of Vietnam or other countries.\n38-\n--\n62-\n63-### 2.4 Meta-analysis\n64-\n65:[Omitted long matching line]\n66-\n67-### FIGURE 2.\n68-\n--\n116-\n117-Table 1 Caption: Demographic data of recruited epileptic patients.\n118-\n119:Among twelve carbamazepine-induced MCARs patients, five patients were diagnosed with itching skin and hypersensitivity reactions, six patients were diagnosed with symptomatic allergy and skin reactions of allergy, and one patient was diagnosed with anaphylaxis level 1 due to CBZ allergy. It is important to note that none of the twelve patients exhibited symptoms specific enough to be classified as SJS/TEN.\n120-\n121-### 3.2 The frequencies of HLA-B alleles detected in Southern Vietnamese\n122-\n123:[Table 2](#T2) shows the HLA allele polymorphism in the epileptic southern population of Vietnam, where a total of 22 alleles were observed. The most popular *HLA-B* alleles are *15:02* (20%), *38:02* (10%), and *46:01* (10%). There is a 5% of frequency in each of the following alleles: 7:05; 18:01, 37:01, 57:01. The rest 15 alleles account for around 1.7%–6.7% of the whole population.\n124-\n125-### TABLE 2.\n126-\n--\n135-\n136-Table 2 Caption: The frequencies of detected HLA-B alleles in the population of Southern Vietnamese.\n137-\n138:### 3.3 The increased risk patients carrying HLA-B*15:02 in Southern Vietnamese\n139-\n140:[Omitted long matching line]\n141-\n142-### TABLE 3.\n143-\n--\n150-\n151-Table 3 Caption: The association and odd ratio of HLA-B alleles.\n152-\n153:Out of the twelve cases of allopurinol-induced MCARs, three patients tested positive for *HLA-B*15:02*. While the strength of evidence is not large enough to be statistically significant, it is worth noting that the rate of *HLA-B*15:02* in the MCARs group is higher compared to the group of tolerant controls.\n154-\n155-### 3.4 Meta-analysis\n156-\n157:[Omitted long matching line]\n158-\n159-### FIGURE 3.\n160-\n--\n162-\n163-[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10374328_fphar-14-1217516-g003.jpg)\n164-\n165:Forest plot of the association between HLA-B*15:02 and SCARs in Vietnamese.\n166-\n167-## 4 Discussion\n168-\n169-This is the first case-control study to investigate the pharmacogenomics of CBZ-induced SJS in Southern Vietnam. Based on the evidence that the pharmacogenomic test can protect one case of SJS with every two interventions or every nine genetic tests, we recommend implementing this test in the population of Southern Vietnamese.\n170-\n171:[Omitted long matching line]\n172-\n173:[Omitted long matching line]\n174-\n175:[Omitted long matching line]\n176-\n177-[Omitted long context line]\n178-\n179:[Omitted long matching line]\n180-\n181:In conclusion, this study confirms the association between CBZ-induced SJS and *HLA-B*15:02* in Vietnamese, particularly in the Southern population. Therefore, it is recommended to perform further studies about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\n182-\n183-## Acknowledgments\n184-\n--\n232-\n233-[Omitted long context line]\n234-\n235:[Omitted long matching line]\n236-\n237:[Omitted long matching line]\n238-\n239-[Omitted long context line]\n240-\n241:[Omitted long matching line]\n242-\n243-[Omitted long context line]\n244-\n--\n248-\n249-[Omitted long context line]\n250-\n251:[Omitted long matching line]\n252-\n253:11. Khosama H. (2017). HLA-B* 1502 and carbamazepine induced Stevens-Johnson syndrome/toxic epidermal necrolysis in Indonesia. Neurol. Asia 22 (2).  [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Neurol.%20Asia&title=HLA-B*%201502%20and%20carbamazepine%20induced%20Stevens-Johnson%20syndrome/toxic%20epidermal%20necrolysis%20in%20Indonesia&author=H.%20Khosama&volume=22&issue=2&publication_year=2017&)\n254-\n255-[Omitted long context line]\n256-\n257:[Omitted long matching line]\n258-\n259:[Omitted long matching line]\n260-\n261-[Omitted long context line]\n262-\n263-[Omitted long context line]\n264-\n265:[Omitted long matching line]\n266-\n267-[Omitted long context line]\n268-\n269-[Omitted long context line]\n270-\n271:[Omitted long matching line]\n272-\n273-[Omitted long context line]\n274-\n275-22. Snell G. D. (1981). Studies in histocompatibility. Science 213 (4504), 172–178. 10.1126/science.7017931  [DOI](https://doi.org/10.1126/science.7017931) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/7017931/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Science&title=Studies%20in%20histocompatibility&author=G.%20D.%20Snell&volume=213&issue=4504&publication_year=1981&pages=172-178&pmid=7017931&doi=10.1126/science.7017931&)\n276-\n277:[Omitted long matching line]\n278-\n279:[Omitted long matching line]\n280-\n281-25. Thorsby E. (2009). A short history of HLA. Tissue antigens 74 (2), 101–116. 10.1111/j.1399-0039.2009.01291.x  [DOI](https://doi.org/10.1111/j.1399-0039.2009.01291.x) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/19523022/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Tissue%20antigens&title=A%20short%20history%20of%20HLA&author=E.%20Thorsby&volume=74&issue=2&publication_year=2009&pages=101-116&pmid=19523022&doi=10.1111/j.1399-0039.2009.01291.x&)\n282-\n--\n284-\n285-[Omitted long context line]\n286-\n287:[Omitted long matching line]\n288-\n289:[Omitted long matching line]\n290-\n291:[Omitted long matching line]\n292-\n293-[Omitted long context line]\n294-\n295:[Omitted long matching line]\n296-\n297:[Omitted long matching line]\n\n[metadata] {\"mode\": \"content\", \"numFiles\": 0, \"filenames\": [], \"content\": \"1:# The pharmacogenomics of carbamazepine-induced cutaneous adverse drug reaction in the South of Vietnam\\n2-\\n3-## Metadata\\n4-**Authors:** Ai-Hoc Nguyen, Chonlaphat Sukasem, Quy Ngoc Nguyen, Hong Tham Pham\\n--\\n12-\\n13-## Abstract\\n14-\\n15:Background: The relationship between HLA-B*15:02 and Severe Cutaneous Adverse Reactions was rigorously examined in Japanese, Han Chinese, Thais, and Caucasians. However, the number of studies about this topic in Vietnamese population is still limited and mostly focuses on the North of Vietnam.\\n16-\\n17-Objective: This study aims to clarify the genetic culprit of SCARs in Vietnamese population, particularly in the South of Vietnam, and to validate our result by a meta-analysis about this topic in Vietnamese.\\n18-\\n19:Method: A retrospective case-control study with 37 patients treated with carbamazepine monotherapy. Statistical calculation and meta-analysis were performed by R software.\\n20-\\n21:Result: HLA-B*15:02 increases the risk of SJS 12.5 times higher in CBZ-treated patients (p-value = 0.017). However, this allele has no impact on MCARs (Mild Cutaneous Adverse Reactions) of CBZ. The number needed to test and the number needed to genotype is two and nine patients respectively.\\n22-\\n23-Conclusion: This study recommends more investigations about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\\n24-\\n25:Keywords: pharmacogenomics, Vietnam, HLA-B*15:02, SJS, MCARs, SCARs, epileptic, carbamazepine\\n26-\\n27-## 1 Introduction\\n28-\\n29-[Omitted long context line]\\n30-\\n31:[Omitted long matching line]\\n32-\\n33-[Omitted long context line]\\n34-\\n35:*HLA-B*15:02* is not only important in the treatment of Carbamazepine, but also in its structural analog, Oxcarbazepine ([Phillips et al., 2018](#B20)). The cross-reactivity of *HLA-B*1502* contributes to the improvement in cost-effectiveness, making this allele a worthy investment for personalized therapy.\\n36-\\n37-In this study, we aimed to clarify the genetic culprit of SCARs in the Vietnamese population, particularly in the South of Vietnam. We also compare the associated risk and genetic patterns in the population between the south and the north of Vietnam or other countries.\\n38-\\n--\\n62-\\n63-### 2.4 Meta-analysis\\n64-\\n65:[Omitted long matching line]\\n66-\\n67-### FIGURE 2.\\n68-\\n--\\n116-\\n117-Table 1 Caption: Demographic data of recruited epileptic patients.\\n118-\\n119:Among twelve carbamazepine-induced MCARs patients, five patients were diagnosed with itching skin and hypersensitivity reactions, six patients were diagnosed with symptomatic allergy and skin reactions of allergy, and one patient was diagnosed with anaphylaxis level 1 due to CBZ allergy. It is important to note that none of the twelve patients exhibited symptoms specific enough to be classified as SJS/TEN.\\n120-\\n121-### 3.2 The frequencies of HLA-B alleles detected in Southern Vietnamese\\n122-\\n123:[Table 2](#T2) shows the HLA allele polymorphism in the epileptic southern population of Vietnam, where a total of 22 alleles were observed. The most popular *HLA-B* alleles are *15:02* (20%), *38:02* (10%), and *46:01* (10%). There is a 5% of frequency in each of the following alleles: 7:05; 18:01, 37:01, 57:01. The rest 15 alleles account for around 1.7%–6.7% of the whole population.\\n124-\\n125-### TABLE 2.\\n126-\\n--\\n135-\\n136-Table 2 Caption: The frequencies of detected HLA-B alleles in the population of Southern Vietnamese.\\n137-\\n138:### 3.3 The increased risk patients carrying HLA-B*15:02 in Southern Vietnamese\\n139-\\n140:[Omitted long matching line]\\n141-\\n142-### TABLE 3.\\n143-\\n--\\n150-\\n151-Table 3 Caption: The association and odd ratio of HLA-B alleles.\\n152-\\n153:Out of the twelve cases of allopurinol-induced MCARs, three patients tested positive for *HLA-B*15:02*. While the strength of evidence is not large enough to be statistically significant, it is worth noting that the rate of *HLA-B*15:02* in the MCARs group is higher compared to the group of tolerant controls.\\n154-\\n155-### 3.4 Meta-analysis\\n156-\\n157:[Omitted long matching line]\\n158-\\n159-### FIGURE 3.\\n160-\\n--\\n162-\\n163-[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10374328_fphar-14-1217516-g003.jpg)\\n164-\\n165:Forest plot of the association between HLA-B*15:02 and SCARs in Vietnamese.\\n166-\\n167-## 4 Discussion\\n168-\\n169-This is the first case-control study to investigate the pharmacogenomics of CBZ-induced SJS in Southern Vietnam. Based on the evidence that the pharmacogenomic test can protect one case of SJS with every two interventions or every nine genetic tests, we recommend implementing this test in the population of Southern Vietnamese.\\n170-\\n171:[Omitted long matching line]\\n172-\\n173:[Omitted long matching line]\\n174-\\n175:[Omitted long matching line]\\n176-\\n177-[Omitted long context line]\\n178-\\n179:[Omitted long matching line]\\n180-\\n181:In conclusion, this study confirms the association between CBZ-induced SJS and *HLA-B*15:02* in Vietnamese, particularly in the Southern population. Therefore, it is recommended to perform further studies about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\\n182-\\n183-## Acknowledgments\\n184-\\n--\\n232-\\n233-[Omitted long context line]\\n234-\\n235:[Omitted long matching line]\\n236-\\n237:[Omitted long matching line]\\n238-\\n239-[Omitted long context line]\\n240-\\n241:[Omitted long matching line]\\n242-\\n243-[Omitted long context line]\\n244-\\n--\\n248-\\n249-[Omitted long context line]\\n250-\\n251:[Omitted long matching line]\\n252-\\n253:11. Khosama H. (2017). HLA-B* 1502 and carbamazepine induced Stevens-Johnson syndrome/toxic epidermal necrolysis in Indonesia. Neurol. Asia 22 (2).  [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Neurol.%20Asia&title=HLA-B*%201502%20and%20carbamazepine%20induced%20Stevens-Johnson%20syndrome/toxic%20epidermal%20necrolysis%20in%20Indonesia&author=H.%20Khosama&volume=22&issue=2&publication_year=2017&)\\n254-\\n255-[Omitted long context line]\\n256-\\n257:[Omitted long matching line]\\n258-\\n259:[Omitted long matching line]\\n260-\\n261-[Omitted long context line]\\n262-\\n263-[Omitted long context line]\\n264-\\n265:[Omitted long matching line]\\n266-\\n267-[Omitted long context line]\\n268-\\n269-[Omitted long context line]\\n270-\\n271:[Omitted long matching line]\\n272-\\n273-[Omitted long context line]\\n274-\\n275-22. Snell G. D. (1981). Studies in histocompatibility. Science 213 (4504), 172–178. 10.1126/science.7017931  [DOI](https://doi.org/10.1126/science.7017931) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/7017931/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Science&title=Studies%20in%20histocompatibility&author=G.%20D.%20Snell&volume=213&issue=4504&publication_year=1981&pages=172-178&pmid=7017931&doi=10.1126/science.7017931&)\\n276-\\n277:[Omitted long matching line]\\n278-\\n279:[Omitted long matching line]\\n280-\\n281-25. Thorsby E. (2009). A short history of HLA. Tissue antigens 74 (2), 101–116. 10.1111/j.1399-0039.2009.01291.x  [DOI](https://doi.org/10.1111/j.1399-0039.2009.01291.x) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/19523022/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Tissue%20antigens&title=A%20short%20history%20of%20HLA&author=E.%20Thorsby&volume=74&issue=2&publication_year=2009&pages=101-116&pmid=19523022&doi=10.1111/j.1399-0039.2009.01291.x&)\\n282-\\n--\\n284-\\n285-[Omitted long context line]\\n286-\\n287:[Omitted long matching line]\\n288-\\n289:[Omitted long matching line]\\n290-\\n291:[Omitted long matching line]\\n292-\\n293-[Omitted long context line]\\n294-\\n295:[Omitted long matching line]\\n296-\\n297:[Omitted long matching line]\", \"numLines\": 163}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 19538,
+        "completion_tokens": 25,
+        "cached_tokens": 19537,
+        "extra": {
+          "cache_creation_input_tokens": 127,
+          "cache_read_input_tokens": 19537,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 127,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false,
+        "tool_use_name": "Grep",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "mode": "content",
+            "numFiles": 0,
+            "filenames": [],
+            "content": "1:# The pharmacogenomics of carbamazepine-induced cutaneous adverse drug reaction in the South of Vietnam\n2-\n3-## Metadata\n4-**Authors:** Ai-Hoc Nguyen, Chonlaphat Sukasem, Quy Ngoc Nguyen, Hong Tham Pham\n--\n12-\n13-## Abstract\n14-\n15:Background: The relationship between HLA-B*15:02 and Severe Cutaneous Adverse Reactions was rigorously examined in Japanese, Han Chinese, Thais, and Caucasians. However, the number of studies about this topic in Vietnamese population is still limited and mostly focuses on the North of Vietnam.\n16-\n17-Objective: This study aims to clarify the genetic culprit of SCARs in Vietnamese population, particularly in the South of Vietnam, and to validate our result by a meta-analysis about this topic in Vietnamese.\n18-\n19:Method: A retrospective case-control study with 37 patients treated with carbamazepine monotherapy. Statistical calculation and meta-analysis were performed by R software.\n20-\n21:Result: HLA-B*15:02 increases the risk of SJS 12.5 times higher in CBZ-treated patients (p-value = 0.017). However, this allele has no impact on MCARs (Mild Cutaneous Adverse Reactions) of CBZ. The number needed to test and the number needed to genotype is two and nine patients respectively.\n22-\n23-Conclusion: This study recommends more investigations about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\n24-\n25:Keywords: pharmacogenomics, Vietnam, HLA-B*15:02, SJS, MCARs, SCARs, epileptic, carbamazepine\n26-\n27-## 1 Introduction\n28-\n29-[Omitted long context line]\n30-\n31:[Omitted long matching line]\n32-\n33-[Omitted long context line]\n34-\n35:*HLA-B*15:02* is not only important in the treatment of Carbamazepine, but also in its structural analog, Oxcarbazepine ([Phillips et al., 2018](#B20)). The cross-reactivity of *HLA-B*1502* contributes to the improvement in cost-effectiveness, making this allele a worthy investment for personalized therapy.\n36-\n37-In this study, we aimed to clarify the genetic culprit of SCARs in the Vietnamese population, particularly in the South of Vietnam. We also compare the associated risk and genetic patterns in the population between the south and the north of Vietnam or other countries.\n38-\n--\n62-\n63-### 2.4 Meta-analysis\n64-\n65:[Omitted long matching line]\n66-\n67-### FIGURE 2.\n68-\n--\n116-\n117-Table 1 Caption: Demographic data of recruited epileptic patients.\n118-\n119:Among twelve carbamazepine-induced MCARs patients, five patients were diagnosed with itching skin and hypersensitivity reactions, six patients were diagnosed with symptomatic allergy and skin reactions of allergy, and one patient was diagnosed with anaphylaxis level 1 due to CBZ allergy. It is important to note that none of the twelve patients exhibited symptoms specific enough to be classified as SJS/TEN.\n120-\n121-### 3.2 The frequencies of HLA-B alleles detected in Southern Vietnamese\n122-\n123:[Table 2](#T2) shows the HLA allele polymorphism in the epileptic southern population of Vietnam, where a total of 22 alleles were observed. The most popular *HLA-B* alleles are *15:02* (20%), *38:02* (10%), and *46:01* (10%). There is a 5% of frequency in each of the following alleles: 7:05; 18:01, 37:01, 57:01. The rest 15 alleles account for around 1.7%–6.7% of the whole population.\n124-\n125-### TABLE 2.\n126-\n--\n135-\n136-Table 2 Caption: The frequencies of detected HLA-B alleles in the population of Southern Vietnamese.\n137-\n138:### 3.3 The increased risk patients carrying HLA-B*15:02 in Southern Vietnamese\n139-\n140:[Omitted long matching line]\n141-\n142-### TABLE 3.\n143-\n--\n150-\n151-Table 3 Caption: The association and odd ratio of HLA-B alleles.\n152-\n153:Out of the twelve cases of allopurinol-induced MCARs, three patients tested positive for *HLA-B*15:02*. While the strength of evidence is not large enough to be statistically significant, it is worth noting that the rate of *HLA-B*15:02* in the MCARs group is higher compared to the group of tolerant controls.\n154-\n155-### 3.4 Meta-analysis\n156-\n157:[Omitted long matching line]\n158-\n159-### FIGURE 3.\n160-\n--\n162-\n163-[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10374328_fphar-14-1217516-g003.jpg)\n164-\n165:Forest plot of the association between HLA-B*15:02 and SCARs in Vietnamese.\n166-\n167-## 4 Discussion\n168-\n169-This is the first case-control study to investigate the pharmacogenomics of CBZ-induced SJS in Southern Vietnam. Based on the evidence that the pharmacogenomic test can protect one case of SJS with every two interventions or every nine genetic tests, we recommend implementing this test in the population of Southern Vietnamese.\n170-\n171:[Omitted long matching line]\n172-\n173:[Omitted long matching line]\n174-\n175:[Omitted long matching line]\n176-\n177-[Omitted long context line]\n178-\n179:[Omitted long matching line]\n180-\n181:In conclusion, this study confirms the association between CBZ-induced SJS and *HLA-B*15:02* in Vietnamese, particularly in the Southern population. Therefore, it is recommended to perform further studies about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\n182-\n183-## Acknowledgments\n184-\n--\n232-\n233-[Omitted long context line]\n234-\n235:[Omitted long matching line]\n236-\n237:[Omitted long matching line]\n238-\n239-[Omitted long context line]\n240-\n241:[Omitted long matching line]\n242-\n243-[Omitted long context line]\n244-\n--\n248-\n249-[Omitted long context line]\n250-\n251:[Omitted long matching line]\n252-\n253:11. Khosama H. (2017). HLA-B* 1502 and carbamazepine induced Stevens-Johnson syndrome/toxic epidermal necrolysis in Indonesia. Neurol. Asia 22 (2).  [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Neurol.%20Asia&title=HLA-B*%201502%20and%20carbamazepine%20induced%20Stevens-Johnson%20syndrome/toxic%20epidermal%20necrolysis%20in%20Indonesia&author=H.%20Khosama&volume=22&issue=2&publication_year=2017&)\n254-\n255-[Omitted long context line]\n256-\n257:[Omitted long matching line]\n258-\n259:[Omitted long matching line]\n260-\n261-[Omitted long context line]\n262-\n263-[Omitted long context line]\n264-\n265:[Omitted long matching line]\n266-\n267-[Omitted long context line]\n268-\n269-[Omitted long context line]\n270-\n271:[Omitted long matching line]\n272-\n273-[Omitted long context line]\n274-\n275-22. Snell G. D. (1981). Studies in histocompatibility. Science 213 (4504), 172–178. 10.1126/science.7017931  [DOI](https://doi.org/10.1126/science.7017931) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/7017931/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Science&title=Studies%20in%20histocompatibility&author=G.%20D.%20Snell&volume=213&issue=4504&publication_year=1981&pages=172-178&pmid=7017931&doi=10.1126/science.7017931&)\n276-\n277:[Omitted long matching line]\n278-\n279:[Omitted long matching line]\n280-\n281-25. Thorsby E. (2009). A short history of HLA. Tissue antigens 74 (2), 101–116. 10.1111/j.1399-0039.2009.01291.x  [DOI](https://doi.org/10.1111/j.1399-0039.2009.01291.x) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/19523022/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Tissue%20antigens&title=A%20short%20history%20of%20HLA&author=E.%20Thorsby&volume=74&issue=2&publication_year=2009&pages=101-116&pmid=19523022&doi=10.1111/j.1399-0039.2009.01291.x&)\n282-\n--\n284-\n285-[Omitted long context line]\n286-\n287:[Omitted long matching line]\n288-\n289:[Omitted long matching line]\n290-\n291:[Omitted long matching line]\n292-\n293-[Omitted long context line]\n294-\n295:[Omitted long matching line]\n296-\n297:[Omitted long matching line]",
+            "numLines": 163
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_018WcTwkP2gkCKrPxLSvwqkR",
+            "type": "tool_result",
+            "content": "1:# The pharmacogenomics of carbamazepine-induced cutaneous adverse drug reaction in the South of Vietnam\n2-\n3-## Metadata\n4-**Authors:** Ai-Hoc Nguyen, Chonlaphat Sukasem, Quy Ngoc Nguyen, Hong Tham Pham\n--\n12-\n13-## Abstract\n14-\n15:Background: The relationship between HLA-B*15:02 and Severe Cutaneous Adverse Reactions was rigorously examined in Japanese, Han Chinese, Thais, and Caucasians. However, the number of studies about this topic in Vietnamese population is still limited and mostly focuses on the North of Vietnam.\n16-\n17-Objective: This study aims to clarify the genetic culprit of SCARs in Vietnamese population, particularly in the South of Vietnam, and to validate our result by a meta-analysis about this topic in Vietnamese.\n18-\n19:Method: A retrospective case-control study with 37 patients treated with carbamazepine monotherapy. Statistical calculation and meta-analysis were performed by R software.\n20-\n21:Result: HLA-B*15:02 increases the risk of SJS 12.5 times higher in CBZ-treated patients (p-value = 0.017). However, this allele has no impact on MCARs (Mild Cutaneous Adverse Reactions) of CBZ. The number needed to test and the number needed to genotype is two and nine patients respectively.\n22-\n23-Conclusion: This study recommends more investigations about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\n24-\n25:Keywords: pharmacogenomics, Vietnam, HLA-B*15:02, SJS, MCARs, SCARs, epileptic, carbamazepine\n26-\n27-## 1 Introduction\n28-\n29-[Omitted long context line]\n30-\n31:[Omitted long matching line]\n32-\n33-[Omitted long context line]\n34-\n35:*HLA-B*15:02* is not only important in the treatment of Carbamazepine, but also in its structural analog, Oxcarbazepine ([Phillips et al., 2018](#B20)). The cross-reactivity of *HLA-B*1502* contributes to the improvement in cost-effectiveness, making this allele a worthy investment for personalized therapy.\n36-\n37-In this study, we aimed to clarify the genetic culprit of SCARs in the Vietnamese population, particularly in the South of Vietnam. We also compare the associated risk and genetic patterns in the population between the south and the north of Vietnam or other countries.\n38-\n--\n62-\n63-### 2.4 Meta-analysis\n64-\n65:[Omitted long matching line]\n66-\n67-### FIGURE 2.\n68-\n--\n116-\n117-Table 1 Caption: Demographic data of recruited epileptic patients.\n118-\n119:Among twelve carbamazepine-induced MCARs patients, five patients were diagnosed with itching skin and hypersensitivity reactions, six patients were diagnosed with symptomatic allergy and skin reactions of allergy, and one patient was diagnosed with anaphylaxis level 1 due to CBZ allergy. It is important to note that none of the twelve patients exhibited symptoms specific enough to be classified as SJS/TEN.\n120-\n121-### 3.2 The frequencies of HLA-B alleles detected in Southern Vietnamese\n122-\n123:[Table 2](#T2) shows the HLA allele polymorphism in the epileptic southern population of Vietnam, where a total of 22 alleles were observed. The most popular *HLA-B* alleles are *15:02* (20%), *38:02* (10%), and *46:01* (10%). There is a 5% of frequency in each of the following alleles: 7:05; 18:01, 37:01, 57:01. The rest 15 alleles account for around 1.7%–6.7% of the whole population.\n124-\n125-### TABLE 2.\n126-\n--\n135-\n136-Table 2 Caption: The frequencies of detected HLA-B alleles in the population of Southern Vietnamese.\n137-\n138:### 3.3 The increased risk patients carrying HLA-B*15:02 in Southern Vietnamese\n139-\n140:[Omitted long matching line]\n141-\n142-### TABLE 3.\n143-\n--\n150-\n151-Table 3 Caption: The association and odd ratio of HLA-B alleles.\n152-\n153:Out of the twelve cases of allopurinol-induced MCARs, three patients tested positive for *HLA-B*15:02*. While the strength of evidence is not large enough to be statistically significant, it is worth noting that the rate of *HLA-B*15:02* in the MCARs group is higher compared to the group of tolerant controls.\n154-\n155-### 3.4 Meta-analysis\n156-\n157:[Omitted long matching line]\n158-\n159-### FIGURE 3.\n160-\n--\n162-\n163-[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10374328_fphar-14-1217516-g003.jpg)\n164-\n165:Forest plot of the association between HLA-B*15:02 and SCARs in Vietnamese.\n166-\n167-## 4 Discussion\n168-\n169-This is the first case-control study to investigate the pharmacogenomics of CBZ-induced SJS in Southern Vietnam. Based on the evidence that the pharmacogenomic test can protect one case of SJS with every two interventions or every nine genetic tests, we recommend implementing this test in the population of Southern Vietnamese.\n170-\n171:[Omitted long matching line]\n172-\n173:[Omitted long matching line]\n174-\n175:[Omitted long matching line]\n176-\n177-[Omitted long context line]\n178-\n179:[Omitted long matching line]\n180-\n181:In conclusion, this study confirms the association between CBZ-induced SJS and *HLA-B*15:02* in Vietnamese, particularly in the Southern population. Therefore, it is recommended to perform further studies about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\n182-\n183-## Acknowledgments\n184-\n--\n232-\n233-[Omitted long context line]\n234-\n235:[Omitted long matching line]\n236-\n237:[Omitted long matching line]\n238-\n239-[Omitted long context line]\n240-\n241:[Omitted long matching line]\n242-\n243-[Omitted long context line]\n244-\n--\n248-\n249-[Omitted long context line]\n250-\n251:[Omitted long matching line]\n252-\n253:11. Khosama H. (2017). HLA-B* 1502 and carbamazepine induced Stevens-Johnson syndrome/toxic epidermal necrolysis in Indonesia. Neurol. Asia 22 (2).  [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Neurol.%20Asia&title=HLA-B*%201502%20and%20carbamazepine%20induced%20Stevens-Johnson%20syndrome/toxic%20epidermal%20necrolysis%20in%20Indonesia&author=H.%20Khosama&volume=22&issue=2&publication_year=2017&)\n254-\n255-[Omitted long context line]\n256-\n257:[Omitted long matching line]\n258-\n259:[Omitted long matching line]\n260-\n261-[Omitted long context line]\n262-\n263-[Omitted long context line]\n264-\n265:[Omitted long matching line]\n266-\n267-[Omitted long context line]\n268-\n269-[Omitted long context line]\n270-\n271:[Omitted long matching line]\n272-\n273-[Omitted long context line]\n274-\n275-22. Snell G. D. (1981). Studies in histocompatibility. Science 213 (4504), 172–178. 10.1126/science.7017931  [DOI](https://doi.org/10.1126/science.7017931) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/7017931/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Science&title=Studies%20in%20histocompatibility&author=G.%20D.%20Snell&volume=213&issue=4504&publication_year=1981&pages=172-178&pmid=7017931&doi=10.1126/science.7017931&)\n276-\n277:[Omitted long matching line]\n278-\n279:[Omitted long matching line]\n280-\n281-25. Thorsby E. (2009). A short history of HLA. Tissue antigens 74 (2), 101–116. 10.1111/j.1399-0039.2009.01291.x  [DOI](https://doi.org/10.1111/j.1399-0039.2009.01291.x) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/19523022/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Tissue%20antigens&title=A%20short%20history%20of%20HLA&author=E.%20Thorsby&volume=74&issue=2&publication_year=2009&pages=101-116&pmid=19523022&doi=10.1111/j.1399-0039.2009.01291.x&)\n282-\n--\n284-\n285-[Omitted long context line]\n286-\n287:[Omitted long matching line]\n288-\n289:[Omitted long matching line]\n290-\n291:[Omitted long matching line]\n292-\n293-[Omitted long context line]\n294-\n295:[Omitted long matching line]\n296-\n297:[Omitted long matching line]"
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "mode": "content",
+            "numFiles": 0,
+            "filenames": [],
+            "content": "1:# The pharmacogenomics of carbamazepine-induced cutaneous adverse drug reaction in the South of Vietnam\n2-\n3-## Metadata\n4-**Authors:** Ai-Hoc Nguyen, Chonlaphat Sukasem, Quy Ngoc Nguyen, Hong Tham Pham\n--\n12-\n13-## Abstract\n14-\n15:Background: The relationship between HLA-B*15:02 and Severe Cutaneous Adverse Reactions was rigorously examined in Japanese, Han Chinese, Thais, and Caucasians. However, the number of studies about this topic in Vietnamese population is still limited and mostly focuses on the North of Vietnam.\n16-\n17-Objective: This study aims to clarify the genetic culprit of SCARs in Vietnamese population, particularly in the South of Vietnam, and to validate our result by a meta-analysis about this topic in Vietnamese.\n18-\n19:Method: A retrospective case-control study with 37 patients treated with carbamazepine monotherapy. Statistical calculation and meta-analysis were performed by R software.\n20-\n21:Result: HLA-B*15:02 increases the risk of SJS 12.5 times higher in CBZ-treated patients (p-value = 0.017). However, this allele has no impact on MCARs (Mild Cutaneous Adverse Reactions) of CBZ. The number needed to test and the number needed to genotype is two and nine patients respectively.\n22-\n23-Conclusion: This study recommends more investigations about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\n24-\n25:Keywords: pharmacogenomics, Vietnam, HLA-B*15:02, SJS, MCARs, SCARs, epileptic, carbamazepine\n26-\n27-## 1 Introduction\n28-\n29-[Omitted long context line]\n30-\n31:[Omitted long matching line]\n32-\n33-[Omitted long context line]\n34-\n35:*HLA-B*15:02* is not only important in the treatment of Carbamazepine, but also in its structural analog, Oxcarbazepine ([Phillips et al., 2018](#B20)). The cross-reactivity of *HLA-B*1502* contributes to the improvement in cost-effectiveness, making this allele a worthy investment for personalized therapy.\n36-\n37-In this study, we aimed to clarify the genetic culprit of SCARs in the Vietnamese population, particularly in the South of Vietnam. We also compare the associated risk and genetic patterns in the population between the south and the north of Vietnam or other countries.\n38-\n--\n62-\n63-### 2.4 Meta-analysis\n64-\n65:[Omitted long matching line]\n66-\n67-### FIGURE 2.\n68-\n--\n116-\n117-Table 1 Caption: Demographic data of recruited epileptic patients.\n118-\n119:Among twelve carbamazepine-induced MCARs patients, five patients were diagnosed with itching skin and hypersensitivity reactions, six patients were diagnosed with symptomatic allergy and skin reactions of allergy, and one patient was diagnosed with anaphylaxis level 1 due to CBZ allergy. It is important to note that none of the twelve patients exhibited symptoms specific enough to be classified as SJS/TEN.\n120-\n121-### 3.2 The frequencies of HLA-B alleles detected in Southern Vietnamese\n122-\n123:[Table 2](#T2) shows the HLA allele polymorphism in the epileptic southern population of Vietnam, where a total of 22 alleles were observed. The most popular *HLA-B* alleles are *15:02* (20%), *38:02* (10%), and *46:01* (10%). There is a 5% of frequency in each of the following alleles: 7:05; 18:01, 37:01, 57:01. The rest 15 alleles account for around 1.7%–6.7% of the whole population.\n124-\n125-### TABLE 2.\n126-\n--\n135-\n136-Table 2 Caption: The frequencies of detected HLA-B alleles in the population of Southern Vietnamese.\n137-\n138:### 3.3 The increased risk patients carrying HLA-B*15:02 in Southern Vietnamese\n139-\n140:[Omitted long matching line]\n141-\n142-### TABLE 3.\n143-\n--\n150-\n151-Table 3 Caption: The association and odd ratio of HLA-B alleles.\n152-\n153:Out of the twelve cases of allopurinol-induced MCARs, three patients tested positive for *HLA-B*15:02*. While the strength of evidence is not large enough to be statistically significant, it is worth noting that the rate of *HLA-B*15:02* in the MCARs group is higher compared to the group of tolerant controls.\n154-\n155-### 3.4 Meta-analysis\n156-\n157:[Omitted long matching line]\n158-\n159-### FIGURE 3.\n160-\n--\n162-\n163-[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10374328_fphar-14-1217516-g003.jpg)\n164-\n165:Forest plot of the association between HLA-B*15:02 and SCARs in Vietnamese.\n166-\n167-## 4 Discussion\n168-\n169-This is the first case-control study to investigate the pharmacogenomics of CBZ-induced SJS in Southern Vietnam. Based on the evidence that the pharmacogenomic test can protect one case of SJS with every two interventions or every nine genetic tests, we recommend implementing this test in the population of Southern Vietnamese.\n170-\n171:[Omitted long matching line]\n172-\n173:[Omitted long matching line]\n174-\n175:[Omitted long matching line]\n176-\n177-[Omitted long context line]\n178-\n179:[Omitted long matching line]\n180-\n181:In conclusion, this study confirms the association between CBZ-induced SJS and *HLA-B*15:02* in Vietnamese, particularly in the Southern population. Therefore, it is recommended to perform further studies about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\n182-\n183-## Acknowledgments\n184-\n--\n232-\n233-[Omitted long context line]\n234-\n235:[Omitted long matching line]\n236-\n237:[Omitted long matching line]\n238-\n239-[Omitted long context line]\n240-\n241:[Omitted long matching line]\n242-\n243-[Omitted long context line]\n244-\n--\n248-\n249-[Omitted long context line]\n250-\n251:[Omitted long matching line]\n252-\n253:11. Khosama H. (2017). HLA-B* 1502 and carbamazepine induced Stevens-Johnson syndrome/toxic epidermal necrolysis in Indonesia. Neurol. Asia 22 (2).  [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Neurol.%20Asia&title=HLA-B*%201502%20and%20carbamazepine%20induced%20Stevens-Johnson%20syndrome/toxic%20epidermal%20necrolysis%20in%20Indonesia&author=H.%20Khosama&volume=22&issue=2&publication_year=2017&)\n254-\n255-[Omitted long context line]\n256-\n257:[Omitted long matching line]\n258-\n259:[Omitted long matching line]\n260-\n261-[Omitted long context line]\n262-\n263-[Omitted long context line]\n264-\n265:[Omitted long matching line]\n266-\n267-[Omitted long context line]\n268-\n269-[Omitted long context line]\n270-\n271:[Omitted long matching line]\n272-\n273-[Omitted long context line]\n274-\n275-22. Snell G. D. (1981). Studies in histocompatibility. Science 213 (4504), 172–178. 10.1126/science.7017931  [DOI](https://doi.org/10.1126/science.7017931) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/7017931/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Science&title=Studies%20in%20histocompatibility&author=G.%20D.%20Snell&volume=213&issue=4504&publication_year=1981&pages=172-178&pmid=7017931&doi=10.1126/science.7017931&)\n276-\n277:[Omitted long matching line]\n278-\n279:[Omitted long matching line]\n280-\n281-25. Thorsby E. (2009). A short history of HLA. Tissue antigens 74 (2), 101–116. 10.1111/j.1399-0039.2009.01291.x  [DOI](https://doi.org/10.1111/j.1399-0039.2009.01291.x) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/19523022/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Tissue%20antigens&title=A%20short%20history%20of%20HLA&author=E.%20Thorsby&volume=74&issue=2&publication_year=2009&pages=101-116&pmid=19523022&doi=10.1111/j.1399-0039.2009.01291.x&)\n282-\n--\n284-\n285-[Omitted long context line]\n286-\n287:[Omitted long matching line]\n288-\n289:[Omitted long matching line]\n290-\n291:[Omitted long matching line]\n292-\n293-[Omitted long context line]\n294-\n295:[Omitted long matching line]\n296-\n297:[Omitted long matching line]",
+            "numLines": 163
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_018WcTwkP2gkCKrPxLSvwqkR",
+            "type": "tool_result",
+            "content": "1:# The pharmacogenomics of carbamazepine-induced cutaneous adverse drug reaction in the South of Vietnam\n2-\n3-## Metadata\n4-**Authors:** Ai-Hoc Nguyen, Chonlaphat Sukasem, Quy Ngoc Nguyen, Hong Tham Pham\n--\n12-\n13-## Abstract\n14-\n15:Background: The relationship between HLA-B*15:02 and Severe Cutaneous Adverse Reactions was rigorously examined in Japanese, Han Chinese, Thais, and Caucasians. However, the number of studies about this topic in Vietnamese population is still limited and mostly focuses on the North of Vietnam.\n16-\n17-Objective: This study aims to clarify the genetic culprit of SCARs in Vietnamese population, particularly in the South of Vietnam, and to validate our result by a meta-analysis about this topic in Vietnamese.\n18-\n19:Method: A retrospective case-control study with 37 patients treated with carbamazepine monotherapy. Statistical calculation and meta-analysis were performed by R software.\n20-\n21:Result: HLA-B*15:02 increases the risk of SJS 12.5 times higher in CBZ-treated patients (p-value = 0.017). However, this allele has no impact on MCARs (Mild Cutaneous Adverse Reactions) of CBZ. The number needed to test and the number needed to genotype is two and nine patients respectively.\n22-\n23-Conclusion: This study recommends more investigations about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\n24-\n25:Keywords: pharmacogenomics, Vietnam, HLA-B*15:02, SJS, MCARs, SCARs, epileptic, carbamazepine\n26-\n27-## 1 Introduction\n28-\n29-[Omitted long context line]\n30-\n31:[Omitted long matching line]\n32-\n33-[Omitted long context line]\n34-\n35:*HLA-B*15:02* is not only important in the treatment of Carbamazepine, but also in its structural analog, Oxcarbazepine ([Phillips et al., 2018](#B20)). The cross-reactivity of *HLA-B*1502* contributes to the improvement in cost-effectiveness, making this allele a worthy investment for personalized therapy.\n36-\n37-In this study, we aimed to clarify the genetic culprit of SCARs in the Vietnamese population, particularly in the South of Vietnam. We also compare the associated risk and genetic patterns in the population between the south and the north of Vietnam or other countries.\n38-\n--\n62-\n63-### 2.4 Meta-analysis\n64-\n65:[Omitted long matching line]\n66-\n67-### FIGURE 2.\n68-\n--\n116-\n117-Table 1 Caption: Demographic data of recruited epileptic patients.\n118-\n119:Among twelve carbamazepine-induced MCARs patients, five patients were diagnosed with itching skin and hypersensitivity reactions, six patients were diagnosed with symptomatic allergy and skin reactions of allergy, and one patient was diagnosed with anaphylaxis level 1 due to CBZ allergy. It is important to note that none of the twelve patients exhibited symptoms specific enough to be classified as SJS/TEN.\n120-\n121-### 3.2 The frequencies of HLA-B alleles detected in Southern Vietnamese\n122-\n123:[Table 2](#T2) shows the HLA allele polymorphism in the epileptic southern population of Vietnam, where a total of 22 alleles were observed. The most popular *HLA-B* alleles are *15:02* (20%), *38:02* (10%), and *46:01* (10%). There is a 5% of frequency in each of the following alleles: 7:05; 18:01, 37:01, 57:01. The rest 15 alleles account for around 1.7%–6.7% of the whole population.\n124-\n125-### TABLE 2.\n126-\n--\n135-\n136-Table 2 Caption: The frequencies of detected HLA-B alleles in the population of Southern Vietnamese.\n137-\n138:### 3.3 The increased risk patients carrying HLA-B*15:02 in Southern Vietnamese\n139-\n140:[Omitted long matching line]\n141-\n142-### TABLE 3.\n143-\n--\n150-\n151-Table 3 Caption: The association and odd ratio of HLA-B alleles.\n152-\n153:Out of the twelve cases of allopurinol-induced MCARs, three patients tested positive for *HLA-B*15:02*. While the strength of evidence is not large enough to be statistically significant, it is worth noting that the rate of *HLA-B*15:02* in the MCARs group is higher compared to the group of tolerant controls.\n154-\n155-### 3.4 Meta-analysis\n156-\n157:[Omitted long matching line]\n158-\n159-### FIGURE 3.\n160-\n--\n162-\n163-[View larger image](https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&p=PMC3&id=10374328_fphar-14-1217516-g003.jpg)\n164-\n165:Forest plot of the association between HLA-B*15:02 and SCARs in Vietnamese.\n166-\n167-## 4 Discussion\n168-\n169-This is the first case-control study to investigate the pharmacogenomics of CBZ-induced SJS in Southern Vietnam. Based on the evidence that the pharmacogenomic test can protect one case of SJS with every two interventions or every nine genetic tests, we recommend implementing this test in the population of Southern Vietnamese.\n170-\n171:[Omitted long matching line]\n172-\n173:[Omitted long matching line]\n174-\n175:[Omitted long matching line]\n176-\n177-[Omitted long context line]\n178-\n179:[Omitted long matching line]\n180-\n181:In conclusion, this study confirms the association between CBZ-induced SJS and *HLA-B*15:02* in Vietnamese, particularly in the Southern population. Therefore, it is recommended to perform further studies about the cost-effectiveness of this test to accelerate the protection of Southern Vietnamese from SCARs.\n182-\n183-## Acknowledgments\n184-\n--\n232-\n233-[Omitted long context line]\n234-\n235:[Omitted long matching line]\n236-\n237:[Omitted long matching line]\n238-\n239-[Omitted long context line]\n240-\n241:[Omitted long matching line]\n242-\n243-[Omitted long context line]\n244-\n--\n248-\n249-[Omitted long context line]\n250-\n251:[Omitted long matching line]\n252-\n253:11. Khosama H. (2017). HLA-B* 1502 and carbamazepine induced Stevens-Johnson syndrome/toxic epidermal necrolysis in Indonesia. Neurol. Asia 22 (2).  [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Neurol.%20Asia&title=HLA-B*%201502%20and%20carbamazepine%20induced%20Stevens-Johnson%20syndrome/toxic%20epidermal%20necrolysis%20in%20Indonesia&author=H.%20Khosama&volume=22&issue=2&publication_year=2017&)\n254-\n255-[Omitted long context line]\n256-\n257:[Omitted long matching line]\n258-\n259:[Omitted long matching line]\n260-\n261-[Omitted long context line]\n262-\n263-[Omitted long context line]\n264-\n265:[Omitted long matching line]\n266-\n267-[Omitted long context line]\n268-\n269-[Omitted long context line]\n270-\n271:[Omitted long matching line]\n272-\n273-[Omitted long context line]\n274-\n275-22. Snell G. D. (1981). Studies in histocompatibility. Science 213 (4504), 172–178. 10.1126/science.7017931  [DOI](https://doi.org/10.1126/science.7017931) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/7017931/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Science&title=Studies%20in%20histocompatibility&author=G.%20D.%20Snell&volume=213&issue=4504&publication_year=1981&pages=172-178&pmid=7017931&doi=10.1126/science.7017931&)\n276-\n277:[Omitted long matching line]\n278-\n279:[Omitted long matching line]\n280-\n281-25. Thorsby E. (2009). A short history of HLA. Tissue antigens 74 (2), 101–116. 10.1111/j.1399-0039.2009.01291.x  [DOI](https://doi.org/10.1111/j.1399-0039.2009.01291.x) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/19523022/) | [Google Scholar](https://scholar.google.com/scholar_lookup?journal=Tissue%20antigens&title=A%20short%20history%20of%20HLA&author=E.%20Thorsby&volume=74&issue=2&publication_year=2009&pages=101-116&pmid=19523022&doi=10.1111/j.1399-0039.2009.01291.x&)\n282-\n--\n284-\n285-[Omitted long context line]\n286-\n287:[Omitted long matching line]\n288-\n289:[Omitted long matching line]\n290-\n291:[Omitted long matching line]\n292-\n293-[Omitted long context line]\n294-\n295:[Omitted long matching line]\n296-\n297:[Omitted long matching line]"
+          }
+        },
+        "raw_arguments": {
+          "pattern": "HLA-B.*15:02|Stevens-Johnson|carbamazepine|oxcarbazepine",
+          "path": "/app/papers/PMC10374328.md",
+          "output_mode": "content",
+          "context": 3
+        }
+      }
+    },
+    {
+      "step_id": 5,
+      "timestamp": "2026-02-20T11:47:13.358Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "",
+      "reasoning_content": "null",
+      "metrics": {
+        "prompt_tokens": 19665,
+        "completion_tokens": 8,
+        "cached_tokens": 19664,
+        "extra": {
+          "cache_creation_input_tokens": 2701,
+          "cache_read_input_tokens": 19664,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 2701,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 6,
+      "timestamp": "2026-02-20T11:47:14.962Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "The paper clearly establishes that HLA-B*15:02 increases SJS risk with carbamazepine (CBZ) in epileptic patients. It also notes that HLA-B*15:02 applies to oxcarbazepine (carbamazepine's structural analog) via cross-reactivity.\n\n- **Question 1**: Answer is **c) carbamazepine** (the paper's primary finding)\n- **Question 2**: Since carbamazepine is not among the options, and the paper explicitly states HLA-B*15:02 is also important for its structural analog **oxcarbazepine**, the answer is **b) oxcarbazepine**",
+      "metrics": {
+        "prompt_tokens": 19665,
+        "completion_tokens": 8,
+        "cached_tokens": 19664,
+        "extra": {
+          "cache_creation_input_tokens": 2701,
+          "cache_read_input_tokens": 19664,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 2701,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 7,
+      "timestamp": "2026-02-20T11:47:15.827Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "Executed Write toolu_01FY7AfKF5Jo2creSN4dsRUT",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01FY7AfKF5Jo2creSN4dsRUT",
+          "function_name": "Write",
+          "arguments": {
+            "file_path": "/app/answers.json",
+            "content": "{\n  \"1\": \"c\",\n  \"2\": \"b\"\n}\n"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01FY7AfKF5Jo2creSN4dsRUT",
+            "content": "File created successfully at: /app/answers.json\n\n[metadata] {\"type\": \"create\", \"filePath\": \"/app/answers.json\", \"content\": \"{\\n  \\\"1\\\": \\\"c\\\",\\n  \\\"2\\\": \\\"b\\\"\\n}\\n\", \"structuredPatch\": [], \"originalFile\": null}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 19665,
+        "completion_tokens": 8,
+        "cached_tokens": 19664,
+        "extra": {
+          "cache_creation_input_tokens": 2701,
+          "cache_read_input_tokens": 19664,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 2701,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false,
+        "tool_use_name": "Write",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "type": "create",
+            "filePath": "/app/answers.json",
+            "content": "{\n  \"1\": \"c\",\n  \"2\": \"b\"\n}\n",
+            "structuredPatch": [],
+            "originalFile": null
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FY7AfKF5Jo2creSN4dsRUT",
+            "type": "tool_result",
+            "content": "File created successfully at: /app/answers.json"
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "type": "create",
+            "filePath": "/app/answers.json",
+            "content": "{\n  \"1\": \"c\",\n  \"2\": \"b\"\n}\n",
+            "structuredPatch": [],
+            "originalFile": null
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FY7AfKF5Jo2creSN4dsRUT",
+            "type": "tool_result",
+            "content": "File created successfully at: /app/answers.json"
+          }
+        },
+        "raw_arguments": {
+          "file_path": "/app/answers.json",
+          "content": "{\n  \"1\": \"c\",\n  \"2\": \"b\"\n}\n"
+        }
+      }
+    },
+    {
+      "step_id": 8,
+      "timestamp": "2026-02-20T11:47:18.431Z",
+      "source": "agent",
+      "model_name": "claude-sonnet-4-6",
+      "message": "Answers written:\n- **Question 1**: `c` (carbamazepine) — HLA-B*15:02 increases SJS risk 12.5x in CBZ-treated epileptic patients\n- **Question 2**: `b` (oxcarbazepine) — the paper notes HLA-B*15:02 cross-reactivity extends to carbamazepine's structural analog, oxcarbazepine",
+      "metrics": {
+        "prompt_tokens": 22366,
+        "completion_tokens": 2,
+        "cached_tokens": 22365,
+        "extra": {
+          "cache_creation_input_tokens": 801,
+          "cache_read_input_tokens": 22365,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 801,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      },
+      "extra": {
+        "cwd": "/app",
+        "is_sidechain": false
+      }
+    }
+  ],
+  "final_metrics": {
+    "total_prompt_tokens": 137743,
+    "total_completion_tokens": 51,
+    "total_cached_tokens": 137734,
+    "total_steps": 8,
+    "extra": {
+      "service_tiers": [
+        "standard"
+      ],
+      "total_cache_creation_input_tokens": 11265,
+      "total_cache_read_input_tokens": 137734
+    }
+  }
+}
