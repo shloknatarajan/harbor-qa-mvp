@@ -1,0 +1,77 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 1,
+            "failed": 4,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771629661.62536,
+            "stop": 1771629665.964836
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0008048340023378842,
+                "start": 1771629661.6543267,
+                "stop": 1771629661.6613767,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Strong', 'implication': 'G6PD deficiency reduces erythrocyte ability to handle oxidative stress; n...ing (baseline and follow-up CBC/reticulocytes and bilirubin) and discontinue immediately if signs of hemolysis occur.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Moderate', got 'Strong'\nE       assert 'strong' == 'moderate'\nE         \nE         - moderate\nE         + strong\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4.293917085997236,
+                "start": 1771629661.6615117,
+                "stop": 1771629665.9587793,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': \"The agent's recommendation meaningfully deviates fr...n creates safety concerns by not adhering to the guideline's avoidance stance.\", 'recommendation_completeness': 2, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 2/5 (need >= 4). Rationale: The agent's recommendation meaningfully deviates from CPIC's clear 'avoid' guidance by providing an alternative pathway to use nitrofurantoin with monitoring, which contradicts the moderate-strength recommendation to avoid the drug entirely. While the implication is accurate about G6PD deficiency and hemolysis risk, the conditional use recommendation creates safety concerns by not adhering to the guideline's avoidance stance.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.000430373998824507,
+                "start": 1771629665.9592094,
+                "stop": 1771629665.961389,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': \"The agent's recommendation meaningfully deviates fr...n creates safety concerns by not adhering to the guideline's avoidance stance.\", 'recommendation_completeness': 2, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent's recommendation meaningfully deviates from CPIC's clear 'avoid' guidance by providing an alternative pathway to use nitrofurantoin with monitoring, which contradicts the moderate-strength recommendation to avoid the drug entirely. While the implication is accurate about G6PD deficiency and hemolysis risk, the conditional use recommendation creates safety concerns by not adhering to the guideline's avoidance stance.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.0002540419955039397,
+                "start": 1771629665.961577,
+                "stop": 1771629665.9619367,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0004708339984063059,
+                "start": 1771629665.9620507,
+                "stop": 1771629665.9646244,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': \"The agent's recommendation meaningfully deviates fr...n creates safety concerns by not adhering to the guideline's avoidance stance.\", 'recommendation_completeness': 2, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent's recommendation meaningfully deviates from CPIC's clear 'avoid' guidance by providing an alternative pathway to use nitrofurantoin with monitoring, which contradicts the moderate-strength recommendation to avoid the drug entirely. While the implication is accurate about G6PD deficiency and hemolysis risk, the conditional use recommendation creates safety concerns by not adhering to the guideline's avoidance stance.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

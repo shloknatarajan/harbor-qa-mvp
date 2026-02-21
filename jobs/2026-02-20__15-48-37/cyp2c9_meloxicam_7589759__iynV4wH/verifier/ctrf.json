@@ -1,0 +1,77 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 1,
+            "failed": 4,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771636824.730501,
+            "stop": 1771636828.712784
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0004791250012203818,
+                "start": 1771636824.7534137,
+                "stop": 1771636824.758822,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Optional', 'implication': 'Reduced CYP2C9 metabolic capacity is expected to decrease meloxicam cle...learly outweigh risks; monitor closely for NSAID toxicity (GI bleeding, renal impairment, and cardiovascular events).'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Moderate', got 'Optional'\nE       assert 'optional' == 'moderate'\nE         \nE         - moderate\nE         + optional\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.941595877000509,
+                "start": 1771636824.7589242,
+                "stop": 1771636828.705496,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': 'The agent provides dose reduction as primary recomm...than switching away from CYP2C9-metabolized drugs as the guideline recommends.', 'recommendation_completeness': 3, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 2/5 (need >= 4). Rationale: The agent provides dose reduction as primary recommendation when CPIC clearly states to choose alternative therapy, representing a meaningfully different action. While the agent mentions alternatives, it prioritizes continuing meloxicam with dose adjustment rather than switching away from CYP2C9-metabolized drugs as the guideline recommends.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.000686082998981874,
+                "start": 1771636828.7061477,
+                "stop": 1771636828.709743,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': 'The agent provides dose reduction as primary recomm...than switching away from CYP2C9-metabolized drugs as the guideline recommends.', 'recommendation_completeness': 3, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent provides dose reduction as primary recommendation when CPIC clearly states to choose alternative therapy, representing a meaningfully different action. While the agent mentions alternatives, it prioritizes continuing meloxicam with dose adjustment rather than switching away from CYP2C9-metabolized drugs as the guideline recommends.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.0003078339996136492,
+                "start": 1771636828.7099385,
+                "stop": 1771636828.710343,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00033370799974363763,
+                "start": 1771636828.7104492,
+                "stop": 1771636828.7125177,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': 'The agent provides dose reduction as primary recomm...than switching away from CYP2C9-metabolized drugs as the guideline recommends.', 'recommendation_completeness': 3, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent provides dose reduction as primary recommendation when CPIC clearly states to choose alternative therapy, representing a meaningfully different action. While the agent mentions alternatives, it prioritizes continuing meloxicam with dose adjustment rather than switching away from CYP2C9-metabolized drugs as the guideline recommends.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

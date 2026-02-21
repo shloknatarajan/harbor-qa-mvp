@@ -1,0 +1,77 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 1,
+            "failed": 4,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771637656.894439,
+            "stop": 1771637660.7462316
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0006057909995433874,
+                "start": 1771637656.9198241,
+                "stop": 1771637656.926004,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'No Recommendation', 'implication': 'CYP2D6 activity score \u22653.5 is consistent with substantially in...nd if response is insufficient at the maximum labeled dose, consider switching to a non-CYP2D6-dependent alternative.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Moderate', got 'No Recommendation'\nE       assert 'no recommendation' == 'moderate'\nE         \nE         - moderate\nE         + no recommendation\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.8069160429995463,
+                "start": 1771637656.9261165,
+                "stop": 1771637660.7387948,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 4, 'rationale': 'The agent recommends standard dosing when CPIC spec...ose optimization and therapeutic drug monitoring as outlined in the guideline.', 'recommendation_completeness': 1, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 1/5 (need >= 4). Rationale: The agent recommends standard dosing when CPIC specifically calls for starting at 0.5 mg/kg and increasing to 1.2 mg/kg/day, representing a fundamentally different clinical action. This could lead to suboptimal care by missing the opportunity for appropriate dose optimization and therapeutic drug monitoring as outlined in the guideline.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0008330009995916043,
+                "start": 1771637660.739512,
+                "stop": 1771637660.743099,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 4, 'rationale': 'The agent recommends standard dosing when CPIC spec...ose optimization and therapeutic drug monitoring as outlined in the guideline.', 'recommendation_completeness': 1, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 1/5 (need >= 4). Rationale: The agent recommends standard dosing when CPIC specifically calls for starting at 0.5 mg/kg and increasing to 1.2 mg/kg/day, representing a fundamentally different clinical action. This could lead to suboptimal care by missing the opportunity for appropriate dose optimization and therapeutic drug monitoring as outlined in the guideline.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00022674899901176104,
+                "start": 1771637660.7432487,
+                "stop": 1771637660.743566,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00031183399914880283,
+                "start": 1771637660.7436671,
+                "stop": 1771637660.7460928,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 4, 'rationale': 'The agent recommends standard dosing when CPIC spec...ose optimization and therapeutic drug monitoring as outlined in the guideline.', 'recommendation_completeness': 1, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 2/5 (need >= 4). Rationale: The agent recommends standard dosing when CPIC specifically calls for starting at 0.5 mg/kg and increasing to 1.2 mg/kg/day, representing a fundamentally different clinical action. This could lead to suboptimal care by missing the opportunity for appropriate dose optimization and therapeutic drug monitoring as outlined in the guideline.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

@@ -1,0 +1,77 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 1,
+            "failed": 4,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771636410.164767,
+            "stop": 1771636414.3071506
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00044537400026456453,
+                "start": 1771636410.188514,
+                "stop": 1771636410.19418,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Moderate', 'implication': 'Reduced CYP2D6 activity (AS 1.0) can decrease conversion of tamoxifen t...alation (e.g., to 30 mg/day) with therapeutic drug monitoring of endoxifen and avoidance of strong CYP2D6 inhibitors.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Optional', got 'Moderate'\nE       assert 'moderate' == 'optional'\nE         \nE         - optional\nE         + moderate\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4.097246461000395,
+                "start": 1771636410.1942801,
+                "stop": 1771636414.2984788,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': 'The agent correctly identifies the need for alterna...ctly describes reduced CYP2D6 function and its effect on endoxifen conversion.', 'recommendation_completeness': 3, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 3/5 (need >= 4). Rationale: The agent correctly identifies the need for alternative therapy and dose escalation but recommends 30 mg/day instead of the CPIC-specified 40 mg/day, and omits the important distinction between premenopausal and postmenopausal treatment approaches. The implication correctly describes reduced CYP2D6 function and its effect on endoxifen conversion.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0006985830004850868,
+                "start": 1771636414.299246,
+                "stop": 1771636414.3027449,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': 'The agent correctly identifies the need for alterna...ctly describes reduced CYP2D6 function and its effect on endoxifen conversion.', 'recommendation_completeness': 3, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly identifies the need for alternative therapy and dose escalation but recommends 30 mg/day instead of the CPIC-specified 40 mg/day, and omits the important distinction between premenopausal and postmenopausal treatment approaches. The implication correctly describes reduced CYP2D6 function and its effect on endoxifen conversion.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.0004033740015074727,
+                "start": 1771636414.302967,
+                "stop": 1771636414.3035135,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0008104999997158302,
+                "start": 1771636414.303743,
+                "stop": 1771636414.3068101,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': 'The agent correctly identifies the need for alterna...ctly describes reduced CYP2D6 function and its effect on endoxifen conversion.', 'recommendation_completeness': 3, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent correctly identifies the need for alternative therapy and dose escalation but recommends 30 mg/day instead of the CPIC-specified 40 mg/day, and omits the important distinction between premenopausal and postmenopausal treatment approaches. The implication correctly describes reduced CYP2D6 function and its effect on endoxifen conversion.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

@@ -1,0 +1,74 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771634779.9263937,
+            "stop": 1771634783.5548182
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.0003511250001793087,
+                "start": 1771634779.9502316,
+                "stop": 1771634779.9507499,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.5702048329999343,
+                "start": 1771634779.95087,
+                "stop": 1771634783.5503218,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 5, 'rationale': \"The agent correctly identifies the need for alterna...lication accurately describes the reduced clearance and higher concentrations.\", 'recommendation_completeness': 3, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 3/5 (need >= 4). Rationale: The agent correctly identifies the need for alternatives and TDM but fails to specify 'preferably lower than standard dosage' and recommends 'standard weight-based initial dosing' which contradicts the CPIC preference for lower initial dosing. The implication accurately describes the reduced clearance and higher concentrations.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0003880410008605395,
+                "start": 1771634783.5506237,
+                "stop": 1771634783.5525131,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 5, 'rationale': \"The agent correctly identifies the need for alterna...lication accurately describes the reduced clearance and higher concentrations.\", 'recommendation_completeness': 3, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly identifies the need for alternatives and TDM but fails to specify 'preferably lower than standard dosage' and recommends 'standard weight-based initial dosing' which contradicts the CPIC preference for lower initial dosing. The implication accurately describes the reduced clearance and higher concentrations.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00021725000078731682,
+                "start": 1771634783.55264,
+                "stop": 1771634783.5529435,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00028404200020304415,
+                "start": 1771634783.553069,
+                "stop": 1771634783.5546856,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 5, 'rationale': \"The agent correctly identifies the need for alterna...lication accurately describes the reduced clearance and higher concentrations.\", 'recommendation_completeness': 3, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent correctly identifies the need for alternatives and TDM but fails to specify 'preferably lower than standard dosage' and recommends 'standard weight-based initial dosing' which contradicts the CPIC preference for lower initial dosing. The implication accurately describes the reduced clearance and higher concentrations.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

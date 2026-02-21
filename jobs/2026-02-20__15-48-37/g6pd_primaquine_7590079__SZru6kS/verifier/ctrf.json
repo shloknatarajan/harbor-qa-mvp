@@ -1,0 +1,74 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771632954.2898135,
+            "stop": 1771632958.1356163
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.0003332919995955308,
+                "start": 1771632954.31156,
+                "stop": 1771632954.3120103,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.7902054610001414,
+                "start": 1771632954.3121097,
+                "stop": 1771632958.1309566,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 5, 'rationale': 'The agent correctly recommends avoiding primaquine ...ically incomplete and potentially problematic for malaria treatment scenarios.', 'recommendation_completeness': 2, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 2/5 (need >= 4). Rationale: The agent correctly recommends avoiding primaquine but completely omits the critical CPIC exceptions for malaria treatment with specific dosing regimens (weekly dosing for P. vivax/ovale and single-dose gametocytocide for P. falciparum). This omission makes the recommendation clinically incomplete and potentially problematic for malaria treatment scenarios.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0004096249997473933,
+                "start": 1771632958.13128,
+                "stop": 1771632958.1332603,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 5, 'rationale': 'The agent correctly recommends avoiding primaquine ...ically incomplete and potentially problematic for malaria treatment scenarios.', 'recommendation_completeness': 2, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent correctly recommends avoiding primaquine but completely omits the critical CPIC exceptions for malaria treatment with specific dosing regimens (weekly dosing for P. vivax/ovale and single-dose gametocytocide for P. falciparum). This omission makes the recommendation clinically incomplete and potentially problematic for malaria treatment scenarios.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00021133200016265619,
+                "start": 1771632958.1334007,
+                "stop": 1771632958.1337,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00030275099993559706,
+                "start": 1771632958.1338222,
+                "stop": 1771632958.1354804,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 5, 'rationale': 'The agent correctly recommends avoiding primaquine ...ically incomplete and potentially problematic for malaria treatment scenarios.', 'recommendation_completeness': 2, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent correctly recommends avoiding primaquine but completely omits the critical CPIC exceptions for malaria treatment with specific dosing regimens (weekly dosing for P. vivax/ovale and single-dose gametocytocide for P. falciparum). This omission makes the recommendation clinically incomplete and potentially problematic for malaria treatment scenarios.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

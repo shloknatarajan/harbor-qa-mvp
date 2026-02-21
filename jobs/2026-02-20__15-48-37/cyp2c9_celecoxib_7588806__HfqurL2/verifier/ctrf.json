@@ -1,0 +1,71 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 3,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771634997.5884647,
+            "stop": 1771635001.552114
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.000495000000228174,
+                "start": 1771634997.613124,
+                "stop": 1771634997.6190746,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Moderate', 'implication': 'Normal CYP2C9-mediated celecoxib metabolism expected (variant-associate...zer): use celecoxib per standard dosing/label recommendations; no CYP2C9 genotype-based dose adjustment is indicated.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Strong', got 'Moderate'\nE       assert 'moderate' == 'strong'\nE         \nE         - strong\nE         + moderate\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "passed",
+                "duration": 3.921639001999665,
+                "start": 1771634997.6191962,
+                "stop": 1771635001.5414083,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.001064085000052728,
+                "start": 1771635001.5422733,
+                "stop": 1771635001.5501282,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 4, 'implication_accuracy': 5, 'rationale': \"The agent correctly recommends standard dosing for ...n and misclassifies the recommendation strength as moderate instead of strong.\", 'recommendation_completeness': 3, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly recommends standard dosing for normal metabolizers but omits the CPIC's specific guidance about using the lowest effective dosage for shortest duration and misclassifies the recommendation strength as moderate instead of strong.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00040562500043961336,
+                "start": 1771635001.5504274,
+                "stop": 1771635001.5510068,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "passed",
+                "duration": 0.000335415999416,
+                "start": 1771635001.5512285,
+                "stop": 1771635001.5516858,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

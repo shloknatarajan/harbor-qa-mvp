@@ -1,0 +1,80 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 0,
+            "failed": 5,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771635394.23297,
+            "stop": 1771635398.1092315
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00048758299999462906,
+                "start": 1771635394.2562115,
+                "stop": 1771635394.2618592,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Optional', 'implication': 'Intermediate acetylation is expected to produce intermediate hydralazin...oses, consider alternative/add-on antihypertensive therapy rather than escalating solely on the basis of NAT2 status.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Moderate', got 'Optional'\nE       assert 'optional' == 'moderate'\nE         \nE         - moderate\nE         + optional\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.8299264169995695,
+                "start": 1771635394.2619448,
+                "stop": 1771635398.0983536,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 3, 'rationale': \"The agent directly contradicts CPIC by stating no g... agent's recommendation could lead to inadequate dosing and treatment failure.\", 'recommendation_completeness': 1, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 1/5 (need >= 4). Rationale: The agent directly contradicts CPIC by stating no genotype-based dose adjustment when CPIC specifically recommends starting with at least 75mg and titrating to 300mg with 50-100% higher maintenance doses. The agent's recommendation could lead to inadequate dosing and treatment failure.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0008068339993769769,
+                "start": 1771635398.099473,
+                "stop": 1771635398.1035142,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 3, 'rationale': \"The agent directly contradicts CPIC by stating no g... agent's recommendation could lead to inadequate dosing and treatment failure.\", 'recommendation_completeness': 1, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 1/5 (need >= 4). Rationale: The agent directly contradicts CPIC by stating no genotype-based dose adjustment when CPIC specifically recommends starting with at least 75mg and titrating to 300mg with 50-100% higher maintenance doses. The agent's recommendation could lead to inadequate dosing and treatment failure.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00046975000032034586,
+                "start": 1771635398.1037252,
+                "stop": 1771635398.1063316,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 3, 'rationale': \"The agent directly contradicts CPIC by stating no g... agent's recommendation could lead to inadequate dosing and treatment failure.\", 'recommendation_completeness': 1, ...}\n\n    def test_implication_accuracy(judge_scores):\n        \"\"\"LLM judge: is the stated implication correct for this genotype?\"\"\"\n        score = judge_scores[\"implication_accuracy\"]\n>       assert score >= 4, (\n            f\"Implication accuracy {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Implication accuracy 3/5 (need >= 4). Rationale: The agent directly contradicts CPIC by stating no genotype-based dose adjustment when CPIC specifically recommends starting with at least 75mg and titrating to 300mg with 50-100% higher maintenance doses. The agent's recommendation could lead to inadequate dosing and treatment failure.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:96: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.000425457999426726,
+                "start": 1771635398.1065123,
+                "stop": 1771635398.1090605,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 3, 'rationale': \"The agent directly contradicts CPIC by stating no g... agent's recommendation could lead to inadequate dosing and treatment failure.\", 'recommendation_completeness': 1, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 2/5 (need >= 4). Rationale: The agent directly contradicts CPIC by stating no genotype-based dose adjustment when CPIC specifically recommends starting with at least 75mg and titrating to 300mg with 50-100% higher maintenance doses. The agent's recommendation could lead to inadequate dosing and treatment failure.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

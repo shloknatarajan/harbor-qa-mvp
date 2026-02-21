@@ -1,0 +1,74 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771634537.1462016,
+            "stop": 1771634540.369289
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0004719160006061429,
+                "start": 1771634537.1692326,
+                "stop": 1771634537.1748185,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Moderate', 'implication': 'CYP2C19 ultrarapid metabolism (typically via *17) can increase clopidog...ies, monitor closely for bleeding and individualize overall antithrombotic intensity based on clinical bleeding risk.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Strong', got 'Moderate'\nE       assert 'moderate' == 'strong'\nE         \nE         - strong\nE         + moderate\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "passed",
+                "duration": 3.1823384180001995,
+                "start": 1771634537.1749132,
+                "stop": 1771634540.3577523,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0009486680000918568,
+                "start": 1771634540.3585522,
+                "stop": 1771634540.3649597,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 5, 'implication_accuracy': 2, 'rationale': 'The agent correctly recommends standard dose clopid...y states no association with higher bleeding risk for ultrarapid metabolizers.', 'recommendation_completeness': 3, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly recommends standard dose clopidogrel but provides incorrect classification strength (moderate vs strong) and contradicts CPIC by stating increased bleeding risk when CPIC explicitly states no association with higher bleeding risk for ultrarapid metabolizers.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0005758750003224122,
+                "start": 1771634540.3652995,
+                "stop": 1771634540.3684316,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 5, 'implication_accuracy': 2, 'rationale': 'The agent correctly recommends standard dose clopid...y states no association with higher bleeding risk for ultrarapid metabolizers.', 'recommendation_completeness': 3, ...}\n\n    def test_implication_accuracy(judge_scores):\n        \"\"\"LLM judge: is the stated implication correct for this genotype?\"\"\"\n        score = judge_scores[\"implication_accuracy\"]\n>       assert score >= 4, (\n            f\"Implication accuracy {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Implication accuracy 2/5 (need >= 4). Rationale: The agent correctly recommends standard dose clopidogrel but provides incorrect classification strength (moderate vs strong) and contradicts CPIC by stating increased bleeding risk when CPIC explicitly states no association with higher bleeding risk for ultrarapid metabolizers.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:96: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "passed",
+                "duration": 0.000342124999860971,
+                "start": 1771634540.3686223,
+                "stop": 1771634540.369103,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

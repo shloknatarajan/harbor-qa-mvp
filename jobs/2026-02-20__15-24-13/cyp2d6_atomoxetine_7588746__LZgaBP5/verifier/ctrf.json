@@ -1,0 +1,74 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771629922.7846847,
+            "stop": 1771629927.577514
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.0005185000045457855,
+                "start": 1771629922.8147318,
+                "stop": 1771629922.8154244,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4.7050466269938624,
+                "start": 1771629922.8155754,
+                "stop": 1771629927.5704904,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': \"The agent recommends vague 'lower initial dose' ins...ch is safe, the missing specific dosing details could lead to suboptimal care.\", 'recommendation_completeness': 2, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 2/5 (need >= 4). Rationale: The agent recommends vague 'lower initial dose' instead of the specific 40mg/day starting dose, omits the detailed plasma concentration monitoring protocol (200-400 ng/mL targets), and lacks the precise 2-week titration timeline specified in CPIC guidelines. While the general approach is safe, the missing specific dosing details could lead to suboptimal care.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0005793750096927397,
+                "start": 1771629927.571422,
+                "stop": 1771629927.5741236,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': \"The agent recommends vague 'lower initial dose' ins...ch is safe, the missing specific dosing details could lead to suboptimal care.\", 'recommendation_completeness': 2, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent recommends vague 'lower initial dose' instead of the specific 40mg/day starting dose, omits the detailed plasma concentration monitoring protocol (200-400 ng/mL targets), and lacks the precise 2-week titration timeline specified in CPIC guidelines. While the general approach is safe, the missing specific dosing details could lead to suboptimal care.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.0002839580047293566,
+                "start": 1771629927.5743206,
+                "stop": 1771629927.5747352,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0004734579924843274,
+                "start": 1771629927.5748425,
+                "stop": 1771629927.577132,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': \"The agent recommends vague 'lower initial dose' ins...ch is safe, the missing specific dosing details could lead to suboptimal care.\", 'recommendation_completeness': 2, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent recommends vague 'lower initial dose' instead of the specific 40mg/day starting dose, omits the detailed plasma concentration monitoring protocol (200-400 ng/mL targets), and lacks the precise 2-week titration timeline specified in CPIC guidelines. While the general approach is safe, the missing specific dosing details could lead to suboptimal care.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

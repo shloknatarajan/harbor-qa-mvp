@@ -1,0 +1,71 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 3,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771635819.9495218,
+            "stop": 1771635823.576374
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.0005207910007811734,
+                "start": 1771635819.9758317,
+                "stop": 1771635819.97658,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.5786532100009936,
+                "start": 1771635819.9767241,
+                "stop": 1771635823.5730984,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correcteness': 4, 'implication_accuracy': 5, 'rationale': 'The agent correctly recommends dose reduction and ...commendations are present but incomplete specificity reduces clinical utility.', 'recommendation_completeness': 3, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n>       score = judge_scores[\"action_correctness\"]\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       KeyError: 'action_correctness'\n\n/tests/test_outputs.py:77: KeyError",
+                "message": "The test failed in the call phase"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00044254199929127935,
+                "start": 1771635823.5733817,
+                "stop": 1771635823.5756216,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correcteness': 4, 'implication_accuracy': 5, 'rationale': 'The agent correctly recommends dose reduction and ...commendations are present but incomplete specificity reduces clinical utility.', 'recommendation_completeness': 3, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly recommends dose reduction and alternative therapy but misses critical details like the 8-day steady state requirement, specific monitoring parameters (blood pressure, kidney function), and the 25-50% maximum dose limitation. The core safety recommendations are present but incomplete specificity reduces clinical utility.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00019095900097454432,
+                "start": 1771635823.5757265,
+                "stop": 1771635823.5759838,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "passed",
+                "duration": 0.0001729159985188744,
+                "start": 1771635823.576056,
+                "stop": 1771635823.5762866,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

@@ -1,0 +1,983 @@
+{
+  "schema_version": "ATIF-v1.5",
+  "session_id": "019c7d89-407e-7db1-9860-e06809342617",
+  "agent": {
+    "name": "codex",
+    "version": "0.104.0",
+    "model_name": "gpt-5.2",
+    "extra": {
+      "originator": "codex_exec",
+      "cwd": "/app"
+    }
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "timestamp": "2026-02-21T00:11:12.896Z",
+      "source": "system",
+      "message": "<permissions instructions>\nFilesystem sandboxing defines which files can be read or written. `sandbox_mode` is `danger-full-access`: No filesystem sandboxing - all commands are permitted. Network access is enabled.\nApproval policy is currently never. Do not provide the `sandbox_permissions` for any reason, commands will be rejected.\n</permissions instructions>"
+    },
+    {
+      "step_id": 2,
+      "timestamp": "2026-02-21T00:11:12.897Z",
+      "source": "user",
+      "message": "# AGENTS.md instructions for /app\n\n<INSTRUCTIONS>\n## Skills\nA skill is a set of local instructions to follow that is stored in a `SKILL.md` file. Below is the list of skills that can be used. Each entry includes a name, description, and file path so you can open the source for full instructions when using a specific skill.\n### Available skills\n- skill-creator: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Codex's capabilities with specialized knowledge, workflows, or tool integrations. (file: /logs/agent/skills/.system/skill-creator/SKILL.md)\n- skill-installer: Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable skills, install a curated skill, or install a skill from another repo (including private repos). (file: /logs/agent/skills/.system/skill-installer/SKILL.md)\n### How to use skills\n- Discovery: The list above is the skills available in this session (name + description + file path). Skill bodies live on disk at the listed paths.\n- Trigger rules: If the user names a skill (with `$SkillName` or plain text) OR the task clearly matches a skill's description shown above, you must use that skill for that turn. Multiple mentions mean use them all. Do not carry skills across turns unless re-mentioned.\n- Missing/blocked: If a named skill isn't in the list or the path can't be read, say so briefly and continue with the best fallback.\n- How to use a skill (progressive disclosure):\n  1) After deciding to use a skill, open its `SKILL.md`. Read only enough to follow the workflow.\n  2) When `SKILL.md` references relative paths (e.g., `scripts/foo.py`), resolve them relative to the skill directory listed above first, and only consider other paths if needed.\n  3) If `SKILL.md` points to extra folders such as `references/`, load only the specific files needed for the request; don't bulk-load everything.\n  4) If `scripts/` exist, prefer running or patching them instead of retyping large code blocks.\n  5) If `assets/` or templates exist, reuse them instead of recreating from scratch.\n- Coordination and sequencing:\n  - If multiple skills apply, choose the minimal set that covers the request and state the order you'll use them.\n  - Announce which skill(s) you're using and why (one short line). If you skip an obvious skill, say why.\n- Context hygiene:\n  - Keep context small: summarize long sections instead of pasting them; only load extra files when needed.\n  - Avoid deep reference-chasing: prefer opening only files directly linked from `SKILL.md` unless you're blocked.\n  - When variants exist (frameworks, providers, domains), pick only the relevant reference file(s) and note that choice.\n- Safety and fallback: If a skill can't be applied cleanly (missing files, unclear instructions), state the issue, pick the next-best approach, and continue.\n</INSTRUCTIONS>"
+    },
+    {
+      "step_id": 3,
+      "timestamp": "2026-02-21T00:11:12.897Z",
+      "source": "user",
+      "message": "<environment_context>\n  <cwd>/app</cwd>\n  <shell>bash</shell>\n</environment_context>"
+    },
+    {
+      "step_id": 4,
+      "timestamp": "2026-02-21T00:11:12.897Z",
+      "source": "user",
+      "message": "You are a clinical pharmacogenomics expert.\n\n**Drug:** dapsone\n**Gene:** G6PD\n**Patient Genotype:** G6PD Variable\n\nResearch papers relevant to this gene-drug combination are available in `/app/papers/`. Read these papers to inform your recommendation.\n\nBased on the evidence in these papers, provide a clinical recommendation for this drug-gene-variant combination.\n\n---\n\nYou must write your answers to `/app/answers.json` (a real file on disk). Printing JSON in chat is not sufficient.\nAfter writing the file, verify it exists and contains valid JSON.\n\nFor example, you may use a shell heredoc to write the file:\n```bash\ncat > /app/answers.json <<'JSON'\n{\n  \"recommendation\": \"Use drug per standard dosing guidelines\",\n  \"classification\": \"Moderate\",\n  \"implication\": \"Normal metabolism expected\"\n}\nJSON\npython3 -c 'import json; json.load(open(\"/app/answers.json\"))'\n```\n\nThe JSON object must have the following structure:\n\n```json\n{\n  \"recommendation\": \"<dosing recommendation text>\",\n  \"classification\": \"<Strong|Moderate|Optional|No Recommendation>\",\n  \"implication\": \"<clinical implication of this genotype>\"\n}\n```\n\nNotes:\n- **recommendation**: Your clinical dosing recommendation for this drug-gene-variant combination.\n- **classification**: The CPIC classification strength of this recommendation, based on the quality and quantity of clinical evidence supporting it:\n  - **Strong**: High-quality evidence and/or strong expert consensus that the recommendation should be followed.\n  - **Moderate**: Moderate evidence; the recommendation is generally appropriate but evidence is less definitive.\n  - **Optional**: Weak or emerging evidence; clinical action is at the prescriber's discretion.\n  - **No Recommendation**: Insufficient evidence to make a recommendation for this gene-drug-phenotype combination.\n- **implication**: The clinical implication of this specific genotype for this drug's metabolism/response.\n- Read the research papers in /app/papers/ before answering.\n- **Do not use web search.** Base your answer on the provided evidence."
+    },
+    {
+      "step_id": 5,
+      "timestamp": "2026-02-21T00:11:20.108Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed update_plan call_X3yn0DkxcV1yWbVwJGgpYpiR",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_X3yn0DkxcV1yWbVwJGgpYpiR",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "step": "Inventory papers and key metadata",
+                "status": "in_progress"
+              },
+              {
+                "step": "Extract evidence on dapsone hemolysis risk",
+                "status": "pending"
+              },
+              {
+                "step": "Map \u201cG6PD Variable\u201d to phenotype",
+                "status": "pending"
+              },
+              {
+                "step": "Draft CPIC-style recommendation",
+                "status": "pending"
+              },
+              {
+                "step": "Write and validate /app/answers.json",
+                "status": "pending"
+              }
+            ],
+            "explanation": "Review local papers on dapsone\u2013G6PD, determine clinical action for the patient\u2019s reported genotype, then write a CPIC-strength recommendation to answers.json."
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_X3yn0DkxcV1yWbVwJGgpYpiR",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"step\":\"Inventory papers and key metadata\",\"status\":\"in_progress\"},{\"step\":\"Extract evidence on dapsone hemolysis risk\",\"status\":\"pending\"},{\"step\":\"Map \u201cG6PD Variable\u201d to phenotype\",\"status\":\"pending\"},{\"step\":\"Draft CPIC-style recommendation\",\"status\":\"pending\"},{\"step\":\"Write and validate /app/answers.json\",\"status\":\"pending\"}],\"explanation\":\"Review local papers on dapsone\u2013G6PD, determine clinical action for the patient\u2019s reported genotype, then write a CPIC-strength recommendation to answers.json.\"}"
+      }
+    },
+    {
+      "step_id": 6,
+      "timestamp": "2026-02-21T00:11:21.217Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_LOgJkeV53STS3QewiuyT2buX",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_LOgJkeV53STS3QewiuyT2buX",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "ls -la /app && ls -la /app/papers"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_LOgJkeV53STS3QewiuyT2buX",
+            "content": "Chunk ID: aab943\nWall time: 0.0519 seconds\nProcess exited with code 0\nOriginal token count: 2070\nOutput:\ntotal 12\ndrwxr-xr-x 1 root root 4096 Feb 20 23:20 .\ndrwxr-xr-x 1 root root 4096 Feb 21 00:10 ..\ndrwxr-xr-x 2 root root 4096 Feb 20 23:20 papers\ntotal 568\ndrwxr-xr-x 2 root root 4096 Feb 20 23:20 .\ndrwxr-xr-x 1 root root 4096 Feb 20 23:20 ..\n-rw-r--r-- 1 root root 1886 Feb 20 23:09 PMID_10192449.md\n-rw-r--r-- 1 root root 2233 Feb 20 23:09 PMID_10556177.md\n-rw-r--r-- 1 root root 1409 Feb 20 23:09 PMID_10571945.md\n-rw-r--r-- 1 root root  651 Feb 20 23:09 PMID_10627140.md\n-rw-r--r-- 1 root root 1073 Feb 20 23:09 PMID_10666231.md\n-rw-r--r-- 1 root root 1378 Feb 20 23:09 PMID_10772881.md\n-rw-r--r-- 1 root root 1471 Feb 20 23:09 PMID_10782016.md\n-rw-r--r-- 1 root root 1379 Feb 20 23:09 PMID_11112389.md\n-rw-r--r-- 1 root root 1853 Feb 20 23:09 PMID_11146567.md\n-rw-r--r-- 1 root root 1568 Feb 20 23:09 PMID_11271380.md\n-rw-r--r-- 1 root root 2256 Feb 20 23:09 PMID_11295127.md\n-rw-r--r-- 1 root root 1918 Feb 20 23:09 PMID_11499668.md\n-rw-r--r-- 1 root root  964 Feb 20 23:09 PMID_11594515.md\n-rw-r--r-- 1 root root 1352 Feb 20 23:09 PMID_11780463.md\n-rw-r--r-- 1 root root  312 Feb 20 23:09 PMID_11852882.md\n-rw-r--r-- 1 root root  249 Feb 20 23:09 PMID_12064901.md\n-rw-r--r-- 1 root root  763 Feb 20 23:09 PMID_12064902.md\n-rw-r--r-- 1 root root 1621 Feb 20 23:09 PMID_12130518.md\n-rw-r--r-- 1 root root 2315 Feb 20 23:09 PMID_12367584.md\n-rw-r--r-- 1 root root 1980 Feb 20 23:09 PMID_12497642.md\n-rw-r--r-- 1 root root 1264 Feb 20 23:09 PMID_1270075.md\n-rw-r--r-- 1 root root  890 Feb 20 23:09 PMID_12737940.md\n-rw-r--r-- 1 root root 1765 Feb 20 23:09 PMID_1303173.md\n-rw-r--r-- 1 root root  321 Feb 20 23:09 PMID_1303180.md\n-rw-r--r-- 1 root root  350 Feb 20 23:09 PMID_1303182.md\n-rw-r--r-- 1 root root 2262 Feb 20 23:09 PMID_1353664.md\n-rw-r--r-- 1 root root  739 Feb 20 23:09 PMID_1459579.md\n-rw-r--r-- 1 root root 1854 Feb 20 23:09 PMID_14757424.md\n-rw-r--r-- 1 root root 1855 Feb 20 23:09 PMID_14757426.md\n-rw-r--r-- 1 root root 1060 Feb 20 23:09 PMID_15065213.md\n-rw-r--r-- 1 root root 2081 Feb 20 23:09 PMID_15223006.md\n-rw-r--r-- 1 root root 1764 Feb 20 23:09 PMID_1536798.md\n-rw-r--r-- 1 root root 1176 Feb 20 23:09 PMID_1551674.md\n-rw-r--r-- 1 root root 2553 Feb 20 23:09 PMID_1562739.md\n-rw-r--r-- 1 root root 2154 Feb 20 23:09 PMID_15727905.md\n-rw-r--r-- 1 root root  999 Feb 20 23:09 PMID_15996881.md\n-rw-r--r-- 1 root root  735 Feb 20 23:09 PMID_16079115.md\n-rw-r--r-- 1 root root 1932 Feb 20 23:09 PMID_16088936.md\n-rw-r--r-- 1 root root  839 Feb 20 23:09 PMID_1611091.md\n-rw-r--r-- 1 root root 1493 Feb 20 23:09 PMID_16143877.md\n-rw-r--r-- 1 root root 1767 Feb 20 23:09 PMID_16329560.md\n-rw-r--r-- 1 root root 1833 Feb 20 23:09 PMID_16607506.md\n-rw-r--r-- 1 root root 2490 Feb 20 23:09 PMID_16927025.md\n-rw-r--r-- 1 root root 1860 Feb 20 23:09 PMID_16934959.md\n-rw-r--r-- 1 root root 2321 Feb 20 23:09 PMID_17018380.md\n-rw-r--r-- 1 root root  725 Feb 20 23:09 PMID_1733837.md\n-rw-r--r-- 1 root root  870 Feb 20 23:09 PMID_17524386.md\n-rw-r--r-- 1 root root 1643 Feb 20 23:09 PMID_17637841.md\n-rw-r--r-- 1 root root 2114 Feb 20 23:09 PMID_17726510.md\n-rw-r--r-- 1 root root  930 Feb 20 23:09 PMID_18043863.md\n-rw-r--r-- 1 root root 1403 Feb 20 23:09 PMID_1805484.md\n-rw-r--r-- 1 root root 1022 Feb 20 23:09 PMID_18056001.md\n-rw-r--r-- 1 root root  827 Feb 20 23:09 PMID_18066402.md\n-rw-r--r-- 1 root root 1495 Feb 20 23:09 PMID_18086567.md\n-rw-r--r-- 1 root root 1837 Feb 20 23:09 PMID_18226470.md\n-rw-r--r-- 1 root root 1539 Feb 20 23:09 PMID_18452027.md\n-rw-r--r-- 1 root root 1004 Feb 20 23:09 PMID_18677765.md\n-rw-r--r-- 1 root root 1334 Feb 20 23:09 PMID_1879833.md\n-rw-r--r-- 1 root root  282 Feb 20 23:09 PMID_1945893.md\n-rw-r--r-- 1 root root 1151 Feb 20 23:09 PMID_1953767.md\n-rw-r--r-- 1 root root 1357 Feb 20 23:09 PMID_1978554.md\n-rw-r--r-- 1 root root 1458 Feb 20 23:09 PMID_1999409.md\n-rw-r--r-- 1 root root  212 Feb 20 23:09 PMID_2005960.md\n-rw-r--r-- 1 root root  959 Feb 20 23:09 PMID_20582980.md\n-rw-r--r-- 1 root root  318 Feb 20 23:09 PMID_20621077.md\n-rw-r--r-- 1 root root 1716 Feb 20 23:09 PMID_20713184.md\n-rw-r--r-- 1 root root 1069 Feb 20 23:09 PMID_20949590.md\n-rw-r--r-- 1 root root 2056 Feb 20 23:09 PMID_21302115.md\n-rw-r--r-- 1 root root 1614 Feb 20 23:09 PMID_21397531.md\n-rw-r--r-- 1 root root 1648 Feb 20 23:09 PMID_21446359.md\n-rw-r--r-- 1 root root 1537 Feb 20 23:09 PMID_22139979.md\n-rw-r--r-- 1 root root 1392 Feb 20 23:09 PMID_2222408.md\n-rw-r--r-- 1 root root 1676 Feb 20 23:09 PMID_22293322.md\n-rw-r--r-- 1 root root 1781 Feb 20 23:09 PMID_2253938.md\n-rw-r--r-- 1 root root  296 Feb 20 23:09 PMID_2263506.md\n-rw-r--r-- 1 root root 2030 Feb 20 23:09 PMID_22770933.md\n-rw-r--r-- 1 root root 1571 Feb 20 23:09 PMID_22963789.md\n-rw-r--r-- 1 root root 2091 Feb 20 23:09 PMID_23006493.md\n-rw-r--r-- 1 root root 1081 Feb 20 23:09 PMID_2307454.md\n-rw-r--r-- 1 root root 1313 Feb 20 23:09 PMID_2321910.md\n-rw-r--r-- 1 root root 1645 Feb 20 23:09 PMID_2393028.md\n-rw-r--r-- 1 root root  296 Feb 20 23:09 PMID_2503817.md\n-rw-r--r-- 1 root root 1243 Feb 20 23:09 PMID_2572288.md\n-rw-r--r-- 1 root root 1458 Feb 20 23:09 PMID_2602358.md\n-rw-r--r-- 1 root root 2124 Feb 20 23:09 PMID_28028996.md\n-rw-r--r-- 1 root root 1767 Feb 20 23:09 PMID_32387609.md\n-rw-r--r-- 1 root root 2382 Feb 20 23:09 PMID_32425388.md\n-rw-r--r-- 1 root root  729 Feb 20 23:09 PMID_3338798.md\n-rw-r--r-- 1 root root 2266 Feb 20 23:09 PMID_33413378.md\n-rw-r--r-- 1 root root  936 Feb 20 23:09 PMID_3360447.md\n-rw-r--r-- 1 root root 2019 Feb 20 23:09 PMID_3393536.md\n-rw-r--r-- 1 root root 1189 Feb 20 23:09 PMID_3446582.md\n-rw-r--r-- 1 root root  977 Feb 20 23:09 PMID_3565372.md\n-rw-r--r-- 1 root root  329 Feb 20 23:09 PMID_3591235.md\n-rw-r--r-- 1 root root 1589 Feb 20 23:09 PMID_4405605.md\n-rw-r--r-- 1 root root 1319 Feb 20 23:09 PMID_511159.md\n-rw-r--r-- 1 root root  230 Feb 20 23:09 PMID_5413384.md\n-rw-r--r-- 1 root root  249 Feb 20 23:09 PMID_5844610.md\n-rw-r--r-- 1 root root 1025 Feb 20 23:09 PMID_6500558.md\n-rw-r--r-- 1 root root  861 Feb 20 23:09 PMID_7129446.md\n-rw-r--r-- 1 root root  795 Feb 20 23:09 PMID_7160841.md\n-rw-r--r-- 1 root root 1542 Feb 20 23:09 PMID_7327562.md\n-rw-r--r-- 1 root root 1138 Feb 20 23:09 PMID_7440223.md\n-rw-r--r-- 1 root root 2005 Feb 20 23:09 PMID_7577654.md\n-rw-r--r-- 1 root root 1232 Feb 20 23:09 PMID_7655862.md\n-rw-r--r-- 1 root root 1312 Feb 20 23:09 PMID_7705842.md\n-rw-r--r-- 1 root root  288 Feb 20 23:09 PMID_7726184.md\n-rw-r--r-- 1 root root 1607 Feb 20 23:09 PMID_7803800.md\n-rw-r--r-- 1 root root 2004 Feb 20 23:09 PMID_7825590.md\n-rw-r--r-- 1 root root 1451 Feb 20 23:09 PMID_7849299.md\n-rw-r--r-- 1 root root  870 Feb 20 23:09 PMID_7858267.md\n-rw-r--r-- 1 root root 1102 Feb 20 23:09 PMID_7947250.md\n-rw-r--r-- 1 root root 1464 Feb 20 23:09 PMID_7959686.md\n-rw-r--r-- 1 root root 1269 Feb 20 23:09 PMID_7959695.md\n-rw-r--r-- 1 root root 1600 Feb 20 23:09 PMID_8193373.md\n-rw-r--r-- 1 root root 1304 Feb 20 23:09 PMID_8241497.md\n-rw-r--r-- 1 root root 1365 Feb 20 23:09 PMID_8370579.md\n-rw-r--r-- 1 root root  726 Feb 20 23:09 PMID_8436389.md\n-rw-r--r-- 1 root root 2074 Feb 20 23:09 PMID_8447319.md\n-rw-r--r-- 1 root root 1598 Feb 20 23:09 PMID_8471773.md\n-rw-r--r-- 1 root root  243 Feb 20 23:09 PMID_8477268.md\n-rw-r--r-- 1 root root 1166 Feb 20 23:09 PMID_848857.md\n-rw-r--r-- 1 root root  322 Feb 20 23:09 PMID_8490627.md\n-rw-r--r-- 1 root root 1509 Feb 20 23:09 PMID_8533762.md\n-rw-r--r-- 1 root root  982 Feb 20 23:09 PMID_8807322.md\n-rw-r--r-- 1 root root 1760 Feb 20 23:09 PMID_8808605.md\n-rw-r--r-- 1 root root 1444 Feb 20 23:09 PMID_8860007.md\n-rw-r--r-- 1 root root 1446 Feb 20 23:09 PMID_8935319.md\n-rw-r--r-- 1 root root 1593 Feb 20 23:09 PMID_8956035.md\n-rw-r--r-- 1 root root 1208 Feb 20 23:09 PMID_9192788.md\n-rw-r--r-- 1 root root 1263 Feb 20 23:09 PMID_9233561.md\n-rw-r--r-- 1 root root 1443 Feb 20 23:09 PMID_9250351.md\n-rw-r--r-- 1 root root  774 Feb 20 23:09 PMID_9290617.md\n-rw-r--r-- 1 root root  290 Feb 20 23:09 PMID_9298828.md\n-rw-r--r-- 1 root root 1685 Feb 20 23:09 PMID_9332310.md\n-rw-r--r-- 1 root root  261 Feb 20 23:09 PMID_9410474.md\n-rw-r--r-- 1 root root 1689 Feb 20 23:09 PMID_9444913.md\n-rw-r--r-- 1 root root  291 Feb 20 23:09 PMID_9452072.md\n-rw-r--r-- 1 root root 1061 Feb 20 23:09 PMID_9526168.md\n-rw-r--r-- 1 root root 1418 Feb 20 23:09 PMID_9674740.md\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"ls -la /app && ls -la /app/papers\"}"
+      }
+    },
+    {
+      "step_id": 7,
+      "timestamp": "2026-02-21T00:11:25.249Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_OVnkuKUDPhiSRabt6EwsMR1R",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_OVnkuKUDPhiSRabt6EwsMR1R",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"\\bdapsone\\b\" /app/papers -S | head -n 50"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_OVnkuKUDPhiSRabt6EwsMR1R",
+            "content": "Chunk ID: 214e74\nWall time: 0.1117 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"\\\\bdapsone\\\\b\\\" /app/papers -S | head -n 50\"}"
+      }
+    },
+    {
+      "step_id": 8,
+      "timestamp": "2026-02-21T00:11:25.254Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_vUwTQbGyqgaNzfZbb7LzlrJ3",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_vUwTQbGyqgaNzfZbb7LzlrJ3",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"\\bG6PD\\b|glucose-6-phosphate\" /app/papers -S | head -n 50"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_vUwTQbGyqgaNzfZbb7LzlrJ3",
+            "content": "Chunk ID: 7a184e\nWall time: 0.1119 seconds\nProcess exited with code 0\nOriginal token count: 7625\nOutput:\n/app/papers/PMID_18226470.md:1:# Molecular characterization of erythrocyte glucose-6-phosphate dehydrogenase deficiency in Tunisia.\n/app/papers/PMID_18226470.md:11:Screening of G6PD deficiency was carried out on 79 unrelated subjects (32 females and 47 males), all coming from out consultation. DNA from deficient subject (11 females and 30 males) was analyzed for the presence of G6PD mutation. Known mutations were studied by the appropriate restriction enzyme digestion of fragment amplified by PCR. Where the mutation could not be identified in this way, the samples were subjected to SSCP analysis and abnormal fragments were sequenced. Through these methods, seven different mutations have been identified. Among deficient females, eight had the African variant A-(tow of them were homozygous) and three had the Mediterranean variant, one of them was homozygous and have had a haemolytic crisis after ingestion of fava beans showing at birth manifestation of neonatal jaundice. Among deficient males, four were hospitalized and transfused after a haemolytic crisis due to ingestion of fava beans. All of them have had manifestation of neonatal jaundice. Of them, one carried the Mediterranean variant and three others had the African variant A-. Among the remaining deficient males, 15 had A-variant, two had the Aur\u00e8s mutation. SSCP analysis of nine mild deficient males, revealed the presence of the association of 1311 CT/93 TC in two subjects, a newly described silent mutation in the exon 12 associated with the polymorphism in the intron 11 93 TC in one subject and tow single intronic base deletion. The first is IVS V 17 (-C) found in two subjects and the second is IVS VIII 43 (-G) encountered in four subjects.\n/app/papers/PMID_2307454.md:1:# A new glucose-6-phosphate dehydrogenase variant with congenital nonspherocytic hemolytic anemia (G6PD Genova). Biochemical characterization and mosaicism expression in the heterozygote.\n/app/papers/PMID_2307454.md:11:A new deficient variant of glucose-6-phosphate dehydrogenase (G6PD) causing severe congenital nonspherocytic hemolytic anemia (CNSHA) is described. The variant enzyme, characterized by slow electrophoretic mobility, extreme in vivo and in vitro lability, high Km for G6P and strongly acidic pH optimum, appears to be unique, and has been designated G6PD Genova. Investigation of an obligate heterozygote using various cytochemical, biochemical and recombinant-DNA techniques showed G6PD mosaicism in the erythrocytes and leukocytes. Therefore, the presence of a disadvantageous mutation at one Gd locus did not determine selection in favor of the normal allele in the heterozygote's hemopoietic cells.\n/app/papers/PMID_10782016.md:1:# Molecular heterogeneity of the glucose-6-phosphate dehydrogenase deficiency in the Hellenic population.\n/app/papers/PMID_10782016.md:11:We report results from a systematic study to identify the molecular basis of glucose-6-phosphate dehydrogenase (G6PD) deficiency on a sample of 299 male subjects from the Hellenic population. Our stepwise approach involved partial biochemical characterization and quantitation of the enzyme's activity, MboII restriction endonuclease digestion to identify the G6PD Mediterranean variant, which represents the most frequent G6PD variant in our population and a nonradioactive polymerase chain reaction-single-strand conformation polymorphism methodology for the detection of the underlying molecular defect(s) in the rest of the non-Mediterranean G6PD-deficient individuals. Through this approach, six different G6PD variants were identified (G6PD Mediterranean, G6PD Hermoupolis, G6PD Cassano, G6PD Seattle, G6PD Ierapetra and G6PD Acrokorinthos), two of which were new (G6PD Hermoupolis, G6PD Acrokorinthos). In essence, this study underlines the remarkable genetic heterogeneity of the G6PD deficiency in the Hellenic population, while the finding of the double mutant, G6PD Hermoupolis, may help to outline the relationship and evolution of mutations in the human G6PD locus.\n/app/papers/PMID_7959695.md:11:More than 80 variants of glucose-6-phosphate dehydrogenase (G6PD) are associated with chronic nonspherocytic haemolytic anaemia (CNSHA); however, the molecular basis of this association is not fully understood. We have used the polymerase chain reaction and nucleotide sequence analysis to characterize a new G6PD variant, which we designate as G6PD Bari, in a G6PD-deficient boy affected by CNSHA. A single mutation leading to an amino-acid substitution was detected in the G6PD coding region, viz. a C->T transition at position 1187 predicting leucine at residue 396 in the enzyme; proline is invariably present in evolutionary distant G6PD molecules at this position. Inheritance in the patient's family was demonstrated by the polymerase chain reaction followed by diagnostic restriction enzyme analysis. The C->T transition responsible for G6PD Bari maps close to several other mutations previously identified in G6PD variants associated with CNSHA.\n/app/papers/PMID_21302115.md:1:# Chronic nonspherocytic hemolytic anemia due to glucose-6-phosphate dehydrogenase deficiency: report of two families with novel mutations causing G6PD Bangkok and G6PD Bangkok Noi.\n/app/papers/PMID_21302115.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency is one of the most common hereditary enzymopathies worldwide. Mostly G6PD deficient cases are asymptomatic though they may have the risk of neonatal jaundice (NNJ) and acute intravascular hemolysis during oxidative stress. Chronic nonspherocytic hemolytic anemia (CNSHA) due to G6PD deficiency is rare. In Thailand, one case was reported 40\u00a0years ago and by biochemical study this G6PD was reported to be a new variant G6PD Bangkok. We, herein, report two families with CNSHA due to G6PD deficiency. In the first family, we have been following up the clinical course of the patient with G6PD Bangkok. In addition to chronic hemolysis, he had three acute hemolytic episodes requiring blood transfusions during childhood period. Multiple gallstones were detected at the age of 27. His two daughters who inherited G6PD Bangkok from him and G6PD Vanua Lava from his wife are asymptomatic. Both of them had NNJ and persistent evidences of compensated hemolysis. Molecular analysis revealed a novel missense mutation 825 G\u2192C predicting 275 Lys\u2192Asn causing G6PD Bangkok. In the second family, two male siblings are affected. They had NNJ and several hemolytic episodes which required blood transfusions. On follow-up they have been diagnosed with chronic hemolysis as evidenced by reticulocytosis and indirect hyperbilirubinemia. Molecular analysis revealed combined missense mutations in exons 12 and 13. The first mutation was 1376 G\u2192T predicting 459 Arg\u2192Leu (known as G6PD Canton) and the second one was 1502 T\u2192G predicting 501 Phe\u2192Cys. We designated the resulting novel G6PD variant, G6PD Bangkok Noi.\n/app/papers/PMID_3591235.md:1:# Frequency of glucose 6-phosphate dehydrogenase (G6PD) deficiency in Tokyo and a new variant: G6PD Musashino.\n/app/papers/PMID_28028996.md:11:**BACKGROUND:** We describe the genetic profiles of Korean patients with glucose-6-phosphate dehydrogenase (G6PD) deficiencies and the effects of G6PD mutations on protein stability and enzyme activity on the basis of in silico analysis.\n/app/papers/PMID_28028996.md:13:**METHODS:** In parallel with a genetic analysis, the pathogenicity of G6PD mutations detected in Korean patients was predicted in silico. The simulated effects of G6PD mutations were compared to the WHO classes based on G6PD enzyme activity. Four previously reported mutations and three newly diagnosed patients with missense mutations were estimated.\n/app/papers/PMID_28028996.md:15:**RESULTS:** One novel mutation (p.Cys385Gly, labeled G6PD Kangnam) and two known mutations [p.Ile220Met (G6PD S\u00e3o Paulo) and p.Glu416Lys (G6PD Tokyo)] were identified in this study. G6PD mutations identified in Koreans were also found in Brazil (G6PD S\u00e3o Paulo), Poland (G6PD Seoul), United States of America (G6PD Riley), Mexico (G6PD Guadalajara), and Japan (G6PD Tokyo). Several mutations occurred at the same nucleotide, but resulted in different amino acid residue changes in different ethnic populations (p.Ile380 variant, G6PD Calvo Mackenna; p.Cys385 variants, Tomah, Madrid, Lynwood; p.Arg387 variant, Beverly Hills; p.Pro396 variant, Bari; and p.Pro396Ala in India). On the basis of the in silico analysis, Class I or II mutations were predicted to be highly deleterious, and the effects of one Class IV mutation were equivocal.\n/app/papers/PMID_28028996.md:17:**CONCLUSIONS:** The genetic profiles of Korean individuals with G6PD mutations indicated that the same mutations may have arisen by independent mutational events, and were not derived from shared ancestral mutations. The in silico analysis provided insight into the role of G6PD mutations in enzyme function and stability.\n/app/papers/PMID_11780463.md:1:# A novel mis-sense mutation (G1381A) in the G6PD gene identified in a Chinese man.\n/app/papers/PMID_11780463.md:11:**OBJECTIVE:** To detect new mutations among 29 glucose-6-phosphate dehydrogenase (G6PD) deficient individuals from Yunnan province.\n/app/papers/PMID_11780463.md:13:**METHODS:** The nitroblue tetrazolium (NBT) method was used to screen G6PD deficient individuals. Mutation was identified by single strand conformation polymorphism (SSCP), amplification created restriction site (ACRS), amplification refractory mutation system (ARMS) and DNA sequencing.\n/app/papers/PMID_11780463.md:15:**RESULTS:** Among 29 cases, 18 cases of G1388A, 1 case of C1004A, and 1 case of G1381A were identified. Nine cases remained to be defined. The G1381A mutation is a novel mis-sense mutation, with a substitution of threonine for alanine (A461T). The resultant G6PD had reduced enzymatic activity. In addition, G1381A caused a restriction site of Stu I to disappear, providing a rapid method for the detection of this mutation.\n/app/papers/PMID_2253938.md:1:# Genetic heterogeneity at the glucose-6-phosphate dehydrogenase locus in southern Italy: a study on a population from the Matera district.\n/app/papers/PMID_2253938.md:11:Glucose-6-phosphate dehydrogenase (G6PD) has been analyzed by gel electrophoresis and by quantitative assay in an unselected sample of 1524 schoolboys from the province of Matera (Lucania) in southern Italy. We have identified 43 subjects with a G6PD variant. Of these, 31 had severe G6PD deficiency, nine had mild to moderate deficiency, and three had a non-deficient electrophoretic variant. The overall rate of G6PD deficiency was 2.6%. The frequency of G6PD deficiency, ranging from 7.2% on the Ionian Coast to zero on the eastern side of the Lucanian Apennines, appears to be inversely related to the distance of each town examined from the Ionian Coast, suggesting that this geographic distribution may reflect, at least in part, gene flow from Greek settlers. Biochemical characterization has shown that most of the G6PD deficiency in this population is accounted for by G6PD Mediterranean. In addition, we have found several examples of two other known polymorphic variants (G6PD Cagliari and G6PD A-); three new polymorphic variants, G6PD Metaponto (class III), G6PD Montalbano (class III), and G6PD Pisticci (class IV); and two sporadic variants, G6PD Tursi (class III) and G6PD Ferrandina (class II). These data provide further evidence for the marked genetic heterogeneity of G6PD deficiency within a relatively narrow geographic area and they prove the presence in the Italian peninsula of a gene (GdA-) regarded as characteristically African.\n/app/papers/PMID_2222408.md:1:# Identification of a single base change in a new human mutant glucose-6-phosphate dehydrogenase gene by polymerase-chain-reaction amplification of the entire coding region from genomic DNA.\n/app/papers/PMID_2222408.md:11:We report the characterization at the molecular level of a mutant glucose-6-phosphate dehydrogenase (G6PD) gene in a Greek boy who presented with a chronic non-spherocytic haemolytic anaemia. In order to identify the mutation from a small amount of patient material, we adopted an approach which by-passes the need to construct a library by using the polymerase chain reaction. The entire coding region was amplified in eight sections, with genomic DNA as template. The DNA fragments were then cloned in an M13 vector and sequenced. The only difference from the sequence of normal G6PD was a T----G substitution at nucleotide position 648 in exon 7, which predicts a substitution of leucine for phenylalanine at amino acid position 216. This mutation creates a new recognition site for the restriction nuclease BalI. We confirmed the presence of the mutation in the DNA of the patient's mother, who was found to be heterozygous for the new BalI site. This is the first transversion among the point mutations thus far reported in the human G6PD gene.\n/app/papers/PMID_16143877.md:1:# Characterization of G6PD deficiency in southern Croatia: description of a new variant, G6PD Split.\n/app/papers/PMID_16143877.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency protects from severe forms of malaria. It is interesting therefore to analyze the molecular basis underlying G6PD deficiency in regions such as the Mediterranean basin where malaria was present for a long time in history. Here we report on the genetic characterization of G6PD deficiency among inhabitants of one Mediterranean region-the Dalmatian region of south Croatia. We analyzed 24 unrelated G6PD-deficient male subjects. Molecular testing revealed several different mutations: G6PD Cosenza 9, G6PD Mediterranean 4, G6PD Seattle 3, G6PD Union 3, and G6PD Cassano 1. Furthermore, we have identified one novel G6PD variant that we named G6PD Split. This variant is caused by a nucleotide change 1442 C-->G leading to the amino acid substitution 481 Pro-->Arg and is characterized by moderate enzyme deficiency (class III variant). This study reveals a higher prevalence (37.5%) of the Cosenza mutation in the Dalmatian region than anywhere else previously investigated and overall shows the considerable molecular heterogeneity underlining G6PD deficiency that can be observed in Mediterranean populations.\n/app/papers/PMID_1562739.md:1:# Diverse point mutations result in glucose-6-phosphate dehydrogenase (G6PD) polymorphism in Taiwan.\n/app/papers/PMID_1562739.md:11:Glucose-6-PHOSPHATE dehydrogenase (G6PD; EC 1.1.1.49) deficiency is the most common human enzymopathy, affecting more than 200 million people worldwide. Although greater than 400 variants have been described based on clinical and biochemical criteria, little is known about the molecular basis of these G6PD deficiencies. Recently, the gene that encodes human G6PD has been cloned and sequenced, which enables us to examine directly the heterogeneity of G6PD at the DNA level. During the past 10 years, we examined the G6PD activity in 21,271 newborn Chinese infants (11,400 males and 9,871 females) and identified 314 (2.8%) males and 246 (2.5%) females having low G6PD activity. The G6PD gene from 10 randomly selected affected individuals and their relatives was polymerase chain reaction (PCR) amplified, subcloned, and sequenced. Our results indicate that at least four types of mutation are responsible for the G6PD polymorphism in Taiwan. The first type of mutation (487 G----A) was found in an affected Chinese with a G to A change at nucleotide 487, which results in a (163)Gly to Ser substitution. The second type of mutation (493 A----G) is a novel mutation that has not been reported in any other ethnic group and was identified in two affected Chinese. This mutation causes an A to G change at nucleotide position 493, producing an (165)Asn to Asp substitution. Interestingly, the 487 G----A and 493 A----G mutations create Alu I and Ava II recognition sites, respectively, which enabled us to rapidly detect these two mutations by PCR/restriction enzyme (RE) digestion method. The third mutation (1376 G----T) was found in four affected Chinese. This mutation causes a G to T change at nucleotide position 1376 that results in an (459)Arg to Leu substitution. The 1376 G----T mutation seems to be the dominant allele that causes G6PD deficiency in Taiwan. Finally, two affected Chinese were identified as having the fourth mutation (1388 G----A). This mutation causes a G to A change at nucleotide 1388 that produces an (463)Arg to His substitution. Our studies provide the direct proof of the genetic heterogeneity of G6PD deficiency in the Chinese populations of Taiwan and the PCR/RE digestion method is suitable for simultaneous detection of the 487 G----A and 493 A----G mutations.\n/app/papers/PMID_2321910.md:1:# Common glucose-6-phosphate dehydrogenase (G6PD) variants from the Italian population: biochemical and molecular characterization.\n/app/papers/PMID_2321910.md:11:By biochemical characterization of glucose-6-phosphate dehydrogenase (G6PD) from the red cells of seventeen subjects of the population of Matera (Southern Italy) we have identified six genetically determined common variants. Among these, G6PD Metaponto and G6PD A(-) Matera had been already fully characterized. We have now found that A(-) Matera is genetically heterogeneous since one of two subjects examined had the two mutations at codons 68 and 126 characteristic of a typical A(-) variant, while the other subject had only the codon 126 mutation. G6PD Pisticci and G6PD Tursi are two new variants whose molecular lesion is not yet known. G6PD Cagliari-like has biochemical characteristics reminiscent of G6PD Cagliari, isolated in Sardinia, and was found to have the same nucleotide substitution as G6PD Mediterranean. G6PD Montalbano is a new variant, with nearly normal properties, due to a G----A transition which causes an Arg----His amino acid replacement at position 285.\n/app/papers/PMID_2572288.md:1:# Molecular heterogeneity of glucose-6-phosphate dehydrogenase A-.\n/app/papers/PMID_2572288.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency is probably the most common disease-producing genetic polymorphism of humans. Virtually all G6PD-deficient Africans show the G6PD A- phenotype, an electrophoretically rapid, deficient enzyme. The recently acquired ability to identify the point mutations producing the different variants has given us new insights into the population genetics of G6PD variants. Twenty-nine males with the G6PD A- phenotype were studied. They were of African, Mexican, Spanish, and US white ethnic origin. All had the A---G transition at nucleotide 376 characteristic of G6PD A. In each case, one of three additional mutations was present, at nucleotides 202, 680, or 968. That in this population second mutations producing G6PD deficiency occurred only on the genetic background of G6PD A suggests that G6PD A was at one time the most common type of G6PD in Africa. However, the nucleotide sequence of the chimpanzee (Pan troglodytes) G6PD indicates that the primordial human type of G6PD was G6PD B.\n/app/papers/PMID_9290617.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency is a common X-linked enzyme defect. We report a new variant, G6PD Durham713G, that is associated with chronic nonspherocytic hemolytic anemia. The G6PD Durham713G variant has a unique biochemical and enzymatic profile and a novel A-->G substitution mutation at nucleotide 713, changing lysine to arginine at amino acid 238. This mutation was not found in the mother of our patient, indicating that G6PD Durham713G resulted from a de novo mutation.\n/app/papers/PMID_9298828.md:1:# G6PD sumar\u00e9: a novel mutation in the G6PD gene (1292 T-->G) associated with chronic nonspherocytic anemia.\n/app/papers/PMID_20582980.md:1:# A novel G473A mutation in the glucose-6-phosphate dehydrogenase gene.\n/app/papers/PMID_20582980.md:11:Hereditary deficiency in human glucose-6-phosphate dehydrogenase (G6PD) is mostly caused by single nucleotide change in the G6PD gene which leads to single amino acid substitution. In 104 cases of Chinese children with G6PD deficiency, RT-PCR-DGGE (denaturing gradient gel electrophoresis) combined with DNA sequencing was carried out to screen the mutations within the coding region of G6PD gene. A novel missense mutation (G473A), predicting a Cys-to-Tyr substitution at codon 158, was identified in a male infant patient and confirmed in his mother. This G6PD variant (158 Tyr) showed decreased enzyme activity, belonging to WHO Class II. We designated this variant as G6PD Shenzhen by the birthplace of the propositus.\n/app/papers/PMID_9410474.md:1:# Hematologically important mutations: glucose-6-phosphate dehydrogenase.\n/app/papers/PMID_18452027.md:1:# G6PD deficiency assessment in Freetown, Sierra Leone, reveals further insight into the molecular heterogeneity of G6PD A-.\n/app/papers/PMID_18452027.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency in Africa is of high prevalence, although precise data are lacking in many individual nations. We investigated 129 unrelated subjects (71 male subjects, 58 female subjects) visiting a teaching hospital in Freetown, Sierra Leone, to collect baseline data on the distribution of G6PD deficiency among respective ethnic groups in the country. We confirmed eight G6PD-deficient male subjects by two formazan-based blood tests (11.3% of the male subjects examined), and also detected the common 376A > G mutation in 11 male subjects and eight female subjects by sequencing exons 3-5 of the G6PD gene. Selected samples were further sequenced for exons 2-13 and introns 5, 7, 8, and 11. Among the deficient male subjects, six were G6PD A- carrying the double mutations (202G > A and 376A > G), all of whom were in the Temne and Mende ethnic groups. Others included A- Betica, and a novel variant having double mutations in exon 5 (311G > A and 376A > G forming 104 Arg > His and 126 Asn > Asp, respectively), which we designate as G6PD Sierra Leone. Subsequent haplotype analysis linked this novel variant to the G6PD A- \"family\".\n/app/papers/PMID_12737940.md:1:# Molecular characterization of G6PD Insuli--a novel 989 CGC --> CAC (330 Arg --> His) mutation in the Indian population.\n/app/papers/PMID_12737940.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency is the most common red cell enzymopathy among humans. G6PD deficiency was reported in India more than 30 years ago and about 13 biochemically characterized variants have been reported. We now describe the molecular characterization of a distinct biochemical variant from India which was previously characterized by us as a unique Class IV variant with fast electrophoretic mobility. The sequence of the G6PD gene from this variant has revealed the presence of a novel 989 G --> A mutation in exon 9 with a predicted amino acid change of Arg330His.\n/app/papers/PMID_8241497.md:1:# G6PD Nara: a new class 1 glucose-6-phosphate dehydrogenase variant with an eight amino acid deletion.\n/app/papers/PMID_8241497.md:11:In the course of molecular studies on Japanese glucose-6-phosphate dehydrogenase (G6PD) variants using single-strand conformation polymorphisms (SSCP) analysis, we found an unusual class 1 G6PD variant that had nucleotide deletion in exon 9. The patient showed chronic nonspherocytic hemolytic anemia associated with frequent episodes of severe hemolytic attack. The hemolysate exhibited no measurable activity. Although the partially purified enzyme had detectable activity, we could not perform kinetic studies because of its extreme instability. Nucleotide sequencing showed a unique 24 bp deletion at nucleotide 953-976 that predicts an eight amino acid deletion of TKGYLDDP at residue 319-326. While this is one of the most drastic structural alterations found in G6PD variants, the region with the amino acid deletion was distant from both the G6P and NADP+ binding sites and was located in a domain with low sequence homology among species. The comparatively low functional importance of the deleted region may have saved the patient from lethal tissue dysfunction.\n/app/papers/PMID_1353664.md:1:# Molecular abnormalities of a human glucose-6-phosphate dehydrogenase variant associated with undetectable enzyme activity and immunologically cross-reacting material.\n/app/papers/PMID_1353664.md:11:Among a large number of glucose-6-phosphate dehydrogenase (G6PD) variants associated with different severity of clinical manifestations, enzyme deficiency, and kinetic abnormalities found in humans, only one variant exhibits no measurable activity and lacks an immunologically cross-reacting material in blood cells and other tissues. The mRNA content of the patient's lymphoblastoid cells was found to be normal, and the size of mRNA was also normal (i.e., approximately 2.4 kb). Western blot hybridization indicated that the patient's cells did not produce cross-reacting material. The variant mRNA was reverse transcribed and amplified by PCR. Nucleotide sequencing of the variant cDNA showed the existence of three nucleotide base changes, i.e., a C----G at nucleotide 317 (counting from adenine of the initiation codon), which should cause Ser----Cys substitution at the 106th position (counting from the initiation Met); a C----T at nucleotide 544, which induces the Arg----Trp at the 182d position; and a C----T at nucleotide 592, which induces Arg----Cys at the 198th position of the protein. The existence of three mutation sites was confirmed by sequencing of selected regions of the variant gene. No base deletion or frameshift mutation was found in the variant cDNA. No nucleotide change was detected in the extended 5' region, which included the most distal cap site. When the variant cDNA was expressed in Escherichia coli, the G6PD activity was approximately 2% of that expressed by the normal cDNA, and cross-reacting material was undetectable. However, when the variant mRNA was expressed in the in vitro translation system of rabbit reticulocytes, the variant protein was produced. These results suggest that extremely rapid in vivo degradation or precipitation of the variant enzyme induced by the three amino acid substitutions could be the major cause of the molecular deficiency.\n/app/papers/PMID_8490627.md:1:# G6PD Aures: a new mutation (48 Ile-->Thr) causing mild G6PD deficiency is associated with favism.\n/app/papers/PMID_9674740.md:1:# Clinical and haematological consequences of recurrent G6PD mutations and a single new mutation causing chronic nonspherocytic haemolytic anaemia.\n/app/papers/PMID_9674740.md:11:We have determined the causative mutation in 12 cases of glucose-6-phosphate dehydrogenase deficiency associated with chronic non-spherocytic haemolytic anaemia. In 11 of them the mutation we found had been previously reported in unrelated individuals. These mutations comprise seven different missense mutations and a 24 base pair deletion. G6PD Nara, previously found in a Japanese boy. Repeated findings of the same mutations suggests that a limited number of amino acid changes can produce the CNSHA phenotype and be compatible with normal development. The one new mutation we have found, G6PD Serres, is 1082 C-->T causing a 361 Ala-->Val substitution in the dimer interface where most other severe G6PD mutations are found. Now that several patients with the same mutation have been reported we can compare the resulting clinical phenotypes. For each mutation we find a reasonably consistent clinical picture, ranging from mild (G6PD Clinic) through moderate (G6PD Nashville) to severe (G6PD Beverly Hills and G6PD Nara).\n/app/papers/PMID_1536798.md:1:# Molecular basis of chronic non-spherocytic haemolytic anaemia: a new G6PD variant (393 Arg----His) with abnormal KmG6P and marked in vivo instability.\n/app/papers/PMID_1536798.md:11:More than 80 genetic variants of glucose-6-phosphate dehydrogenase (G6PD) are associated with chronic non-spherocytic haemolytic anaemia (CNSHA). In order to help clarify the molecular basis of this association, we have carried out a detailed biochemical and genetic characterization of two G6PD deficient brothers affected by CNSHA. The G6PD from the two patients has altered electrophoretic mobility, abnormally elevated Michaelis constant (Km) for G6P, and extreme instability in vivo and in vitro. By comparison with published information we found that this is a new G6PD variant which we have designated G6PD Portici. The entire coding region of the gene has been sequenced, and a single point mutation, a G----A transition, was found at position 1178 in exon X, causing a substitution of histidine for arginine at residue 393 in the polypeptide chain. By polymerase chain reaction (PCR) amplification followed by diagnostic restriction enzyme analysis and allele-specific oligonucleotide hybridization we have demonstrated the inheritance of this mutation in the patient's family. Our results support the notion of a causative link between this mutation in the G6PD gene and CNSHA. Our data, in combination with previous data in the literature, suggest that the three-dimensional structure of G6PD is such as to cause interaction in the binding of its two substrates, G6P and NADP.\n/app/papers/PMID_1978554.md:1:# The NT 1311 polymorphism of G6PD: G6PD Mediterranean mutation may have originated independently in Europe and Asia.\n/app/papers/PMID_1978554.md:11:A polymorphic site exists in exon 11 of G6PD: in the wild-type enzyme, nucleotide (NT) 1311 is a C, but is some individuals from diverse populations a T is present instead. Nine of 54 X chromosomes from Europeans of mixed origins, nine of 41 X chromosomes of Ashkenazi Jewish subjects, three of 18 X chromosomes of Sicilians, five of 20 African X chromosomes, and nine of 20 Asian Indian X chromosomes had the mutant genotype. In contrast, the mutation was found in only three of 59 Oriental X chromosomes and in three of 30 Central/South American X chromosomes. The mutation was absent from four samples of chimpanzee DNA. Twenty-one of 22 male subjects from Mediterranean countries who had the G6PD Mediterranean 563T genotype investigated in the present study or reported previously had a T at NT 1311. Only one had the normal C at NT 1311. In contrast, both G6PD Mediterranean563T males from the Indian subcontinent had the normal C at NT 1311. These findings suggest that the same mutation at nucleotide 563 giving rise to G6PD Mediterranean may have arisen independently in Europe and in Asia.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"\\\\bG6PD\\\\b|glucose-6-phosphate\\\" /app/papers -S | head -n 50\"}"
+      }
+    },
+    {
+      "step_id": 9,
+      "timestamp": "2026-02-21T00:11:29.129Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_9fZkPpCPwStv9B0VFlp4Ti6h",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_9fZkPpCPwStv9B0VFlp4Ti6h",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"dapsone|DDS|diaminodiphenyl|diphenylsulfone|sulfone\" /app/papers -S | head -n 80"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_9fZkPpCPwStv9B0VFlp4Ti6h",
+            "content": "Chunk ID: ec9d5d\nWall time: 0.0562 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"dapsone|DDS|diaminodiphenyl|diphenylsulfone|sulfone\\\" /app/papers -S | head -n 80\"}"
+      }
+    },
+    {
+      "step_id": 10,
+      "timestamp": "2026-02-21T00:11:31.922Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_rmqGSmO56F3ZPfg8TEixZvqz",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_rmqGSmO56F3ZPfg8TEixZvqz",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"dapso\" /app/papers -S | head -n 80"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_rmqGSmO56F3ZPfg8TEixZvqz",
+            "content": "Chunk ID: 21a99d\nWall time: 0.0519 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"dapso\\\" /app/papers -S | head -n 80\"}"
+      }
+    },
+    {
+      "step_id": 11,
+      "timestamp": "2026-02-21T00:11:40.171Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_DqfRVYbhmYdFxW3UZH79bhOS",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_DqfRVYbhmYdFxW3UZH79bhOS",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"diphenyl.*sulfo|diamino.*sulfo|lepro|pneumoc|PJP|sulphone|sulfone\" /app/papers -S | head -n 100"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_DqfRVYbhmYdFxW3UZH79bhOS",
+            "content": "Chunk ID: acb434\nWall time: 0.0571 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"diphenyl.*sulfo|diamino.*sulfo|lepro|pneumoc|PJP|sulphone|sulfone\\\" /app/papers -S | head -n 100\"}"
+      }
+    },
+    {
+      "step_id": 12,
+      "timestamp": "2026-02-21T00:11:44.421Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_cbPkw63YDu63vwwOT01yLzuE",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_cbPkw63YDu63vwwOT01yLzuE",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"hemol|haemol|oxid|drug|primaquine|sulfa\" /app/papers -S | head -n 80"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_cbPkw63YDu63vwwOT01yLzuE",
+            "content": "Chunk ID: 776032\nWall time: 0.0532 seconds\nProcess exited with code 0\nOriginal token count: 15956\nOutput:\nTotal output lines: 80\n\n/app/papers/PMID_18226470.md:11:Screening of G6PD deficiency was carried out on 79 unrelated subjects (32 females and 47 males), all coming from out consultation. DNA from deficient subject (11 females and 30 males) was analyzed for the presence of G6PD mutation. Known mutations were studied by the appropriate restriction enzyme digestion of fragment amplified by PCR. Where the mutation could not be identified in this way, the samples were subjected to SSCP analysis and abnormal fragments were sequenced. Through these methods, seven different mutations have been identified. Among deficient females, eight had the African variant A-(tow of them were homozygous) and three had the Mediterranean variant, one of them was homozygous and have had a haemolytic crisis after ingestion of fava beans showing at birth manifestation of neonatal jaundice. Among deficient males, four were hospitalized and transfused after a haemolytic crisis due to ingestion of fava beans. All of them have had manifestation of neonatal jaundice. Of them, one carried the Mediterranean variant and three others had the African variant A-. Among the remaining deficient males, 15 had A-variant, two had the Aur\u00e8s mutation. SSCP analysis of nine mild deficient males, revealed the presence of the association of 1311 CT/93 TC in two subjects, a newly described silent mutation in the exon 12 associated with the polymorphism in the intron 11 93 TC in one subject and tow single intronic base deletion. The first is IVS V 17 (-C) found in two subjects and the second is IVS VIII 43 (-G) encountered in four subjects.\n/app/papers/PMID_2307454.md:1:# A new glucose-6-phosphate dehydrogenase variant with congenital nonspherocytic hemolytic anemia (G6PD Genova). Biochemical characterization and mosaicism expression in the heterozygote.\n/app/papers/PMID_2307454.md:11:A new deficient variant of glucose-6-phosphate dehydrogenase (G6PD) causing severe congenital nonspherocytic hemolytic anemia (CNSHA) is described. The variant enzyme, characterized by slow electrophoretic mobility, extreme in vivo and in vitro lability, high Km for G6P and strongly acidic pH optimum, appears to be unique, and has been designated G6PD Genova. Investigation of an obligate heterozygote using various cytochemical, biochemical and recombinant-DNA techniques showed G6PD mosaicism in the erythrocytes and leukocytes. Therefore, the presence of a disadvantageous mutation at one Gd locus did not determine selection in favor of the normal allele in the heterozygote's hemopoietic cells.\n/app/papers/PMID_7959695.md:1:# A novel single-base mutation in the glucose 6-phosphate dehydrogenase gene is associated with chronic non-spherocytic haemolytic anaemia.\n/app/papers/PMID_7959695.md:11:More than 80 variants of glucose-6-phosphate dehydrogenase (G6PD) are associated with chronic nonspherocytic haemolytic anaemia (CNSHA); however, the molecular basis of this association is not fully understood. We have used the polymerase chain reaction and nucleotide sequence analysis to characterize a new G6PD variant, which we designate as G6PD Bari, in a G6PD-deficient boy affected by CNSHA. A single mutation leading to an amino-acid substitution was detected in the G6PD coding region, viz. a C->T transition at position 1187 predicting leucine at residue 396 in the enzyme; proline is invariably present in evolutionary distant G6PD molecules at this position. Inheritance in the patient's family was demonstrated by the polymerase chain reaction followed by diagnostic restriction enzyme analysis. The C->T transition responsible for G6PD Bari maps close to several other mutations previously identified in G6PD variants associated with CNSHA.\n/app/papers/PMID_21302115.md:1:# Chronic nonspherocytic hemolytic anemia due to glucose-6-phosphate dehydrogenase deficiency: report of two families with novel mutations causing G6PD Bangkok and G6PD Bangkok Noi.\n/app/papers/PMID_21302115.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency is one of the most common hereditary enzymopathies worldwide. Mostly G6PD deficient cases are asymptomatic though they may have the risk of neonatal jaundice (NNJ) and acute intravascular hemolysis during oxidative stress. Chronic nonspherocytic hemolytic anemia (CNSHA) due to G6PD deficiency is rare. In Thailand, one case was reported 40\u00a0years ago and by biochemical study this G6PD was reported to be a new variant G6PD Bangkok. We, herein, report two families with CNSHA due to G6PD deficiency. In the first family, we have been following up the clinical course of the patient with G6PD Bangkok. In addition to chronic hemolysis, he had three acute hemolytic episodes requiring blood transfusions during childhood period. Multiple gallstones were detected at the age of 27. His two daughters who inherited G6PD Bangkok from him and G6PD Vanua Lava from his wife are asymptomatic. Both of them had NNJ and persistent evidences of compensated hemolysis. Molecular analysis revealed a novel missense mutation 825 G\u2192C predicting 275 Lys\u2192Asn causing G6PD Bangkok. In the second family, two male siblings are affected. They had NNJ and several hemolytic episodes which required blood transfusions. On follow-up they have been diagnosed with chronic hemolysis as evidenced by reticulocytosis and indirect hyperbilirubinemia. Molecular analysis revealed combined missense mutations in exons 12 and 13. The first mutation was 1376 G\u2192T predicting 459 Arg\u2192Leu (known as G6PD Canton) and the second one was 1502 T\u2192G predicting 501 Phe\u2192Cys. We designated the resulting novel G6PD variant, G6PD Bangkok Noi.\n/app/papers/PMID_2222408.md:11:We report the characterization at the molecular level of a mutant glucose-6-phosphate dehydrogenase (G6PD) gene in a Greek boy who presented with a chronic non-spherocytic haemolytic anaemia. In order to identify the mutation from a small amount of patient material, we adopted an approach which by-passes the need to construct a library by using the polymerase chain reaction. The entire coding region was amplified in eight sections, with genomic DNA as template. The DNA fragments were then cloned in an M13 vector and sequenced. The only difference from the sequence of normal G6PD was a T----G substitution at nucleotide position 648 in exon 7, which predicts a substitution of leucine for phenylalanine at amino acid position 216. This mutation creates a new recognition site for the restriction nuclease BalI. We confirmed the presence of the mutation in the DNA of the patient's mother, who was found to be heterozygous for the new BalI site. This is the first transversion among the point mutations thus far reported in the human G6PD gene.\n/app/papers/PMID_9290617.md:1:# Glucose-6-phosphate dehydrogenase Durham: a de novo mutation associated with chronic hemolytic anemia.\n/app/papers/PMID_9290617.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency is a common X-linked enzyme defect. We report a new variant, G6PD Durham713G, that is associated with chronic nonspherocytic hemolytic anemia. The G6PD Durham713G variant has a unique biochemical and enzymatic profile and a novel A-->G substitution mutation at nucleotide 713, changing lysine to arginine at amino acid 238. This mutation was not found in the mother of our patient, indicating that G6PD Durham713G resulted from a de novo mutation.\n/app/papers/PMID_8241497.md:11:In the course of molecular studies on Japanese glucose-6-phosphate dehydrogenase (G6PD) variants using single-strand conformation polymorphisms (SSCP) analysis, we found an unusual class 1 G6PD variant that had nucleotide deletion in exon 9. The patient showed chronic nonspherocytic hemolytic anemia associated with frequent episodes of severe hemolytic attack. The hemolysate exhibited no measurable activity. Although the partially purified enzyme had detectable activity, we could not perform kinetic studies because of its extreme instability. Nucleotide sequencing showed a unique 24 bp deletion at nucleotide 953-976 that predicts an eight amino acid deletion of TKGYLDDP at residue 319-326. While this is one of the most drastic structural alterations found in G6PD variants, the region with the amino acid deletion was distant from both the G6P and NADP+ binding sites and was located in a domain with low sequence homology among species. The comparatively low functional importance of the deleted region may have saved the patient from lethal tissue dysfunction.\n/app/papers/PMID_9674740.md:1:# Clinical and haematological consequences of recurrent G6PD mutations and a single new mutation causing chronic nonspherocytic haemolytic anaemia.\n/app/papers/PMID_9674740.md:11:We have determined the causative mutation in 12 cases of glucose-6-phosphate dehydrogenase deficiency associated with chronic non-spherocytic haemolytic anaemia. In 11 of them the mutation we found had been previously reported in unrelated individuals. These mutations comprise seven different missense mutations and a 24 base pair deletion. G6PD Nara, previously found in a Japanese boy. Repeated findings of the same mutations suggests that a limited number of amino acid changes can produce the CNSHA phenotype and be compatible with normal development. The one new mutation we have found, G6PD Serres, is 1082 C-->T causing a 361 Ala-->Val substitution in the dimer interface where most other severe G6PD mutations are found. Now that several patients with the same mutation have been reported we can compare the resulting clinical phenotypes. For each mutation we find a reasonably consistent clinical picture, ranging from mild (G6PD Clinic) through moderate (G6PD Nashville) to severe (G6PD Beverly Hills and G6PD Nara).\n/app/papers/PMID_1536798.md:1:# Molecular basis of chronic non-spherocytic haemolytic anaemia: a new G6PD variant (393 Arg----His) with abnormal KmG6P and marked in vivo instability.\n/app/papers/PMID_1536798.md:11:More than 80 genetic variants of glucose-6-phosphate dehydrogenase (G6PD) are associated with chronic non-spherocytic haemolytic anaemia (CNSHA). In order to help clarify the molecular basis of this association, we have carried out a detailed biochemical and genetic characterization of two G6PD deficient brothers affected by CNSHA. The G6PD from the two patients has altered electrophoretic mobility, abnormally elevated Michaelis constant (Km) for G6P, and extreme instability in vivo and in vitro. By comparison with published information we found that this is a new G6PD variant which we have designated G6PD Portici. The entire coding region of the gene has been sequenced, and a single point mutation, a G----A transition, was found at position 1178 in exon X, causing a substitution of histidine for arginine at residue 393 in the polypeptide chain. By polymerase chain reaction (PCR) amplification followed by diagnostic restriction enzyme analysis and allele-specific oligonucleotide hybridization we have demonstrated the inheritance of this mutation in the patient's family. Our results support the notion of a causative link between this mutation in the G6PD gene and CNSHA. Our data, in combination with previous data in the literature, suggest that the three-dimensional structure of G6PD is such as to cause interaction in the binding of its two substrates, G6P and NADP.\n/app/papers/PMID_1270075.md:11:A deficient G-6PD variant was discovered in 4 males of one family from northwestern Germany. Five generations of this family could be studied. The deficient G-6PD was a new variant, called \"Gd (--) Aachen\". Its main characteristics are the following: severe enzyme deficiency in erythrocytes (3% of normal), contrasting with an almost normal activity in leukocytes; normal molecular specific activity (i.e., normal ratio enzyme activity/cross-reacting material); slow mobility in starch gel electrophoresis (92-94% of normal); increased Michaelis constant for glucoes-6-phosphate (60-70 muM) and NADP+ (20-25 muM); decreased inhibition constant by NADPH with respect to NADP+ (7 muM); increased inhibition by ATP; normal utilization of the substrate analogues; slightly biphasic pH curve; thermal instability, and normal activation energy of the enzymatic reaction. The relationships between the hematologic disorders (severe and frequent hemolytic crises) and the unfavorable kinetic modifications are discussed.\n/app/papers/PMID_11271380.md:11:**UNLABELLED:** Glucose-6-phosphate dehydrogenase (G6PD) deficiency is an X-linked recessive disorder in which haemolytic anaemia is the major symptom. The Beutler spot test employed in mass-screening for galactosaemia in newborns requires several intrinsic erythrocyte enzymes such as G6PD for its reaction and can theoretically detect G6PD deficiency apart from galactose-1-phosphate uridyltransferase deficiency. In this study, we detected two patients with G6PD deficiency using the quantitative Beutler test which was recently developed in our laboratory. Both patients lacked erythrocyte G6PD activity but exhibited no clinical symptoms. Molecular analysis in patients 1 and 2 revealed two novel missense mutations of C853T causing R285C and A1220C causing K407T, respectively. Molecular rather than enzymatic analysis was required in familial studies to detect and diagnose the carrier state. To date these patients have avoided oxidant stress and haemolytic diatheses have not been induced.\n/app/papers/PMID_11271380.md:13:**CONCLUSION:** Our results indicate that the quantitative Beutler test can detect glucose-6-phosphate dehydrogenase deficiency of class 1 and 2 and is therefore useful for early intervention and prevention of haemolytic diathesis in patients with this disorder.\n/app/papers/PMID_3565372.md:1:# Two new variants of glucose-6-phosphate dehydrogenase associated with hereditary non-spherocytic hemolytic anemia: G6PD Wayne and G6PD Huron.\n/app/papers/PMID_3565372.md:11:Two new deficient variants of glucose-6-phosphate dehydrogenase (G6PD) causing hereditary nonspherocytic hemolytic anemia (HNSHA) are described. Both of these are unique and they have been named G6PD Wayne and G6PD Huron. Patients with G6PD Wayne underwent splenectomy and no objective improvement was noted. The patients with G6PD Huron were under medical observation for a considerable period of time without the diagnosis of G6PD deficiency being entertained because the family was of Northern European origin. Since sporadic variants of G6PD causing HNSHA show no special racial predilection, the diagnosis of G6PD deficiency should always be considered in patients with this syndrome.\n/app/papers/PMID_5413384.md:1:# Nonspherocytic congenital hemolytic anemia due to a new G-6-pd variant: g-6-pd alhambra.\n/app/papers/PMID_10556177.md:11:We have investigated the blood cells from a woman with a low degree of chronic nonspherocytic hemolytic anemia and frequent bacterial infections accompanied by icterus and anemia. The activity of glucose 6-phosphate dehydrogenase (G6PD) in her red blood cells (RBCs) was below detection level, and in her leukocytes less than 3% of normal. In cultured skin fibroblasts, G6PD activity was approximately 15% of normal, with 4- to 5-fold increased Michaelis constant (Km) for NADP and for glucose 6-phosphate. Activated neutrophils showed a decreased respiratory burst. Family studies showed normal G6PD activity in the RBCs from all family members, including both parents and the 2 daughters of the patient. Sequencing of polymerase chain reaction (PCR)-amplified genomic DNA showed a novel, heterozygous 514C-->T mutation, predicting a Pro172-->Ser replacement. Analysis of G6PD RNA from the patient's leukocytes and fibroblasts showed only transcripts with the 514C-->T mutation. This was explained by the pattern of X-chromosome inactivation, studied by means of the human androgen receptor (HUMARA) assay, which proved to be skewed in the patient, her mother, and one of the patient's daughters. Thus, the patient has inherited a de novo mutation in G6PD from her father and an X-chromosome inactivation determinant from her mother, causing exclusive expression of the mutated G6PD allele. Purified mutant protein from an Escherichia coli expression system showed strongly decreased specific activity, increased Km for NADP and for glucose 6-phosphate, and increased heat lability, which indicates that the defective phenotype is due to 2 synergistic molecular dysfunctions: decreased catalytic efficiency and protein instability.\n/app/papers/PMID_3360447.md:1:# A new glucose-6-phosphate dehydrogenase variant (G6PD Tsukui) associated with congenital hemolytic anemia.\n/app/papers/PMID_3360447.md:11:A new glucose-6-phosphate dehydrogenase (G6PD) variant associated with chronic nonspherocytic hemolytic anemia was found in a 20-year-old Japanese male who showed mild hemolysis after an upper respiratory tract infection. The patient had been noted to have jaundice and reticulocytosis several times before this episode. The enzyme activity of the variant was 1.5% of normal. The enzymatic characteristics were slow anodal electrophoretic mobility, high Km G6P, normal Km NADP, decreased heat stability, and a normal pH optimum. From these results, the enzyme was considered to be a new class 1 variant and was designated G6PD Tsukui.\n/app/papers/PMID_10666231.md:1:# Glucose-6-phosphate dehydrogenase aveiro: a de novo mutation associated with chronic nonspherocytic hemolytic anemia.\n/app/papers/PMID_7849299.md:1:# Identification of two novel deletion mutations in glucose-6-phosphate dehydrogenase gene causing hemolytic anemia.\n/app/papers/PMID_7849299.md:11:Among over 50 distinct mutations causing glucose-6-phosphate dehydrogenase (G6PD) deficiency, only two deletion mutations have so far been reported. Using nonradioisotopic single-strand conformation polymorphism analysis, we found two additional deletion mutations in two Japanese G6PD-deficient patients with nonspherocytic hemolytic anemia. Case no. 1 had a 3-nucleotide deletion in exon 6 predicting a deletion of a serine at amino acid 188 or 189, which caused a class 1 variant G6PD Tsukui. Case no. 2 had a 3-nucleotide deletion in exon 5 predicting a deletion of a lysine at residue 95, which caused a class 2 variant G6PD Urayasu. The 188th serine, which might be deleted in G6PD Tsukui, is located close to the putative G6P binding site. The 188th serine is also involved in the amino acid substitution in G6PD Mediterranean, but the kinetics of these two variants are totally different. The residue with an amino acid deletion in G6PD Urayasu was distant from the substrate binding sites and was located in a region with low sequence homology among species. The different properties of variants having mutations in exons 5 and 6 suggest that these two exons code distinct functional domains of the enzyme.\n/app/papers/PMID_22770933.md:13:**DESIGN AND METHODS:** Eighty unrelated Palestinian children hospitalized for hemolysis were studied. G6PD activity was determined by quantitative spectrophotometry and G6PD mutations were analyzed by sequencing of gDNA.\n/app/papers/PMID_22770933.md:15:**RESULTS:** 65 of 80 children (81%) had G6PD deficiency, accounting for most of the hemolytic disease in this age group. G6PD Mediterranean(c.563T), African G6PD A-(c.202A/c.376G), and G6PD Cairo(c.404C) were common with relative allele frequencies of 0.33 [1], 0.26, and 0.18 respectively. Two other variants were discovered, G6PD Beverly Hills(c.1160A) mutation, and a novel G6PD missense mutation c.536G>A (Ser179Asn), designated G6PD \"Gaza\". Three samples exhibited enzyme deficiency without detectable exonic or exon/intron boundary mutations.\n/app/papers/PMID_22770933.md:17:**CONCLUSION:** G6PD deficiency accounts for the majority of diagnoses for hemolysis in Palestinian children (81%), providing support for newborn G6PD deficiency screening programs. We report unanticipated molecular heterogeneity of G6PD variants among Gaza Strip Palestinians greater than reported in neighboring Arab populatio\u20265956 tokens truncated\u2026hemolyzed.\n/app/papers/PMID_22963789.md:11:We screened 423 patients referred to our laboratory after hemolysis triggered by fava beans ingestion, neonatal jaundice or drug hemolysis. Others were asymptomatic but belonged to a family with a history of G6PD deficiency. The determination of enzymatic activity using spectrophotometric method, revealed 293 deficient (143 males and 150 females). The molecular analysis was performed by a combination of PCR-RFLP and DNA sequencing to characterize the mutations causing G6PD deficiency. 14 different genotypes have been identified : G6PD A(-) (376A>G;202G>A) (46.07%) and G6PD Med (33.10%) were the most common variants followed by G6PD Santamaria (5.80%), G6PD Kaiping (3.75%), the association [c.1311T and IVS11 93c] (3.75%), G6PD Chatham (2.04%), G6PD Aures (1.70%), G6PD A(-) Betica (0.68%), the association [ 376G;c.1311T;IVS11 93c] (0.68%), G6PD Malaga, G6PD Canton and G6PD Abeno respectively (0.34%). Two novel missense mutations were identified (c.920A>C: p.307Gln>Pro and c.968T>C: p.323 Leu>Pro). We designated these two class III variants as G6PD Tunis and G6PD Nefza. A mechanism which could account for the defective activity is discussed.\n/app/papers/PMID_6500558.md:11:A new glucose 6-phosphate dehydrogenase (G6PD) variant associated with chronic nonspherocytic hemolytic anemia was discovered in Japan. The patient showed hemolytic crises after upper respiratory infections. The enzyme activity was about 3.8% of the normal. The partially purified enzyme revealed slow anodal electrophoretic mobility, high Km NADP, marked thermal-instability, and increased affinity for a substrate analogue (deamino-NADP). A particular characteristic of this enzyme was a biphasic pH curve with a greatly increased activity at low pH values. From these results, this variant was clearly different from hitherto observed G6PD variants, and was designated G6PD Asahikawa.\n/app/papers/PMID_1879833.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency has previously been reported among both the black and white populations of Costa Rica. All 28 G6PD A- samples were found to be of the common G6PD A-376G/202A type. A previously described mutation associated with nonspherocytic hemolytic anemia, G6PD Puerto Lim\u00f3n, was found to be due to a G----A transition at nucleotide (nt) 1192, causing a glu----lys substitution. Mutations in this region of the G6PD molecule seem invariably to be associated with chronic hemolytic anemia. G6PD Santamaria had been described previously in two unrelated white subjects. We found that both did, indeed, have the same mutations. In this variant the A----G substitution at nt 376 that is characteristic of G6PD A was present, but an A----T mutation at nt 542, apparently superimposed on the ancient G6PD A mutation, resulted in an asp----val substitution. Thus, the gain of a negative charge at amino acid 126 was counterbalanced by the loss of a charge at amino acid 181, giving rise to a variant with the G6PD A mutation but with normal electrophoretic mobility.\n/app/papers/PMID_2602358.md:11:Human erythrocyte glucose-6-phosphate dehydrogenase is normally quite stable in the presence of 10 microM NADP+. Certain glucose-6-phosphate dehydrogenase variants lose virtually all their activity at this concentration of NADP+ but are reactivated by 200 microM NADP+. Such variants presumably have a defect in their NADP+-binding site. We analyzed the sequence of cDNA or genomic DNA from seven unrelated patients with hemolytic anemia due to the inheritance of variants that are reactivated by NADP+. Six patients had substitutions of one of three adjacent amino acids, and the seventh patient had another amino acid substitution 23 residues downstream. These amino acids are highly conserved, all being present in rat and all but one being found also in Drosophila. The anomalous electrophoretic behavior of some of the variants can be explained by their loss of ability to bind NADP+. We conclude that the region in which these mutations occur defines the binding domain for NADP+ and that binding NADP+ that has been designated as \"structural\" and as \"catalytic\" probably occurs at the same site.\n/app/papers/PMID_7160841.md:1:# G6PD-Puerto Lim\u00f3n: a new deficient variant of glucose-6-phosphate dehydrogenase associated with congenital nonspherocytic hemolytic anemia.\n/app/papers/PMID_7160841.md:11:A new glucose-6-phosphate dehydrogenase (G6PD) variant with total deficiency associated with congenital nonspherocytic hemolytic anemia was found in a Costa Rican family. The study of the partially purified enzyme revealed thermal instability, increased G6P affinity, abnormal pH optimum, increased utilization of analogues, and a chromatographic behavior that differs from all the variants previously described. Thus, this new variant was designated G6PD Puerto Lim\u00f3n.\n/app/papers/PMID_1611091.md:11:Seven new mutations that produce glucose 6 phosphate dehydrogenase (G6PD) deficiency are described. Three are in variants that were biochemically characterized and described previously, while four were found in samples that had not been characterized biochemically. Several of the mutations affect the amino acids that are mutated in other G6PD variants. As had been noted previously, variants that are associated with nonspherocytic anemia are located either near the glucose 6 phosphate or the NADP binding sites. Variants more distant from these sites are not associated with chronic hemolysis.\n/app/papers/PMID_1999409.md:11:Over 400 supposedly biochemically and genetically distinct variants of glucose-6-phosphate dehydrogenase (G6PD) have been described in the past. In order to investigate these variants at the DNA sequence level we have now determined the relevant sequences of introns of G6PD and describe a method which allows us to rapidly determine the sequence of the entire coding region of G6PD. This technique was applied to six variants that cause G6PD deficiency to be functionally so severe as to result in nonspherocytic hemolytic anemia. Although the patients were all unrelated, G6PD Marion, Gastonia, and Minnesota each had identical mutations, a G----T at nucleotide (nt) 637 in exon 6 leading to a Val----Leu substitution at amino acid 213. The mutations of Nashville and Anaheim were identical to each other, viz. G----A at nt 1178 in exon 10 producing a Arg----His substitution at amino acid 393. G6PD Loma Linda had a C----A substitution at nt 1089 in exon 10, producing a Asn----Lys change at amino acid 363. The results confirm our earlier results suggesting that the NADP-binding site is in a small region of exon 10 and suggest the possibility that this area is also concerned with the binding of glucose-6-P.\n/app/papers/PMID_7327562.md:11:Two new glucose 6-phosphate dehydrogenase (G6PD) variants associated with chronic nonspherocytic hemolytic anemia were discovered, G6PD Kobe was found in a 16-year-old male associated with hemolytic crisis after upper respiratory infection. The enzyme activity of the variant was about 22% of that of the normal enzyme. The main enzymatic characteristics were slower than normal anodal electrophoretic mobility, high Km G6P, increased thermal-instability, an acidic pH optimum, and an extremely increased affinity for the substrate analogue, galactose 6-phosphate (Gal-6P). G6PD Sapporo was found in a 3-year-old male associated with drug-induced hemolysis. The enzyme activity was extremely low, being 3.6% of normal. In addition, this variant showed high Ki NADPH and thermal-instability. G6PD Kobe utilized the artificial substrate Gal-6P effectively as compared with the common natural substrate, glucose 6-phosphate. In G6PD Sapporo, NADPH could not exert the effect of product inhibition. The structural changes of these variants are expected to occur at the portions inducing conformational changes of the substrate binding site of the enzyme.\n/app/papers/PMID_7655862.md:11:Three previously undescribed mutations of the glucose-6-phosphate dehydrogenase (G6PD) gene have been documented in patients with hereditary non-spherocytic hemolytic anemia (HNSHA). In none of the cases have we been able to obtain a sufficient volume of blood to characterize the residual enzyme biochemically. \"G6PD Calvo Mackenna\" was due to an A-->G transition in cDNA nucleotide 1138 creating an Aat II site and resulting in a substitution of valine for isoleucine at amino acid 380. \"G6PD Riley\" was due to a T-->C transition at cDNA nucleotide 1139 also changing the 380 isoleucine, in this case to a threonine. \"G6PD Wisconsin\" was due to an C-->G transversion in cDNA nucleotide 1177, destroying a Aci I site and resulting in a substitution of glycine for arginine at amino acid 393. All of these mutations were in exon 10, where mutations that cause HNSHA appear to be clustered. We present a list of the 83 mutations of G6PD that have been documented to the end of April, 1995.\n/app/papers/PMID_21397531.md:1:# Chronic hemolytic anemia is associated with a new glucose-6-phosphate dehydrogenase in-frame deletion in an older woman.\n/app/papers/PMID_21397531.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency, an X-linked disorder, is usually observed in hemizygote males and very rarely in females. The G6PD class 1 variants, very uncommon, are associated with chronic hemolytic anemia. Here we report a Portuguese woman who suffered in her sixties from a chronic hemolytic anemia due to G6PD deficiency. Molecular studies revealed heterozygosity for an in-frame 18-bp deletion, mapping to exon 10 leading to a deletion of 6 residues, 362-367 (LNERKA), which is a novel G6PD class 1 variant, G6PD Tondela. Two of her three daughters, asymptomatic, with G6PD activity within the normal range, are heterozygous for the same deletion. The patient's leukocyte and reticulocyte mRNA studies revealed an almost exclusive expression of the mutant allele, explaining the chronic hemolytic anemia. Patient whole blood genomic DNA HUMARA assay showed a balanced pattern of X chromosome inactivation (XCI), but granulocyte DNA showed extensive skewing, harboring the mutated allele, implying that in whole blood, lymphocyte DNA, with a very long lifetime, may cover up the current high XCI skewing. This observation indicates that HUMARA assay in women should be assessed in granulocytes and not in total leukocytes.\n/app/papers/PMID_15996881.md:11:Earlier we have reported two G6PD variants viz.; G6PD Jamnagar and G6PD Rohini. The enzymes from both the variants showed altered biochemical properties with mild enzyme deficiency and were classified as unique Class III variants. G6PD Jamnagar was found to be associated with drug-induced hemolytic anemia whereas G6PD Rohini was picked up during a population survey. Subsequent molecular studies on the DNA from both the cases showed the presence of the Kerala-Kalyan (949 G-->A) mutation. Hence, this study besides supporting the fact that biochemically distinct variants could have the same mutation at the molecular level also highlights the importance of molecular characterization of G6PD variants.\n/app/papers/PMID_18086567.md:11:**OBJECTIVE:** : Glucose 6-phosphate dehydrogenase (G6PD) catalyzes the first committed steps in the pentose phosphate pathway: the generation of NADPH by this enzyme is essential for protection against oxidative stress. The human enzyme is in a dimer<-->tetramer equilibrium and its stability depends on NADP(+) concentration. Herein, we report a case of a symptomatic baby affected by severe deficiency of G6PD activity due to a novel de novo genetic mutation (g1465C>T) in the thirteenth exon of its gene.\n/app/papers/PMID_7440223.md:11:Fifty-four cases of glucose 6-phosphate dehydrogenase (G6PD) deficiency have so far been reported in Japan. Among them, 21 G6PD variants have been characterized. Nineteen out of the 21 variants were characterized in our laboratory and G6PD Heian and \"Kyoto\" by others. G6PD Tokyo, Tokushima, Ogikubo, Kurume, Fukushima, Yokohama, Yamaguchi, Wakayama, Akita, Heian and \"Kyoto\" were classified as Class 1, because all these cases showed chronic hemolytic anemia and severe enzyme deficiency. All these variants showed thermal instability. G6PD Mediterranean-like, Ogori, Gifu and Fukuoka were classified as Class 2, whereas G6PD Hofu, B(-) Chinese, Ube, Konan, Kamiube and Kiwa belonged to Class 3. All the 6 Class 3 variants were found as the results of the screening tests. The incidence of the deficiency in Japanese seems to be 0.1-0.5% but that of the cases which may slow drug-induced hemolysis would be much less. G6PD Ube and Konan appear to be relatively common in Japan.\n/app/papers/PMID_12064902.md:11:A patient with chronic hemolytic anemia and G6PD deficiency was noted to be severely jaundiced and to have a high serum ferritin level. Analysis of his DNA revealed only heterozygosity for the c.187 C-->G (H63D) mutation of HFE, but showed that he was homozygous for the UDP glucuronosyltransferase promoter mutation of Gilbert's disease and that he had a previously undescribed mutation of G6PD, c.832 T-->C (Ser278Pro). The new variant was named G6PD La Jolla.\n/app/papers/PMID_9233561.md:11:We report on the molecular basis of glucose-6-phosphate dehydrogenase (G6PD) deficiency in Southern Italy (Campania region). Thirty-one unrelated G6PD-deficient males were analysed at DNA level for the presence of G6PD gene mutations. Nine different G6PD variants were identified, eight of which have already been described (Mediterranean, Seattle, two different A-, Santamaria, Cassano, Union and Cosenza). G6PD Mediterranean, Santamaria, A- and Union were associated with haemolytic episodes. G6PD Seattle, which is polymorphic in several populations, Cassano and Cosenza appeared to be asymptomatic. A new variant (G6PD Neapolis) is reported here. The 467(Pro-->Arg) substitution responsible for G6PD Neapolis is discussed in the light of the current 3D model of human G6PD and in comparison with other natural mutations which occur in the proximity of residue 467.\n/app/papers/PMID_7803800.md:11:Mutations that produce glucose-6-phosphate dehydrogenase (G6PD) deficiency have been identified in samples from patients with hemolytic disease in the United States, and in G6PD-deficient samples from Greece, the Canary Islands, the Czech and Slovak Republics, South China, and in samples from the Coriell Cell Repository. Eight new mutations are described. Particularly unusual were a nonsense mutation (\"G6PD Georgia\"1284A), a deletion of six bases (\"G6PD Stony Brook\" 724-729 del) coding for two amino acids, and a deletion of the invariant dinucleotide ApG at the 3' acceptor splice site in the highly conserved sequence between intron 10 and exon 11 (\"G6PD Varnsdorf\"). In addition, five new missense point mutations were identified: \"G6PD Cleveland\"820A creates a deduced AA 274 Glu-->Lys; \"G6PD West Virginia\"910T AA 303 Val-->Phe; \"G6PD Fushan\"1004A, AA 335 Ala-->Asp; \"G6PD Olomouc\"1141C AA 381 Leu-->Phe; and \"G6PD Praha\"1166G AA 389 Glu-->Gly. All of the new mutations except for \"G6PD Fushan\"1004A were found in patients with hereditary nonspherocytic hemolytic anemia. A coincidental finding in the case of G6PD \"West Virginia\" was a C-->T transition at nucleotide 1,191. This silent mutation, Asn-->Asn, appears to be rare. Haplotype analysis of mutations in samples from the Canary Islands and South China agreed with previous findings.\n/app/papers/PMID_15727905.md:11:Two hundred and twenty-five G6PD-deficient subjects in Songklanagarind Hospital in the south of Thailand comprising 210 males and 15 females were studied. Neonatal jaundice was detected in 85% of these patients. Acute hemolysis related to infection was detected in 17.3% of the G6PD-deficient subjects. Drug-induced acute hemolysis was detected in 1.8% and favism was observed in 3.6% of G6PD-deficient patients. The molecular analysis was performed on 134 G6PD-deficient individuals by a combination of PCR-RFLP, multiplex polymerase chain reaction by multiple tandem forward primers and a common reverse primer assay (MPTP) and DNA sequencing to characterize the mutations of the samples with abnormal MPTP bands. We found 10 different missense G6PD mutations and the three most common variants were G6PD Viangchan 871,G-->A (31.3%), G6PD Kaiping 1388,G-->A (20.1%) and G6PD Mahidol 487,G-->A (17.2%) followed by G6PD Canton 1376,G-->T (9.7%), G6PD Union 1360,C-->T (2.2%), G6PD Gaohe 95,A-->G (1.5%), G6PD Quing Yuan 392,G-->T (0.7%), G6PD Mediterranean 563,C-->T (0.7%), G6PD Songklanagarind 196,T-->A (0.7%), silent mutation 1311,C-->T (6.7%), and uncharacterized variant (9%). A novel missense mutation at codon 196, TTC-->ATC in exon 4 of the G6PD gene predicting a single amino acid substitution, Phe66Ile was identified and we designated this novel class II variant as G6PD Songklanagarind. The G6PD variants among the Thais in the southern part are heterogeneous and G6PD Viangchan, Kaiping, Mahidol, and Canton variants account for about 78% of the cases. Our findings provide some evidence that G6PD Viangchan and Mahidol are common Southeast Asian variants and support the theory of genetic drifts throughout Southeast Asia.\n/app/papers/PMID_22139979.md:11:We present a rapid strategy based on Restriction Fragment Length Polymorphism (RFLP) analysis to characterize the more frequent glucose 6-phosphate dehydrogenase (G6PD) variants observed in a population with high gene flow. During a study involving more than 600 patients, we observed mainly G6PD A(-) (c.202G>A, c.376A>G; p.Val68Met, p.Asn126Asp), G6PD Mediterranean (Med) (c.563C>T, p.Ser188Phe), and G6PD Betica (c.376A>G, 542A>T; p.126Asn>Asp, 181Asp>Val) with addition of a few rare ones. A number of 10 abnormalities amounted to 92% of all the molecular defects. In addition, seven new mutations were found: three presented with acute hemolytic anemia following oxidative stress [G6PD Nice (c.1380G>C, p.Glu460Asp), G6PD Roubaix (c.811G>C, p.Val271Leu), and G6PD Toledo (c.496C>T, p.Arg166Cys)], three with different degrees of chronic hemolytic anemia [G6PD Lille (c.821A>T, p.Glu274Val), G6PD Villeurbanne (c.1000_1002delACC, p.Thr334del), and G6PD Amiens (c.1367A>T, p.Asp456Val)] and one found fortuitously G6PD Montpellier (c.1132G>A, p.Gly378Ser).\n/app/papers/PMID_9332310.md:1:# Two new mutations of the glucose-6-phosphate dehydrogenase (G6PD) gene associated with haemolytic anaemia: clinical, biochemical and molecular relationships.\n/app/papers/PMID_9332310.md:11:In two unrelated Spanish males with glucose-6-phosphate dehydrogenase (G6PD) deficiency and haemolytic anaemia, and two different novel point mutations in the G6PD gene, have been identified. A C to T transition at nucleotide 406 resulting in a (136) Arg to Cys substitution and a C to G transition at nucleotide 1155 resulting in a (385) Cys to Trp substitution. These two molecular defects have not been described before and are designated G6PD Valladolid 406 C-->T and G6PD Madrid 1155 C-->G. In vitro biochemical characterization of both mutant enzymes showed important differences in their molecular properties according to their different clinical behaviour. In G6PD Valladolid, the mutation of which is located in exon 5, the normal in vitro heat stability may explain its mild clinical expression (low-grade haemolysis interrupted by an acute haemolytic crisis at age 70). In G6PD Madrid, the mutation, located in exon 10, results in a deficient variant associated with neonatal jaundice and life-long chronic nonspherocytic haemolytic anaemia (CNSHA). This finding further emphasizes the importance of this specific region of the G6PD gene in the stabilization of the G6PD molecule. Putative relationships between these single point mutations and the molecular properties of the mutant enzymes are also discussed.\n/app/papers/PMID_11852882.md:1:# A single mutation 202G>A in the human glucose-6-phosphate dehydrogenase gene (G6PD) can cause acute hemolysis by itself.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"hemol|haemol|oxid|drug|primaquine|sulfa\\\" /app/papers -S | head -n 80\"}"
+      }
+    },
+    {
+      "step_id": 13,
+      "timestamp": "2026-02-21T00:11:51.596Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_vBw76vP3olVKS7EdqwsezgUt",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_vBw76vP3olVKS7EdqwsezgUt",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"diamino\" /app/papers -S | head -n 50"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_vBw76vP3olVKS7EdqwsezgUt",
+            "content": "Chunk ID: 347699\nWall time: 0.0573 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"diamino\\\" /app/papers -S | head -n 50\"}"
+      }
+    },
+    {
+      "step_id": 14,
+      "timestamp": "2026-02-21T00:11:59.984Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_oMFzGwoYWVP9oPeC3oSCVcCg",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_oMFzGwoYWVP9oPeC3oSCVcCg",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,200p' /app/papers/PMID_15727905.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_oMFzGwoYWVP9oPeC3oSCVcCg",
+            "content": "Chunk ID: a183e3\nWall time: 0.0573 seconds\nProcess exited with code 0\nOriginal token count: 539\nOutput:\n# Molecular heterogeneity of glucose-6-phosphate dehydrogenase (G6PD) variants in the south of Thailand and identification of a novel variant (G6PD Songklanagarind).\n\n## Metadata\n**Authors:** Vichai Laosombat, Benjamas Sattayasevana, Waricha Janejindamai, Vip Viprakasit, Taku Shirakawa, Kaoru Nishiyama, Masafumi Matsuo\n**Journal:** Blood cells, molecules & diseases\n**Year:** 2005\n**PMID:** 15727905\n\n## Abstract\n\nTwo hundred and twenty-five G6PD-deficient subjects in Songklanagarind Hospital in the south of Thailand comprising 210 males and 15 females were studied. Neonatal jaundice was detected in 85% of these patients. Acute hemolysis related to infection was detected in 17.3% of the G6PD-deficient subjects. Drug-induced acute hemolysis was detected in 1.8% and favism was observed in 3.6% of G6PD-deficient patients. The molecular analysis was performed on 134 G6PD-deficient individuals by a combination of PCR-RFLP, multiplex polymerase chain reaction by multiple tandem forward primers and a common reverse primer assay (MPTP) and DNA sequencing to characterize the mutations of the samples with abnormal MPTP bands. We found 10 different missense G6PD mutations and the three most common variants were G6PD Viangchan 871,G-->A (31.3%), G6PD Kaiping 1388,G-->A (20.1%) and G6PD Mahidol 487,G-->A (17.2%) followed by G6PD Canton 1376,G-->T (9.7%), G6PD Union 1360,C-->T (2.2%), G6PD Gaohe 95,A-->G (1.5%), G6PD Quing Yuan 392,G-->T (0.7%), G6PD Mediterranean 563,C-->T (0.7%), G6PD Songklanagarind 196,T-->A (0.7%), silent mutation 1311,C-->T (6.7%), and uncharacterized variant (9%). A novel missense mutation at codon 196, TTC-->ATC in exon 4 of the G6PD gene predicting a single amino acid substitution, Phe66Ile was identified and we designated this novel class II variant as G6PD Songklanagarind. The G6PD variants among the Thais in the southern part are heterogeneous and G6PD Viangchan, Kaiping, Mahidol, and Canton variants account for about 78% of the cases. Our findings provide some evidence that G6PD Viangchan and Mahidol are common Southeast Asian variants and support the theory of genetic drifts throughout Southeast Asia.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,200p' /app/papers/PMID_15727905.md\"}"
+      }
+    },
+    {
+      "step_id": 15,
+      "timestamp": "2026-02-21T00:11:59.988Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_nMR2A89Pz9NWl1JbDKyHR7ht",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_nMR2A89Pz9NWl1JbDKyHR7ht",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,200p' /app/papers/PMID_11852882.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_nMR2A89Pz9NWl1JbDKyHR7ht",
+            "content": "Chunk ID: 5b4355\nWall time: 0.0548 seconds\nProcess exited with code 0\nOriginal token count: 78\nOutput:\n# A single mutation 202G>A in the human glucose-6-phosphate dehydrogenase gene (G6PD) can cause acute hemolysis by itself.\n\n## Metadata\n**Authors:** Akira Hirono, Kazuhiro Kawate, Akihito Honda, Hisaichi Fujii, Shiro Miwa\n**Journal:** Blood\n**Year:** 2002\n**PMID:** 11852882\n\n## Abstract\n\nNo abstract available.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,200p' /app/papers/PMID_11852882.md\"}"
+      }
+    },
+    {
+      "step_id": 16,
+      "timestamp": "2026-02-21T00:11:59.992Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_fOUPB8DxWkjTGc9DshX82nvI",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_fOUPB8DxWkjTGc9DshX82nvI",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,220p' /app/papers/PMID_2307454.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_fOUPB8DxWkjTGc9DshX82nvI",
+            "content": "Chunk ID: 65c43b\nWall time: 0.0520 seconds\nProcess exited with code 0\nOriginal token count: 271\nOutput:\n# A new glucose-6-phosphate dehydrogenase variant with congenital nonspherocytic hemolytic anemia (G6PD Genova). Biochemical characterization and mosaicism expression in the heterozygote.\n\n## Metadata\n**Authors:** G F Gaetani, S Galiano, C Melani, M Miglino, G L Forni, G Napoli, L Perrone, A M Ferraris\n**Journal:** Human genetics\n**Year:** 1990\n**PMID:** 2307454\n\n## Abstract\n\nA new deficient variant of glucose-6-phosphate dehydrogenase (G6PD) causing severe congenital nonspherocytic hemolytic anemia (CNSHA) is described. The variant enzyme, characterized by slow electrophoretic mobility, extreme in vivo and in vitro lability, high Km for G6P and strongly acidic pH optimum, appears to be unique, and has been designated G6PD Genova. Investigation of an obligate heterozygote using various cytochemical, biochemical and recombinant-DNA techniques showed G6PD mosaicism in the erythrocytes and leukocytes. Therefore, the presence of a disadvantageous mutation at one Gd locus did not determine selection in favor of the normal allele in the heterozygote's hemopoietic cells.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,220p' /app/papers/PMID_2307454.md\"}"
+      }
+    },
+    {
+      "step_id": 17,
+      "timestamp": "2026-02-21T00:12:04.394Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_sGBrkREL7nkzDDcsj6WAKV88",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_sGBrkREL7nkzDDcsj6WAKV88",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"methem|methaem|nitroso|hydroxylamine\" /app/papers -S | head -n 60"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_sGBrkREL7nkzDDcsj6WAKV88",
+            "content": "Chunk ID: 9bba32\nWall time: 0.0563 seconds\nProcess exited with code 0\nOriginal token count: 286\nOutput:\n/app/papers/PMID_17018380.md:15:**RESULTS:** The mutation frequency of male G6PD-deficient individuals was observed to be 7.43%. Twenty-seven genotypes from 361 individuals were found. Statistical analysis showed that there were significant differences in both the percentages of methemoglobin and the G6PD/6PGD ratio between heterozygote and hemizygote in males and between heterozygote and homozygote in females. However, no statistically significance was seen between hemizyotes and homozygotes. The mutation profile showed that five mutations, G6PD Kaiping(1388A), G6PD Canton(1376T), G6PD Gaohe(95G), Chinese-5(1024T)and G6PD Viangchan(817A), are the most common in the area, accounting for 85% of the G6PD-deficient alleles. Ten rare mutations were detected in approximately 4% of the mutant chromosomes. Four novel mutations were found: G6PD Liuzhou(442A), G6PD Nanning(703T), G6PD Laibin(1414C,) and G6PD Hechi(202A/817A). In addition, two other rare mutations, c.196T-->A and c.202 G-->A, were detected for the first time in Chinese patients. A single dominant haplotype (- - + - -) was observed in 94.0% of 182 deficient chromosomes.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"methem|methaem|nitroso|hydroxylamine\\\" /app/papers -S | head -n 60\"}"
+      }
+    },
+    {
+      "step_id": 18,
+      "timestamp": "2026-02-21T00:12:06.612Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_Bxv0oBT0dCidSQORwLQHnXYi",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_Bxv0oBT0dCidSQORwLQHnXYi",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,220p' /app/papers/PMID_17018380.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_Bxv0oBT0dCidSQORwLQHnXYi",
+            "content": "Chunk ID: 00fea2\nWall time: 0.0534 seconds\nProcess exited with code 0\nOriginal token count: 581\nOutput:\n# Incidence and complete molecular characterization of glucose-6-phosphate dehydrogenase deficiency in the Guangxi Zhuang autonomous region of southern China: description of four novel mutations.\n\n## Metadata\n**Authors:** Tizhen Yan, Ren Cai, OiuHua Mo, DongLin Zhu, Hong Ouyang, Lihua Huang, Mingguang Zhao, Fen Huang, Liyan Li, Xin Liang, Xiangmin Xu\n**Journal:** Haematologica\n**Year:** 2006\n**PMID:** 17018380\n\n## Abstract\n\n**BACKGROUND AND OBJECTIVES:** Glucose-6-phosphate dehydrogenase (G6PD) deficiency is the most common human metabolic disorder in southern China. We investigated the incidence and distribution of mutations, the molecular pathology of affected females and the haplotype association with G6PD deficiency in patients from the Guangxi region.\n\n**DESIGN AND METHODS:** A population-based molecular analysis combining phenotypic screening and genotypic detection using both multiplex primer extension/denaturing high performance liquid chromatography assay and DNA sequence analysis were performed in a total of 4,704 individuals.\n\n**RESULTS:** The mutation frequency of male G6PD-deficient individuals was observed to be 7.43%. Twenty-seven genotypes from 361 individuals were found. Statistical analysis showed that there were significant differences in both the percentages of methemoglobin and the G6PD/6PGD ratio between heterozygote and hemizygote in males and between heterozygote and homozygote in females. However, no statistically significance was seen between hemizyotes and homozygotes. The mutation profile showed that five mutations, G6PD Kaiping(1388A), G6PD Canton(1376T), G6PD Gaohe(95G), Chinese-5(1024T)and G6PD Viangchan(817A), are the most common in the area, accounting for 85% of the G6PD-deficient alleles. Ten rare mutations were detected in approximately 4% of the mutant chromosomes. Four novel mutations were found: G6PD Liuzhou(442A), G6PD Nanning(703T), G6PD Laibin(1414C,) and G6PD Hechi(202A/817A). In addition, two other rare mutations, c.196T-->A and c.202 G-->A, were detected for the first time in Chinese patients. A single dominant haplotype (- - + - -) was observed in 94.0% of 182 deficient chromosomes.\n\n**INTERPRETATION AND CONCLUSIONS:** Our protocol could be used to extend the knowledge of molecular defects of G6PD gene in different geographical areas.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,220p' /app/papers/PMID_17018380.md\"}"
+      }
+    },
+    {
+      "step_id": 19,
+      "timestamp": "2026-02-21T00:12:12.086Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_4KG6vAttpVtfZqwlsEBrqyAn",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_4KG6vAttpVtfZqwlsEBrqyAn",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"methemoglobin|methaemoglobin\" /app/papers -S | head -n 50"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_4KG6vAttpVtfZqwlsEBrqyAn",
+            "content": "Chunk ID: 09161f\nWall time: 0.0573 seconds\nProcess exited with code 0\nOriginal token count: 286\nOutput:\n/app/papers/PMID_17018380.md:15:**RESULTS:** The mutation frequency of male G6PD-deficient individuals was observed to be 7.43%. Twenty-seven genotypes from 361 individuals were found. Statistical analysis showed that there were significant differences in both the percentages of methemoglobin and the G6PD/6PGD ratio between heterozygote and hemizygote in males and between heterozygote and homozygote in females. However, no statistically significance was seen between hemizyotes and homozygotes. The mutation profile showed that five mutations, G6PD Kaiping(1388A), G6PD Canton(1376T), G6PD Gaohe(95G), Chinese-5(1024T)and G6PD Viangchan(817A), are the most common in the area, accounting for 85% of the G6PD-deficient alleles. Ten rare mutations were detected in approximately 4% of the mutant chromosomes. Four novel mutations were found: G6PD Liuzhou(442A), G6PD Nanning(703T), G6PD Laibin(1414C,) and G6PD Hechi(202A/817A). In addition, two other rare mutations, c.196T-->A and c.202 G-->A, were detected for the first time in Chinese patients. A single dominant haplotype (- - + - -) was observed in 94.0% of 182 deficient chromosomes.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"methemoglobin|methaemoglobin\\\" /app/papers -S | head -n 50\"}"
+      }
+    },
+    {
+      "step_id": 20,
+      "timestamp": "2026-02-21T00:12:27.741Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_eKFV4ci0D8F2OfzDfgBZjRkU",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_eKFV4ci0D8F2OfzDfgBZjRkU",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"primaquine|chloroquine|aspirin|sulfonamide|nitrofurantoin|antimalarial|antibiotic|analgesic\" /app/papers -S | head -n 120"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_eKFV4ci0D8F2OfzDfgBZjRkU",
+            "content": "Chunk ID: 03705f\nWall time: 0.0570 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"primaquine|chloroquine|aspirin|sulfonamide|nitrofurantoin|antimalarial|antibiotic|analgesic\\\" /app/papers -S | head -n 120\"}"
+      }
+    },
+    {
+      "step_id": 21,
+      "timestamp": "2026-02-21T00:12:33.922Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_VpL8rczv7IrhviNy1u5d3azg",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_VpL8rczv7IrhviNy1u5d3azg",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"heterozy|mosaic|oxidative stress|acute hemolysis\" /app/papers -S | head -n 100"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_VpL8rczv7IrhviNy1u5d3azg",
+            "content": "Chunk ID: e8a41d\nWall time: 0.0519 seconds\nProcess exited with code 0\nOriginal token count: 4969\nOutput:\n/app/papers/PMID_2307454.md:1:# A new glucose-6-phosphate dehydrogenase variant with congenital nonspherocytic hemolytic anemia (G6PD Genova). Biochemical characterization and mosaicism expression in the heterozygote.\n/app/papers/PMID_2307454.md:11:A new deficient variant of glucose-6-phosphate dehydrogenase (G6PD) causing severe congenital nonspherocytic hemolytic anemia (CNSHA) is described. The variant enzyme, characterized by slow electrophoretic mobility, extreme in vivo and in vitro lability, high Km for G6P and strongly acidic pH optimum, appears to be unique, and has been designated G6PD Genova. Investigation of an obligate heterozygote using various cytochemical, biochemical and recombinant-DNA techniques showed G6PD mosaicism in the erythrocytes and leukocytes. Therefore, the presence of a disadvantageous mutation at one Gd locus did not determine selection in favor of the normal allele in the heterozygote's hemopoietic cells.\n/app/papers/PMID_21302115.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency is one of the most common hereditary enzymopathies worldwide. Mostly G6PD deficient cases are asymptomatic though they may have the risk of neonatal jaundice (NNJ) and acute intravascular hemolysis during oxidative stress. Chronic nonspherocytic hemolytic anemia (CNSHA) due to G6PD deficiency is rare. In Thailand, one case was reported 40\u00a0years ago and by biochemical study this G6PD was reported to be a new variant G6PD Bangkok. We, herein, report two families with CNSHA due to G6PD deficiency. In the first family, we have been following up the clinical course of the patient with G6PD Bangkok. In addition to chronic hemolysis, he had three acute hemolytic episodes requiring blood transfusions during childhood period. Multiple gallstones were detected at the age of 27. His two daughters who inherited G6PD Bangkok from him and G6PD Vanua Lava from his wife are asymptomatic. Both of them had NNJ and persistent evidences of compensated hemolysis. Molecular analysis revealed a novel missense mutation 825 G\u2192C predicting 275 Lys\u2192Asn causing G6PD Bangkok. In the second family, two male siblings are affected. They had NNJ and several hemolytic episodes which required blood transfusions. On follow-up they have been diagnosed with chronic hemolysis as evidenced by reticulocytosis and indirect hyperbilirubinemia. Molecular analysis revealed combined missense mutations in exons 12 and 13. The first mutation was 1376 G\u2192T predicting 459 Arg\u2192Leu (known as G6PD Canton) and the second one was 1502 T\u2192G predicting 501 Phe\u2192Cys. We designated the resulting novel G6PD variant, G6PD Bangkok Noi.\n/app/papers/PMID_2222408.md:11:We report the characterization at the molecular level of a mutant glucose-6-phosphate dehydrogenase (G6PD) gene in a Greek boy who presented with a chronic non-spherocytic haemolytic anaemia. In order to identify the mutation from a small amount of patient material, we adopted an approach which by-passes the need to construct a library by using the polymerase chain reaction. The entire coding region was amplified in eight sections, with genomic DNA as template. The DNA fragments were then cloned in an M13 vector and sequenced. The only difference from the sequence of normal G6PD was a T----G substitution at nucleotide position 648 in exon 7, which predicts a substitution of leucine for phenylalanine at amino acid position 216. This mutation creates a new recognition site for the restriction nuclease BalI. We confirmed the presence of the mutation in the DNA of the patient's mother, who was found to be heterozygous for the new BalI site. This is the first transversion among the point mutations thus far reported in the human G6PD gene.\n/app/papers/PMID_10556177.md:11:We have investigated the blood cells from a woman with a low degree of chronic nonspherocytic hemolytic anemia and frequent bacterial infections accompanied by icterus and anemia. The activity of glucose 6-phosphate dehydrogenase (G6PD) in her red blood cells (RBCs) was below detection level, and in her leukocytes less than 3% of normal. In cultured skin fibroblasts, G6PD activity was approximately 15% of normal, with 4- to 5-fold increased Michaelis constant (Km) for NADP and for glucose 6-phosphate. Activated neutrophils showed a decreased respiratory burst. Family studies showed normal G6PD activity in the RBCs from all family members, including both parents and the 2 daughters of the patient. Sequencing of polymerase chain reaction (PCR)-amplified genomic DNA showed a novel, heterozygous 514C-->T mutation, predicting a Pro172-->Ser replacement. Analysis of G6PD RNA from the patient's leukocytes and fibroblasts showed only transcripts with the 514C-->T mutation. This was explained by the pattern of X-chromosome inactivation, studied by means of the human androgen receptor (HUMARA) assay, which proved to be skewed in the patient, her mother, and one of the patient's daughters. Thus, the patient has inherited a de novo mutation in G6PD from her father and an X-chromosome inactivation determinant from her mother, causing exclusive expression of the mutated G6PD allele. Purified mutant protein from an Escherichia coli expression system showed strongly decreased specific activity, increased Km for NADP and for glucose 6-phosphate, and increased heat lability, which indicates that the defective phenotype is due to 2 synergistic molecular dysfunctions: decreased catalytic efficiency and protein instability.\n/app/papers/PMID_10666231.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency is a common X-linked enzyme abnormality. The clinical phenotype is variable but often predictable from the molecular lesion. Class I variants (the most severe forms of the disease) cluster within exon 10, in a region that, at the protein level, is believed to be involved in dimerization. Here we describe a de novo mutation (C269Y) of a new class I variant (G6PD Aveiro) that maps to exon 8. Mutant and normal alleles were found in both hematopoietic and buccal cells, indicating the presence of mosaicism. The available model of the protein predicts that this lesion lies in proximity to the dimer interface of the molecule. A possible mechanism to explain the severity of the defect is proposed. (Blood. 2000;95:1499-1501)\n/app/papers/PMID_18677765.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency is an important cause of hemolytic anemia worldwide. Severely affected patients have chronic hemolysis with exacerbations following oxidative stress. Mutations causing severe chronic non-spherocytic hemolytic anemia (CNSHA) commonly cluster in Exon 10, a region important for protein dimerization. An African-American male presented at age 2 weeks with pallor and jaundice, and was found to have hemolytic anemia with G6PD deficiency. His severe clinical course was inconsistent with the expected G6PD A(-) variant. DNA sequencing revealed two common mutations (A(-)) and a third novel Exon 10 mutation. This inherited haplotype represents a novel triple G6PD coding mutation causing chronic hemolysis.\n/app/papers/PMID_17018380.md:15:**RESULTS:** The mutation frequency of male G6PD-deficient individuals was observed to be 7.43%. Twenty-seven genotypes from 361 individuals were found. Statistical analysis showed that there were significant differences in both the percentages of methemoglobin and the G6PD/6PGD ratio between heterozygote and hemizygote in males and between heterozygote and homozygote in females. However, no statistically significance was seen between hemizyotes and homozygotes. The mutation profile showed that five mutations, G6PD Kaiping(1388A), G6PD Canton(1376T), G6PD Gaohe(95G), Chinese-5(1024T)and G6PD Viangchan(817A), are the most common in the area, accounting for 85% of the G6PD-deficient alleles. Ten rare mutations were detected in approximately 4% of the mutant chromosomes. Four novel mutations were found: G6PD Liuzhou(442A), G6PD Nanning(703T), G6PD Laibin(1414C,) and G6PD Hechi(202A/817A). In addition, two other rare mutations, c.196T-->A and c.202 G-->A, were detected for the first time in Chinese patients. A single dominant haplotype (- - + - -) was observed in 94.0% of 182 deficient chromosomes.\n/app/papers/PMID_15223006.md:11:In the present study, we determined the frequency of glucose-6-phosphate dehydrogenase (G6PD) deficiency in Cyprus using two different procedures in two separate adult population groups: a semiquantitative fluorescence test on blood spotted on filter paper and a quantitative spectrophotometric test on liquid blood. The frequency of G6PD deficiency among healthy adult males was found to be 5.1% using the semiquantitative procedure and 6.4% using the quantitative procedure. Neither method was able to detect all the expected female heterozygotes (5.3% and 47.1% of the expected number, respectively). A total of 21 male hemizygotes, 1 female homozygote and 9 female heterozygotes that tested positive for G6PD deficiency were studied at the molecular level. All 32 chromosomes were genotyped and five different mutations were identified. The Mediterranean mutation in exon 6 (563C-->T) (Ser188Phe) was found to be the most common variant in the Cypriot population, accounting for 52.6% of the deficient alleles. In the remaining chromosomes, four different mutations were identified: three known mutations, Kaiping 1388G-->A (Arg463His), Chatham 1003G-->A (Ala335Thr) and Acrokorinthos 463C-->G (His155Asp), and one previously undescribed mutation in exon 3, 148C-->T (Pro50Ser), which we called G6PD Kambos. We conclude that the frequency of G6PD deficiency in Cypriot males is 6.4%, and that this deficiency is the result of several different mutations. Although all the individuals carrying the Mediterranean variant can be detected using a semiquantitative screening method, a quantitative enzyme measurement is required to detect the G6PD variants with less severe enzyme deficiencies, while the most appropriate method for heterozygote detection is DNA analysis.\n/app/papers/PMID_10627140.md:11:In this paper we report a male infant heterozygous for thalassemia with a mild glucose 6 phosphate dehydrogenase deficiency. The molecular basis of this new Class III G6PD variant is a G-->T mutation at nucleotide 34 in the exon 2, which predicts a Val-->Leu aminoacid substitution at codon 12. We designated this variant as G6PD Sinnai from the place of birth of the propositus.\n/app/papers/PMID_11594515.md:11:A case of glucose-6-phosphate dehydrogenase (G6PD) deficiency associated with chronic hemolysis with episodes of hemolytic crisis immediately after birth is reported. The propositus was a 1-month-old Japanese male infant. Molecular analysis of the G6PD gene revealed a novel missense mutation (826C-->4T) in exon 8 predicting a single amino acid substitution, Pro276Ser. The mother was confirmed to be heterozygous for this mutation. We designated this novel class 1 variant as G6PD Sugao. Pro276 is a phylogenetically conserved residue that may play a significant role in dimer formation.\n/app/papers/PMID_8808605.md:1:# Somatic-cell selection is a major determinant of the blood-cell phenotype in heterozygotes for glucose-6-phosphate dehydrogenase mutations causing severe enzyme deficiency.\n/app/papers/PMID_8808605.md:11:X-chromosome inactivation in mammals is regarded as an essentially random process, but the resulting somatic-cell mosaicism creates the opportunity for cell selection. In most people with red-blood-cell glucose-6-phosphate dehydrogenase (G6PD) deficiency, the enzyme-deficient phenotype is only moderately expressed in nucleated cells. However, in a small subset of hemizygous males who suffer from chronic nonspherocytic hemolytic anemia, the underlying mutations (designated class I) cause more-severe G6PD deficiency, and this might provide an opportunity for selection in heterozygous females during development. In order to test this possibility we have analyzed four heterozygotes for class I G6PD mutations: two with G6PD Portici (1178G-->A) and two with G6PD Bari (1187C-->T). We found that in fractionated blood cell types (including erythroid, myeloid, and lymphoid cell lineages) there was a significant excess of G6PD-normal cells. The significant concordance that we have observed in the degree of imbalance in the different blood-cell lineages indicates that a selective mechanism is likely to operate at the level of pluripotent blood stem cells. Thus, it appears that severe G6PD deficiency affects adversely the proliferation or the survival of nucleated blood cells and that this phenotypic characteristic is critical during hematopoiesis.\n/app/papers/PMID_11499668.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency is a heterogeneous enzyme abnormality with high frequency in tropical areas. We performed population screening and molecular studies of G6PD variants to clarify their distribution and features in Southeast Asia. A total of 4317 participants (2019 males, 2298 females) from 16 ethnic groups in Myanmar, Lao in Laos, and Amboinese in Indonesia were screened with a single-step screening method. The prevalence of G6PD-deficient males ranged from 0% (the Akha) to 10.8% (the Shan). These G6PD-deficient individuals and 12 G6PD-deficient patients who had been diagnosed at hospitals in Indonesia and Malaysia were subjected to molecular analysis by a combination of polymerase-chain-reaction-based single-strand conformation polymorphism analysis and direct sequencing. Ten different missense mutations were identified in 63 G6PD-deficient individuals (50 hemizygotes, 11 heterozygotes, and 2 homozygotes) from 14 ethnic groups. One missense mutation (1291 G-->A) found in an Indonesian Chinese, viz., G6PD Surabaya, was previously unknown. The 487 G-->A (G6PD Mahidol) mutation was widely seen in Myanmar, 383 T-->C (G6PD Vanua Lava) was specifically found among Amboinese, 871 G-->A (G6PD Viangchan) was observed mainly in Lao, and 592 C-->T (G6PD Coimbra) was found in Malaysian aborigines (Orang Asli). The other five mutations, 95 A-->G (G6PD Gaohe), 1003 G-->A (G6PD Chatham), 1360 C-->T (G6PD Union), 1376 G-->T (G6PD Canton), and 1388 G-->A (G6PD Kaiping) were identified mostly in accordance with distributions reported previously.\n/app/papers/PMID_21397531.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency, an X-linked disorder, is usually observed in hemizygote males and very rarely in females. The G6PD class 1 variants, very uncommon, are associated with chronic hemolytic anemia. Here we report a Portuguese woman who suffered in her sixties from a chronic hemolytic anemia due to G6PD deficiency. Molecular studies revealed heterozygosity for an in-frame 18-bp deletion, mapping to exon 10 leading to a deletion of 6 residues, 362-367 (LNERKA), which is a novel G6PD class 1 variant, G6PD Tondela. Two of her three daughters, asymptomatic, with G6PD activity within the normal range, are heterozygous for the same deletion. The patient's leukocyte and reticulocyte mRNA studies revealed an almost exclusive expression of the mutant allele, explaining the chronic hemolytic anemia. Patient whole blood genomic DNA HUMARA assay showed a balanced pattern of X chromosome inactivation (XCI), but granulocyte DNA showed extensive skewing, harboring the mutated allele, implying that in whole blood, lymphocyte DNA, with a very long lifetime, may cover up the current high XCI skewing. This observation indicates that HUMARA assay in women should be assessed in granulocytes and not in total leukocytes.\n/app/papers/PMID_18086567.md:11:**OBJECTIVE:** : Glucose 6-phosphate dehydrogenase (G6PD) catalyzes the first committed steps in the pentose phosphate pathway: the generation of NADPH by this enzyme is essential for protection against oxidative stress. The human enzyme is in a dimer<-->tetramer equilibrium and its stability depends on NADP(+) concentration. Herein, we report a case of a symptomatic baby affected by severe deficiency of G6PD activity due to a novel de novo genetic mutation (g1465C>T) in the thirteenth exon of its gene.\n/app/papers/PMID_18086567.md:17:**CONCLUSIONS:** : The absence of mosaicism in the baby's DNA (from saliva and blood samples) suggests that a de novo mutation event may occur in the very early stages in embryogenesis or in the mother's germ cell lines.\n/app/papers/PMID_12064902.md:11:A patient with chronic hemolytic anemia and G6PD deficiency was noted to be severely jaundiced and to have a high serum ferritin level. Analysis of his DNA revealed only heterozygosity for the c.187 C-->G (H63D) mutation of HFE, but showed that he was homozygous for the UDP glucuronosyltransferase promoter mutation of Gilbert's disease and that he had a previously undescribed mutation of G6PD, c.832 T-->C (Ser278Pro). The new variant was named G6PD La Jolla.\n/app/papers/PMID_15727905.md:11:Two hundred and twenty-five G6PD-deficient subjects in Songklanagarind Hospital in the south of Thailand comprising 210 males and 15 females were studied. Neonatal jaundice was detected in 85% of these patients. Acute hemolysis related to infection was detected in 17.3% of the G6PD-deficient subjects. Drug-induced acute hemolysis was detected in 1.8% and favism was observed in 3.6% of G6PD-deficient patients. The molecular analysis was performed on 134 G6PD-deficient individuals by a combination of PCR-RFLP, multiplex polymerase chain reaction by multiple tandem forward primers and a common reverse primer assay (MPTP) and DNA sequencing to characterize the mutations of the samples with abnormal MPTP bands. We found 10 different missense G6PD mutations and the three most common variants were G6PD Viangchan 871,G-->A (31.3%), G6PD Kaiping 1388,G-->A (20.1%) and G6PD Mahidol 487,G-->A (17.2%) followed by G6PD Canton 1376,G-->T (9.7%), G6PD Union 1360,C-->T (2.2%), G6PD Gaohe 95,A-->G (1.5%), G6PD Quing Yuan 392,G-->T (0.7%), G6PD Mediterranean 563,C-->T (0.7%), G6PD Songklanagarind 196,T-->A (0.7%), silent mutation 1311,C-->T (6.7%), and uncharacterized variant (9%). A novel missense mutation at codon 196, TTC-->ATC in exon 4 of the G6PD gene predicting a single amino acid substitution, Phe66Ile was identified and we designated this novel class II variant as G6PD Songklanagarind. The G6PD variants among the Thais in the southern part are heterogeneous and G6PD Viangchan, Kaiping, Mahidol, and Canton variants account for about 78% of the cases. Our findings provide some evidence that G6PD Viangchan and Mahidol are common Southeast Asian variants and support the theory of genetic drifts throughout Southeast Asia.\n/app/papers/PMID_22139979.md:11:We present a rapid strategy based on Restriction Fragment Length Polymorphism (RFLP) analysis to characterize the more frequent glucose 6-phosphate dehydrogenase (G6PD) variants observed in a population with high gene flow. During a study involving more than 600 patients, we observed mainly G6PD A(-) (c.202G>A, c.376A>G; p.Val68Met, p.Asn126Asp), G6PD Mediterranean (Med) (c.563C>T, p.Ser188Phe), and G6PD Betica (c.376A>G, 542A>T; p.126Asn>Asp, 181Asp>Val) with addition of a few rare ones. A number of 10 abnormalities amounted to 92% of all the molecular defects. In addition, seven new mutations were found: three presented with acute hemolytic anemia following oxidative stress [G6PD Nice (c.1380G>C, p.Glu460Asp), G6PD Roubaix (c.811G>C, p.Val271Leu), and G6PD Toledo (c.496C>T, p.Arg166Cys)], three with different degrees of chronic hemolytic anemia [G6PD Lille (c.821A>T, p.Glu274Val), G6PD Villeurbanne (c.1000_1002delACC, p.Thr334del), and G6PD Amiens (c.1367A>T, p.Asp456Val)] and one found fortuitously G6PD Montpellier (c.1132G>A, p.Gly378Ser).\n/app/papers/PMID_11852882.md:1:# A single mutation 202G>A in the human glucose-6-phosphate dehydrogenase gene (G6PD) can cause acute hemolysis by itself.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"heterozy|mosaic|oxidative stress|acute hemolysis\\\" /app/papers -S | head -n 100\"}"
+      }
+    },
+    {
+      "step_id": 22,
+      "timestamp": "2026-02-21T00:12:36.609Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_xeVs2DAVSXaPrwEqNZCaatjR",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_xeVs2DAVSXaPrwEqNZCaatjR",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "rg -n \"clinical phenotype is variable|phenotype is variable|phenotype.*variable|variable\" /app/papers -S | head -n 80"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_xeVs2DAVSXaPrwEqNZCaatjR",
+            "content": "Chunk ID: 56d144\nWall time: 0.0539 seconds\nProcess exited with code 0\nOriginal token count: 243\nOutput:\n/app/papers/PMID_10666231.md:11:Glucose-6-phosphate dehydrogenase (G6PD) deficiency is a common X-linked enzyme abnormality. The clinical phenotype is variable but often predictable from the molecular lesion. Class I variants (the most severe forms of the disease) cluster within exon 10, in a region that, at the protein level, is believed to be involved in dimerization. Here we describe a de novo mutation (C269Y) of a new class I variant (G6PD Aveiro) that maps to exon 8. Mutant and normal alleles were found in both hematopoietic and buccal cells, indicating the presence of mosaicism. The available model of the protein predicts that this lesion lies in proximity to the dimer interface of the molecule. A possible mechanism to explain the severity of the defect is proposed. (Blood. 2000;95:1499-1501)\n/app/papers/PMID_11112389.md:1:# A new exon 9 glucose-6-phosphate dehydrogenase mutation (G6PD \"Rehovot\") in a Jewish Ethiopian family with variable phenotypes.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"rg -n \\\"clinical phenotype is variable|phenotype is variable|phenotype.*variable|variable\\\" /app/papers -S | head -n 80\"}"
+      }
+    },
+    {
+      "step_id": 23,
+      "timestamp": "2026-02-21T00:12:38.938Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_idxxdpEvr0Ae2I8qP7ew3mV4",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_idxxdpEvr0Ae2I8qP7ew3mV4",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,240p' /app/papers/PMID_11112389.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_idxxdpEvr0Ae2I8qP7ew3mV4",
+            "content": "Chunk ID: a42bac\nWall time: 0.0527 seconds\nProcess exited with code 0\nOriginal token count: 345\nOutput:\n# A new exon 9 glucose-6-phosphate dehydrogenase mutation (G6PD \"Rehovot\") in a Jewish Ethiopian family with variable phenotypes.\n\n## Metadata\n**Authors:** M Iancovici-Kidon, D Sthoeger, A Abrahamov, B Wolach, E Beutler, T Gelbart, Y Barak\n**Journal:** Blood cells, molecules & diseases\n**Year:** 2000\n**PMID:** 11112389\n\n## Abstract\n\nHereditary nonspherocytic hemolytic anemia (HNSHA) is a rare manifestation of glucose-6-phosphate dehydrogenase (G6PD) gene mutations, caused mainly by mutations located in exon 10 of the G6PD gene and less commonly by mutations in other parts of the gene. A new, exon 9, single-base mutation representing a T --> C transition at cDNA nucleotide 964 was found in three brothers and their carrier mother of Jewish Ethiopian descent. Biochemical characterization of the resultant protein was not performed. Though clinical manifestations included HNSHA in all cases, the severity of hemolysis and the transfusion requirement differed markedly. Severe congenital neutropenia (Kostmann's syndrome)--a disorder never reported before in conjunction with G6PD deficiency--was observed in one case. Levels of white blood cell G6PD activity of the three patients were 0-5% of normal controls. Neutrophil oxidative and bactericidal activities were inherently impaired in the patient with Kostmann's syndrome, but were well preserved in his two siblings.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,240p' /app/papers/PMID_11112389.md\"}"
+      }
+    },
+    {
+      "step_id": 24,
+      "timestamp": "2026-02-21T00:12:38.943Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_Q6WxvoX5GwzRAflBA1p3W4um",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_Q6WxvoX5GwzRAflBA1p3W4um",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,240p' /app/papers/PMID_10666231.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_Q6WxvoX5GwzRAflBA1p3W4um",
+            "content": "Chunk ID: 32a513\nWall time: 0.0518 seconds\nProcess exited with code 0\nOriginal token count: 269\nOutput:\n# Glucose-6-phosphate dehydrogenase aveiro: a de novo mutation associated with chronic nonspherocytic hemolytic anemia.\n\n## Metadata\n**Authors:** E Costa, J M Cabeda, E Vieira, R Pinto, S A Pereira, L Ferraz, R Santos, J Barbot\n**Journal:** Blood\n**Year:** 2000\n**PMID:** 10666231\n\n## Abstract\n\nGlucose-6-phosphate dehydrogenase (G6PD) deficiency is a common X-linked enzyme abnormality. The clinical phenotype is variable but often predictable from the molecular lesion. Class I variants (the most severe forms of the disease) cluster within exon 10, in a region that, at the protein level, is believed to be involved in dimerization. Here we describe a de novo mutation (C269Y) of a new class I variant (G6PD Aveiro) that maps to exon 8. Mutant and normal alleles were found in both hematopoietic and buccal cells, indicating the presence of mosaicism. The available model of the protein predicts that this lesion lies in proximity to the dimer interface of the molecule. A possible mechanism to explain the severity of the defect is proposed. (Blood. 2000;95:1499-1501)\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,240p' /app/papers/PMID_10666231.md\"}"
+      }
+    },
+    {
+      "step_id": 25,
+      "timestamp": "2026-02-21T00:12:45.339Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_dDcdCqP9kXHAPiEdaZE8HqkA",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_dDcdCqP9kXHAPiEdaZE8HqkA",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,260p' /app/papers/PMID_18086567.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_dDcdCqP9kXHAPiEdaZE8HqkA",
+            "content": "Chunk ID: e210da\nWall time: 0.0531 seconds\nProcess exited with code 0\nOriginal token count: 374\nOutput:\n# Glucose-6-phosphate dehydrogenase Buenos Aires: a novel de novo missense mutation associated with severe enzyme deficiency.\n\n## Metadata\n**Authors:** Angelo Minucci, Paola Concolino, Francesca Vendittelli, Bruno Giardina, Cecilia Zuppi, Ettore Capoluongo\n**Journal:** Clinical biochemistry\n**Year:** 2008\n**PMID:** 18086567\n\n## Abstract\n\n**OBJECTIVE:** : Glucose 6-phosphate dehydrogenase (G6PD) catalyzes the first committed steps in the pentose phosphate pathway: the generation of NADPH by this enzyme is essential for protection against oxidative stress. The human enzyme is in a dimer<-->tetramer equilibrium and its stability depends on NADP(+) concentration. Herein, we report a case of a symptomatic baby affected by severe deficiency of G6PD activity due to a novel de novo genetic mutation (g1465C>T) in the thirteenth exon of its gene.\n\n**METHODS:** : Clinical, biochemical and genetic evaluations of the affected baby and his mother were performed.\n\n**RESULTS:** : We found the g1465C>T novel mutation, in the thirteenth exon of G6PD gene (named \"G6PD Buenos Aires variant\"). This g1465C>T mutation produce a P489S substitution at protein level. The P489S mutation was absent in his mother, suggesting that G6PD Buenos Aires resulted from a de novo mutation.\n\n**CONCLUSIONS:** : The absence of mosaicism in the baby's DNA (from saliva and blood samples) suggests that a de novo mutation event may occur in the very early stages in embryogenesis or in the mother's germ cell lines.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,260p' /app/papers/PMID_18086567.md\"}"
+      }
+    },
+    {
+      "step_id": 26,
+      "timestamp": "2026-02-21T00:12:47.306Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_snlphKnotZzZEW6pDcZZW66A",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_snlphKnotZzZEW6pDcZZW66A",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,260p' /app/papers/PMID_10556177.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_snlphKnotZzZEW6pDcZZW66A",
+            "content": "Chunk ID: ebfbaa\nWall time: 0.0527 seconds\nProcess exited with code 0\nOriginal token count: 559\nOutput:\n# Molecular basis and enzymatic properties of glucose 6-phosphate dehydrogenase volendam, leading to chronic nonspherocytic anemia, granulocyte dysfunction, and increased susceptibility to infections.\n\n## Metadata\n**Authors:** D Roos, R van Zwieten, J T Wijnen, F G\u00f3mez-Gallego, M de Boer, D Stevens, C J Pronk-Admiraal, T de Rijk, C J van Noorden, R S Weening, T J Vulliamy, J E Ploem, P J Mason, J M Bautista, P M Khan, E Beutler\n**Journal:** Blood\n**Year:** 1999\n**PMID:** 10556177\n\n## Abstract\n\nWe have investigated the blood cells from a woman with a low degree of chronic nonspherocytic hemolytic anemia and frequent bacterial infections accompanied by icterus and anemia. The activity of glucose 6-phosphate dehydrogenase (G6PD) in her red blood cells (RBCs) was below detection level, and in her leukocytes less than 3% of normal. In cultured skin fibroblasts, G6PD activity was approximately 15% of normal, with 4- to 5-fold increased Michaelis constant (Km) for NADP and for glucose 6-phosphate. Activated neutrophils showed a decreased respiratory burst. Family studies showed normal G6PD activity in the RBCs from all family members, including both parents and the 2 daughters of the patient. Sequencing of polymerase chain reaction (PCR)-amplified genomic DNA showed a novel, heterozygous 514C-->T mutation, predicting a Pro172-->Ser replacement. Analysis of G6PD RNA from the patient's leukocytes and fibroblasts showed only transcripts with the 514C-->T mutation. This was explained by the pattern of X-chromosome inactivation, studied by means of the human androgen receptor (HUMARA) assay, which proved to be skewed in the patient, her mother, and one of the patient's daughters. Thus, the patient has inherited a de novo mutation in G6PD from her father and an X-chromosome inactivation determinant from her mother, causing exclusive expression of the mutated G6PD allele. Purified mutant protein from an Escherichia coli expression system showed strongly decreased specific activity, increased Km for NADP and for glucose 6-phosphate, and increased heat lability, which indicates that the defective phenotype is due to 2 synergistic molecular dysfunctions: decreased catalytic efficiency and protein instability.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,260p' /app/papers/PMID_10556177.md\"}"
+      }
+    },
+    {
+      "step_id": 27,
+      "timestamp": "2026-02-21T00:12:53.461Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed update_plan call_vZLZ2MVJrVWrr2EYrtu2OPZX",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_vZLZ2MVJrVWrr2EYrtu2OPZX",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "step": "Inventory papers and key metadata",
+                "status": "completed"
+              },
+              {
+                "step": "Extract evidence on dapsone hemolysis risk",
+                "status": "in_progress"
+              },
+              {
+                "step": "Map \u201cG6PD Variable\u201d to phenotype",
+                "status": "pending"
+              },
+              {
+                "step": "Draft CPIC-style recommendation",
+                "status": "pending"
+              },
+              {
+                "step": "Write and validate /app/answers.json",
+                "status": "pending"
+              }
+            ],
+            "explanation": "Confirmed the paper set is largely about G6PD deficiency mechanisms/phenotype variability rather than dapsone specifically; now extracting the most relevant evidence about oxidative-stress hemolysis and variable expression."
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_vZLZ2MVJrVWrr2EYrtu2OPZX",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"step\":\"Inventory papers and key metadata\",\"status\":\"completed\"},{\"step\":\"Extract evidence on dapsone hemolysis risk\",\"status\":\"in_progress\"},{\"step\":\"Map \u201cG6PD Variable\u201d to phenotype\",\"status\":\"pending\"},{\"step\":\"Draft CPIC-style recommendation\",\"status\":\"pending\"},{\"step\":\"Write and validate /app/answers.json\",\"status\":\"pending\"}],\"explanation\":\"Confirmed the paper set is largely about G6PD deficiency mechanisms/phenotype variability rather than dapsone specifically; now extracting the most relevant evidence about oxidative-stress hemolysis and variable expression.\"}"
+      }
+    },
+    {
+      "step_id": 28,
+      "timestamp": "2026-02-21T00:12:56.902Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_Lul431iwnZXMi30FlpPTz7eK",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_Lul431iwnZXMi30FlpPTz7eK",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "sed -n '1,260p' /app/papers/PMID_21302115.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_Lul431iwnZXMi30FlpPTz7eK",
+            "content": "Chunk ID: fdba1f\nWall time: 0.0526 seconds\nProcess exited with code 0\nOriginal token count: 514\nOutput:\n# Chronic nonspherocytic hemolytic anemia due to glucose-6-phosphate dehydrogenase deficiency: report of two families with novel mutations causing G6PD Bangkok and G6PD Bangkok Noi.\n\n## Metadata\n**Authors:** Voravarn S Tanphaichitr, Akira Hirono, Parichat Pung-amritt, Ajjima Treesucon, Wanchai Wanachiwanawin\n**Journal:** Annals of hematology\n**Year:** 2011\n**PMID:** 21302115\n\n## Abstract\n\nGlucose-6-phosphate dehydrogenase (G6PD) deficiency is one of the most common hereditary enzymopathies worldwide. Mostly G6PD deficient cases are asymptomatic though they may have the risk of neonatal jaundice (NNJ) and acute intravascular hemolysis during oxidative stress. Chronic nonspherocytic hemolytic anemia (CNSHA) due to G6PD deficiency is rare. In Thailand, one case was reported 40\u00a0years ago and by biochemical study this G6PD was reported to be a new variant G6PD Bangkok. We, herein, report two families with CNSHA due to G6PD deficiency. In the first family, we have been following up the clinical course of the patient with G6PD Bangkok. In addition to chronic hemolysis, he had three acute hemolytic episodes requiring blood transfusions during childhood period. Multiple gallstones were detected at the age of 27. His two daughters who inherited G6PD Bangkok from him and G6PD Vanua Lava from his wife are asymptomatic. Both of them had NNJ and persistent evidences of compensated hemolysis. Molecular analysis revealed a novel missense mutation 825 G\u2192C predicting 275 Lys\u2192Asn causing G6PD Bangkok. In the second family, two male siblings are affected. They had NNJ and several hemolytic episodes which required blood transfusions. On follow-up they have been diagnosed with chronic hemolysis as evidenced by reticulocytosis and indirect hyperbilirubinemia. Molecular analysis revealed combined missense mutations in exons 12 and 13. The first mutation was 1376 G\u2192T predicting 459 Arg\u2192Leu (known as G6PD Canton) and the second one was 1502 T\u2192G predicting 501 Phe\u2192Cys. We designated the resulting novel G6PD variant, G6PD Bangkok Noi.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"sed -n '1,260p' /app/papers/PMID_21302115.md\"}"
+      }
+    },
+    {
+      "step_id": 29,
+      "timestamp": "2026-02-21T00:13:02.096Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed update_plan call_NKqoArlA1blsblQb3YDAoKex",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_NKqoArlA1blsblQb3YDAoKex",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "step": "Inventory papers and key metadata",
+                "status": "completed"
+              },
+              {
+                "step": "Extract evidence on dapsone hemolysis risk",
+                "status": "completed"
+              },
+              {
+                "step": "Map \u201cG6PD Variable\u201d to phenotype",
+                "status": "in_progress"
+              },
+              {
+                "step": "Draft CPIC-style recommendation",
+                "status": "pending"
+              },
+              {
+                "step": "Write and validate /app/answers.json",
+                "status": "pending"
+              }
+            ],
+            "explanation": "Using the papers\u2019 data on heterozygote mosaicism and skewed X-inactivation to interpret the reported \u201cG6PD Variable\u201d genotype as an indeterminate/variable activity phenotype with potential deficiency."
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_NKqoArlA1blsblQb3YDAoKex",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"step\":\"Inventory papers and key metadata\",\"status\":\"completed\"},{\"step\":\"Extract evidence on dapsone hemolysis risk\",\"status\":\"completed\"},{\"step\":\"Map \u201cG6PD Variable\u201d to phenotype\",\"status\":\"in_progress\"},{\"step\":\"Draft CPIC-style recommendation\",\"status\":\"pending\"},{\"step\":\"Write and validate /app/answers.json\",\"status\":\"pending\"}],\"explanation\":\"Using the papers\u2019 data on heterozygote mosaicism and skewed X-inactivation to interpret the reported \u201cG6PD Variable\u201d genotype as an indeterminate/variable activity phenotype with potential deficiency.\"}"
+      }
+    },
+    {
+      "step_id": 30,
+      "timestamp": "2026-02-21T00:13:09.378Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed update_plan call_B6euIymIdl3cZR6aRv3enu0W",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_B6euIymIdl3cZR6aRv3enu0W",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "step": "Inventory papers and key metadata",
+                "status": "completed"
+              },
+              {
+                "step": "Extract evidence on dapsone hemolysis risk",
+                "status": "completed"
+              },
+              {
+                "step": "Map \u201cG6PD Variable\u201d to phenotype",
+                "status": "completed"
+              },
+              {
+                "step": "Draft CPIC-style recommendation",
+                "status": "in_progress"
+              },
+              {
+                "step": "Write and validate /app/answers.json",
+                "status": "pending"
+              }
+            ],
+            "explanation": "Drafting the final clinical action statement and strength rating for dapsone in a patient with variable/indeterminate G6PD activity."
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_B6euIymIdl3cZR6aRv3enu0W",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"step\":\"Inventory papers and key metadata\",\"status\":\"completed\"},{\"step\":\"Extract evidence on dapsone hemolysis risk\",\"status\":\"completed\"},{\"step\":\"Map \u201cG6PD Variable\u201d to phenotype\",\"status\":\"completed\"},{\"step\":\"Draft CPIC-style recommendation\",\"status\":\"in_progress\"},{\"step\":\"Write and validate /app/answers.json\",\"status\":\"pending\"}],\"explanation\":\"Drafting the final clinical action statement and strength rating for dapsone in a patient with variable/indeterminate G6PD activity.\"}"
+      }
+    },
+    {
+      "step_id": 31,
+      "timestamp": "2026-02-21T00:13:14.611Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_7IRtp9qpjszpbwwXWoiCWVZH",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_7IRtp9qpjszpbwwXWoiCWVZH",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "cat > /app/answers.json <<'JSON'\n{\n  \"recommendation\": \"Avoid dapsone when possible because patients with variable/indeterminate G6PD activity may have clinically significant G6PD deficiency and are at risk for oxidative hemolysis. If dapsone is essential, first obtain a quantitative G6PD enzyme activity result (and baseline CBC/hemolysis labs), use the lowest effective dose, and monitor closely for hemolytic anemia (e.g., falling hemoglobin, rising bilirubin/LDH, hemoglobinuria) and methemoglobinemia; discontinue if hemolysis occurs.\",\n  \"classification\": \"Moderate\",\n  \"implication\": \"G6PD Variable suggests unpredictable (often mosaic) enzyme activity; reduced NADPH capacity may increase susceptibility to dapsone-induced oxidative hemolysis, with severity that can range from minimal to severe.\"\n}\nJSON\npython3 -c 'import json; json.load(open(\"/app/answers.json\")); print(\"valid json\")'\nls -\u10da\u10d0 /app/answers.json"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_7IRtp9qpjszpbwwXWoiCWVZH",
+            "content": "Chunk ID: 4464cc\nWall time: 0.0530 seconds\nProcess exited with code 2\nOriginal token count: 28\nOutput:\n/bin/bash: line 8: python3: command not found\nls: invalid option -- '\ufffd'\nTry 'ls --help' for more information.\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"cat > /app/answers.json <<'JSON'\\n{\\n  \\\"recommendation\\\": \\\"Avoid dapsone when possible because patients with variable/indeterminate G6PD activity may have clinically significant G6PD deficiency and are at risk for oxidative hemolysis. If dapsone is essential, first obtain a quantitative G6PD enzyme activity result (and baseline CBC/hemolysis labs), use the lowest effective dose, and monitor closely for hemolytic anemia (e.g., falling hemoglobin, rising bilirubin/LDH, hemoglobinuria) and methemoglobinemia; discontinue if hemolysis occurs.\\\",\\n  \\\"classification\\\": \\\"Moderate\\\",\\n  \\\"implication\\\": \\\"G6PD Variable suggests unpredictable (often mosaic) enzyme activity; reduced NADPH capacity may increase susceptibility to dapsone-induced oxidative hemolysis, with severity that can range from minimal to severe.\\\"\\n}\\nJSON\\npython3 -c 'import json; json.load(open(\\\"/app/answers.json\\\")); print(\\\"valid json\\\")'\\nls -\u10da\u10d0 /app/answers.json\"}"
+      }
+    },
+    {
+      "step_id": 32,
+      "timestamp": "2026-02-21T00:13:18.306Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_A1uWZVB4ztt6DaVmXVwZDV1o",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_A1uWZVB4ztt6DaVmXVwZDV1o",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "command -v python3 || true; command -v python || true; command -v jq || true; command -v node || true; ls -la /app/answers.json; sed -n '1,50p' /app/answers.json"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_A1uWZVB4ztt6DaVmXVwZDV1o",
+            "content": "Chunk ID: 38c21d\nWall time: 0.0530 seconds\nProcess exited with code 0\nOriginal token count: 220\nOutput:\n/root/.nvm/versions/node/v22.22.0/bin/node\n-rw-r--r-- 1 root root 776 Feb 21 00:13 /app/answers.json\n{\n  \"recommendation\": \"Avoid dapsone when possible because patients with variable/indeterminate G6PD activity may have clinically significant G6PD deficiency and are at risk for oxidative hemolysis. If dapsone is essential, first obtain a quantitative G6PD enzyme activity result (and baseline CBC/hemolysis labs), use the lowest effective dose, and monitor closely for hemolytic anemia (e.g., falling hemoglobin, rising bilirubin/LDH, hemoglobinuria) and methemoglobinemia; discontinue if hemolysis occurs.\",\n  \"classification\": \"Moderate\",\n  \"implication\": \"G6PD Variable suggests unpredictable (often mosaic) enzyme activity; reduced NADPH capacity may increase susceptibility to dapsone-induced oxidative hemolysis, with severity that can range from minimal to severe.\"\n}\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"command -v python3 || true; command -v python || true; command -v jq || true; command -v node || true; ls -la /app/answers.json; sed -n '1,50p' /app/answers.json\"}"
+      }
+    },
+    {
+      "step_id": 33,
+      "timestamp": "2026-02-21T00:13:20.209Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed exec_command call_l1ITkIj3ypDaycylvnSoCmAG",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_l1ITkIj3ypDaycylvnSoCmAG",
+          "function_name": "exec_command",
+          "arguments": {
+            "cmd": "node -e 'const fs=require(\"fs\"); JSON.parse(fs.readFileSync(\"/app/answers.json\",\"utf8\")); console.log(\"valid json\");'"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_l1ITkIj3ypDaycylvnSoCmAG",
+            "content": "Chunk ID: fb6a4e\nWall time: 0.0528 seconds\nProcess exited with code 0\nOriginal token count: 3\nOutput:\nvalid json\n"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"cmd\":\"node -e 'const fs=require(\\\"fs\\\"); JSON.parse(fs.readFileSync(\\\"/app/answers.json\\\",\\\"utf8\\\")); console.log(\\\"valid json\\\");'\"}"
+      }
+    },
+    {
+      "step_id": 34,
+      "timestamp": "2026-02-21T00:13:22.830Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "Executed update_plan call_HKuiIQ3E53XRNl7oQ8CFVFTp",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_HKuiIQ3E53XRNl7oQ8CFVFTp",
+          "function_name": "update_plan",
+          "arguments": {
+            "plan": [
+              {
+                "step": "Inventory papers and key metadata",
+                "status": "completed"
+              },
+              {
+                "step": "Extract evidence on dapsone hemolysis risk",
+                "status": "completed"
+              },
+              {
+                "step": "Map \u201cG6PD Variable\u201d to phenotype",
+                "status": "completed"
+              },
+              {
+                "step": "Draft CPIC-style recommendation",
+                "status": "completed"
+              },
+              {
+                "step": "Write and validate /app/answers.json",
+                "status": "completed"
+              }
+            ],
+            "explanation": "Wrote /app/answers.json and validated it parses as JSON (using Node.js, since Python is not installed in this environment)."
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_HKuiIQ3E53XRNl7oQ8CFVFTp",
+            "content": "Plan updated"
+          }
+        ]
+      },
+      "extra": {
+        "raw_arguments": "{\"plan\":[{\"step\":\"Inventory papers and key metadata\",\"status\":\"completed\"},{\"step\":\"Extract evidence on dapsone hemolysis risk\",\"status\":\"completed\"},{\"step\":\"Map \u201cG6PD Variable\u201d to phenotype\",\"status\":\"completed\"},{\"step\":\"Draft CPIC-style recommendation\",\"status\":\"completed\"},{\"step\":\"Write and validate /app/answers.json\",\"status\":\"completed\"}],\"explanation\":\"Wrote /app/answers.json and validated it parses as JSON (using Node.js, since Python is not installed in this environment).\"}"
+      }
+    },
+    {
+      "step_id": 35,
+      "timestamp": "2026-02-21T00:13:24.159Z",
+      "source": "agent",
+      "model_name": "gpt-5.2",
+      "message": "- Wrote the clinical recommendation JSON to `/app/answers.json`.\n- Verified the file exists and contains valid JSON (parsed successfully with `node`)."
+    }
+  ],
+  "final_metrics": {
+    "total_prompt_tokens": 723791,
+    "total_completion_tokens": 6265,
+    "total_cached_tokens": 607360,
+    "total_steps": 35,
+    "extra": {
+      "reasoning_output_tokens": 4181,
+      "total_tokens": 730056,
+      "last_token_usage": {
+        "input_tokens": 35901,
+        "cached_input_tokens": 35712,
+        "output_tokens": 34,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 35935
+      }
+    }
+  }
+}

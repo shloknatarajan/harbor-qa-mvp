@@ -1,0 +1,74 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771640186.4278085,
+            "stop": 1771640190.217642
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0006539159985550214,
+                "start": 1771640186.5147252,
+                "stop": 1771640186.5220547,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Optional', 'implication': 'Increased CYP2C19 activity can increase omeprazole metabolism, which ma...nsider increasing the dose and/or dosing frequency or switching to a PPI regimen less impacted by CYP2C19 metabolism.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Moderate', got 'Optional'\nE       assert 'optional' == 'moderate'\nE         \nE         - moderate\nE         + optional\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.6834644180034957,
+                "start": 1771640186.5222206,
+                "stop": 1771640190.2115777,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': 'Agent correctly identifies standard starting dose b...ncreased metabolism and reduced exposure but misses some clinical specificity.', 'recommendation_completeness': 3, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 3/5 (need >= 4). Rationale: Agent correctly identifies standard starting dose but lacks specific 50-100% dose increase guidance for H. pylori and erosive esophagitis, and omits the divided dosing and monitoring requirements from CPIC guidelines. The implication accurately describes increased metabolism and reduced exposure but misses some clinical specificity.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0009270419996028068,
+                "start": 1771640190.2123585,
+                "stop": 1771640190.2164037,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': 'Agent correctly identifies standard starting dose b...ncreased metabolism and reduced exposure but misses some clinical specificity.', 'recommendation_completeness': 3, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: Agent correctly identifies standard starting dose but lacks specific 50-100% dose increase guidance for H. pylori and erosive esophagitis, and omits the divided dosing and monitoring requirements from CPIC guidelines. The implication accurately describes increased metabolism and reduced exposure but misses some clinical specificity.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00035974999809695873,
+                "start": 1771640190.216639,
+                "stop": 1771640190.2171085,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "passed",
+                "duration": 0.00021637500140059274,
+                "start": 1771640190.2172196,
+                "stop": 1771640190.217509,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

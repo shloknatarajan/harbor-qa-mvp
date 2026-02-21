@@ -1,0 +1,74 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771638046.2783656,
+            "stop": 1771638050.1801856
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.000522833001014078,
+                "start": 1771638046.3036172,
+                "stop": 1771638046.304283,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "passed",
+                "duration": 3.841111253001145,
+                "start": 1771638046.3044362,
+                "stop": 1771638050.1460145,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00101804200130573,
+                "start": 1771638050.1468,
+                "stop": 1771638050.1757932,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 4, 'rationale': 'The agent correctly recommends avoiding primaquine but adds non-CPIC content a...he G6PD deficiency phenotype and hemolysis risk.', 'recommendation_accuracy': 4, 'recommendation_completeness': 3, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly recommends avoiding primaquine but adds non-CPIC content about specialist oversight and alternatives that could create confusion about the strength of the avoid recommendation. The implication accurately describes the G6PD deficiency phenotype and hemolysis risk.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0003330409999762196,
+                "start": 1771638050.1760166,
+                "stop": 1771638050.1777716,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 4, 'rationale': 'The agent correctly recommends avoiding primaquine but adds non-CPIC content a...he G6PD deficiency phenotype and hemolysis risk.', 'recommendation_accuracy': 4, 'recommendation_completeness': 3, ...}\n\n    def test_implication_accuracy(judge_scores):\n        \"\"\"LLM judge: is the stated implication correct for this genotype?\"\"\"\n>       score = judge_scores[\"implication_accuracy\"]\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       KeyError: 'implication_accuracy'\n\n/tests/test_outputs.py:95: KeyError",
+                "message": "The test failed in the call phase"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0004952509998474852,
+                "start": 1771638050.177908,
+                "stop": 1771638050.1800256,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 4, 'rationale': 'The agent correctly recommends avoiding primaquine but adds non-CPIC content a...he G6PD deficiency phenotype and hemolysis risk.', 'recommendation_accuracy': 4, 'recommendation_completeness': 3, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent correctly recommends avoiding primaquine but adds non-CPIC content about specialist oversight and alternatives that could create confusion about the strength of the avoid recommendation. The implication accurately describes the G6PD deficiency phenotype and hemolysis risk.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

@@ -1,0 +1,71 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 3,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771637150.7574954,
+            "stop": 1771637155.1487617
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.00030187599895725725,
+                "start": 1771637150.7816377,
+                "stop": 1771637150.782063,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4.341210583998873,
+                "start": 1771637150.7821643,
+                "stop": 1771637155.1459446,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 5, 'rationale': 'The agent recommends avoiding voriconazole when alt...ommendation to use alternatives like liposomal amphotericin B or posaconazole.', 'recommendation_completeness': 3, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 2/5 (need >= 4). Rationale: The agent recommends avoiding voriconazole when alternatives are available but then provides detailed guidance for using voriconazole with TDM, while CPIC clearly states to choose alternative agents; the agent correctly identifies the metabolic consequences but deviates meaningfully from the primary recommendation to use alternatives like liposomal amphotericin B or posaconazole.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00037474999953701627,
+                "start": 1771637155.1462603,
+                "stop": 1771637155.1479201,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 2, 'implication_accuracy': 5, 'rationale': 'The agent recommends avoiding voriconazole when alt...ommendation to use alternatives like liposomal amphotericin B or posaconazole.', 'recommendation_completeness': 3, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent recommends avoiding voriconazole when alternatives are available but then provides detailed guidance for using voriconazole with TDM, while CPIC clearly states to choose alternative agents; the agent correctly identifies the metabolic consequences but deviates meaningfully from the primary recommendation to use alternatives like liposomal amphotericin B or posaconazole.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00018095799987349892,
+                "start": 1771637155.1480389,
+                "stop": 1771637155.1482944,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "passed",
+                "duration": 0.0001726260006762459,
+                "start": 1771637155.1483953,
+                "stop": 1771637155.148629,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

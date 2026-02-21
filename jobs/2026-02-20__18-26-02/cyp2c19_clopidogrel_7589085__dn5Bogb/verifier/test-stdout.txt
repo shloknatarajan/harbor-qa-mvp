@@ -1,0 +1,692 @@
+Hit:1 http://ports.ubuntu.com/ubuntu-ports noble InRelease
+Hit:2 http://ports.ubuntu.com/ubuntu-ports noble-updates InRelease
+Hit:3 http://ports.ubuntu.com/ubuntu-ports noble-backports InRelease
+Hit:4 http://ports.ubuntu.com/ubuntu-ports noble-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (8.5.0-2ubuntu10.6).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
+downloading uv 0.9.7 aarch64-unknown-linux-gnu
+no checksums to verify
+installing to /root/.local/bin
+  uv
+  uvx
+everything's installed!
+
+To add $HOME/.local/bin to your PATH, either restart your shell or run:
+
+    source $HOME/.local/bin/env (sh, bash, zsh)
+    source $HOME/.local/bin/env.fish (fish)
+Downloading cpython-3.14.0-linux-aarch64-gnu (download) (28.6MiB)
+ Downloading cpython-3.14.0-linux-aarch64-gnu (download)
+Downloading pygments (1.2MiB)
+Downloading pydantic-core (1.8MiB)
+ Downloading pygments
+ Downloading pydantic-core
+Installed 21 packages in 9ms
+============================= test session starts ==============================
+platform linux -- Python 3.14.0, pytest-8.4.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.3.5, anyio-4.12.1
+collected 5 items
+
+../tests/test_outputs.py FEEEE                                           [100%]
+
+==================================== ERRORS ====================================
+__________________ ERROR at setup of test_action_correctness ___________________
+
+answers = {'classification': 'Moderate', 'implication': 'CYP2C19 ultrarapid metabolism is expected to increase clopidogrel bioac...r bleeding, as ultrarapid CYP2C19 metabolism may increase formation of the active metabolite and antiplatelet effect.'}
+
+    @pytest.fixture(scope="module")
+    def judge_scores(answers):
+        """Call LLM judge to evaluate the agent's recommendation."""
+        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+        if not api_key:
+            pytest.skip("ANTHROPIC_API_KEY not set — cannot run LLM judge")
+    
+        from anthropic import Anthropic
+    
+        client = Anthropic(api_key=api_key)
+    
+        prompt = JUDGE_PROMPT.format(
+            drug=DRUG,
+            gene=GENE,
+            variant=VARIANT,
+            expected_rec=EXPECTED_RECOMMENDATION,
+            expected_class=EXPECTED_CLASSIFICATION,
+            expected_impl=EXPECTED_IMPLICATION,
+            agent_rec=answers.get("recommendation", ""),
+            agent_class=answers.get("classification", ""),
+            agent_impl=answers.get("implication", ""),
+        )
+    
+>       response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=300,
+            messages=[{"role": "user", "content": prompt}],
+        )
+
+/tests/test_outputs.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_utils/_utils.py:283: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/resources/messages/messages.py:978: in create
+    return self._post(
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_base_client.py:1290: in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0xffffb25b7230>
+cast_to = <class 'anthropic.types.message.Message'>
+options = FinalRequestOptions(method='post', url='/v1/messages', params={}, headers=NOT_GIVEN, max_retries=NOT_GIVEN, timeout=Ti...cy": <1-5>, "safety": <1-5>, "rationale": "<1-2 sentences>"}'}], 'model': 'claude-sonnet-4-20250514'}, extra_json=None)
+
+    def request(
+        self,
+        cast_to: Type[ResponseT],
+        options: FinalRequestOptions,
+        *,
+        stream: bool = False,
+        stream_cls: type[_StreamT] | None = None,
+    ) -> ResponseT | _StreamT:
+        cast_to = self._maybe_override_cast_to(cast_to, options)
+    
+        # create a copy of the options we were given so that if the
+        # options are mutated later & we then retry, the retries are
+        # given the original options
+        input_options = model_copy(options)
+        if input_options.idempotency_key is None and input_options.method.lower() != "get":
+            # ensure the idempotency key is reused between requests
+            input_options.idempotency_key = self._idempotency_key()
+    
+        response: httpx.Response | None = None
+        max_retries = input_options.get_max_retries(self.max_retries)
+    
+        retries_taken = 0
+        for retries_taken in range(max_retries + 1):
+            options = model_copy(input_options)
+            options = self._prepare_options(options)
+    
+            remaining_retries = max_retries - retries_taken
+            request = self._build_request(options, retries_taken=retries_taken)
+            self._prepare_request(request)
+    
+            kwargs: HttpxSendArgs = {}
+            if self.custom_auth is not None:
+                kwargs["auth"] = self.custom_auth
+    
+            log.debug("Sending HTTP Request: %s %s", request.method, request.url)
+    
+            response = None
+            try:
+                response = self._client.send(
+                    request,
+                    stream=stream or self._should_stream_response_body(request=request),
+                    **kwargs,
+                )
+            except httpx.TimeoutException as err:
+                log.debug("Encountered httpx.TimeoutException", exc_info=True)
+    
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+    
+                log.debug("Raising timeout error")
+                raise APITimeoutError(request=request) from err
+            except Exception as err:
+                log.debug("Encountered Exception", exc_info=True)
+    
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+    
+                log.debug("Raising connection error")
+                raise APIConnectionError(request=request) from err
+    
+            log.debug(
+                'HTTP Response: %s %s "%i %s" %s',
+                request.method,
+                request.url,
+                response.status_code,
+                response.reason_phrase,
+                response.headers,
+            )
+            log.debug("request_id: %s", response.headers.get("request-id"))
+    
+            try:
+                response.raise_for_status()
+            except httpx.HTTPStatusError as err:  # thrown on 4xx and 5xx status code
+                log.debug("Encountered httpx.HTTPStatusError", exc_info=True)
+    
+                if remaining_retries > 0 and self._should_retry(err.response):
+                    err.response.close()
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=response,
+                    )
+                    continue
+    
+                # If the response is streamed then we need to explicitly read the response
+                # to completion before attempting to access the response text.
+                if not err.response.is_closed:
+                    err.response.read()
+    
+                log.debug("Re-raising status error")
+>               raise self._make_status_error_from_response(err.response) from None
+E               anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CYLSZE5GDp8MtHRTFxicB'}
+
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_base_client.py:1085: BadRequestError
+______________ ERROR at setup of test_recommendation_completeness ______________
+
+answers = {'classification': 'Moderate', 'implication': 'CYP2C19 ultrarapid metabolism is expected to increase clopidogrel bioac...r bleeding, as ultrarapid CYP2C19 metabolism may increase formation of the active metabolite and antiplatelet effect.'}
+
+    @pytest.fixture(scope="module")
+    def judge_scores(answers):
+        """Call LLM judge to evaluate the agent's recommendation."""
+        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+        if not api_key:
+            pytest.skip("ANTHROPIC_API_KEY not set — cannot run LLM judge")
+    
+        from anthropic import Anthropic
+    
+        client = Anthropic(api_key=api_key)
+    
+        prompt = JUDGE_PROMPT.format(
+            drug=DRUG,
+            gene=GENE,
+            variant=VARIANT,
+            expected_rec=EXPECTED_RECOMMENDATION,
+            expected_class=EXPECTED_CLASSIFICATION,
+            expected_impl=EXPECTED_IMPLICATION,
+            agent_rec=answers.get("recommendation", ""),
+            agent_class=answers.get("classification", ""),
+            agent_impl=answers.get("implication", ""),
+        )
+    
+>       response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=300,
+            messages=[{"role": "user", "content": prompt}],
+        )
+
+/tests/test_outputs.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_utils/_utils.py:283: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/resources/messages/messages.py:978: in create
+    return self._post(
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_base_client.py:1290: in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0xffffb25b7230>
+cast_to = <class 'anthropic.types.message.Message'>
+options = FinalRequestOptions(method='post', url='/v1/messages', params={}, headers=NOT_GIVEN, max_retries=NOT_GIVEN, timeout=Ti...cy": <1-5>, "safety": <1-5>, "rationale": "<1-2 sentences>"}'}], 'model': 'claude-sonnet-4-20250514'}, extra_json=None)
+
+    def request(
+        self,
+        cast_to: Type[ResponseT],
+        options: FinalRequestOptions,
+        *,
+        stream: bool = False,
+        stream_cls: type[_StreamT] | None = None,
+    ) -> ResponseT | _StreamT:
+        cast_to = self._maybe_override_cast_to(cast_to, options)
+    
+        # create a copy of the options we were given so that if the
+        # options are mutated later & we then retry, the retries are
+        # given the original options
+        input_options = model_copy(options)
+        if input_options.idempotency_key is None and input_options.method.lower() != "get":
+            # ensure the idempotency key is reused between requests
+            input_options.idempotency_key = self._idempotency_key()
+    
+        response: httpx.Response | None = None
+        max_retries = input_options.get_max_retries(self.max_retries)
+    
+        retries_taken = 0
+        for retries_taken in range(max_retries + 1):
+            options = model_copy(input_options)
+            options = self._prepare_options(options)
+    
+            remaining_retries = max_retries - retries_taken
+            request = self._build_request(options, retries_taken=retries_taken)
+            self._prepare_request(request)
+    
+            kwargs: HttpxSendArgs = {}
+            if self.custom_auth is not None:
+                kwargs["auth"] = self.custom_auth
+    
+            log.debug("Sending HTTP Request: %s %s", request.method, request.url)
+    
+            response = None
+            try:
+                response = self._client.send(
+                    request,
+                    stream=stream or self._should_stream_response_body(request=request),
+                    **kwargs,
+                )
+            except httpx.TimeoutException as err:
+                log.debug("Encountered httpx.TimeoutException", exc_info=True)
+    
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+    
+                log.debug("Raising timeout error")
+                raise APITimeoutError(request=request) from err
+            except Exception as err:
+                log.debug("Encountered Exception", exc_info=True)
+    
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+    
+                log.debug("Raising connection error")
+                raise APIConnectionError(request=request) from err
+    
+            log.debug(
+                'HTTP Response: %s %s "%i %s" %s',
+                request.method,
+                request.url,
+                response.status_code,
+                response.reason_phrase,
+                response.headers,
+            )
+            log.debug("request_id: %s", response.headers.get("request-id"))
+    
+            try:
+                response.raise_for_status()
+            except httpx.HTTPStatusError as err:  # thrown on 4xx and 5xx status code
+                log.debug("Encountered httpx.HTTPStatusError", exc_info=True)
+    
+                if remaining_retries > 0 and self._should_retry(err.response):
+                    err.response.close()
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=response,
+                    )
+                    continue
+    
+                # If the response is streamed then we need to explicitly read the response
+                # to completion before attempting to access the response text.
+                if not err.response.is_closed:
+                    err.response.read()
+    
+                log.debug("Re-raising status error")
+>               raise self._make_status_error_from_response(err.response) from None
+E               anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CYLSZE5GDp8MtHRTFxicB'}
+
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_base_client.py:1085: BadRequestError
+_________________ ERROR at setup of test_implication_accuracy __________________
+
+answers = {'classification': 'Moderate', 'implication': 'CYP2C19 ultrarapid metabolism is expected to increase clopidogrel bioac...r bleeding, as ultrarapid CYP2C19 metabolism may increase formation of the active metabolite and antiplatelet effect.'}
+
+    @pytest.fixture(scope="module")
+    def judge_scores(answers):
+        """Call LLM judge to evaluate the agent's recommendation."""
+        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+        if not api_key:
+            pytest.skip("ANTHROPIC_API_KEY not set — cannot run LLM judge")
+    
+        from anthropic import Anthropic
+    
+        client = Anthropic(api_key=api_key)
+    
+        prompt = JUDGE_PROMPT.format(
+            drug=DRUG,
+            gene=GENE,
+            variant=VARIANT,
+            expected_rec=EXPECTED_RECOMMENDATION,
+            expected_class=EXPECTED_CLASSIFICATION,
+            expected_impl=EXPECTED_IMPLICATION,
+            agent_rec=answers.get("recommendation", ""),
+            agent_class=answers.get("classification", ""),
+            agent_impl=answers.get("implication", ""),
+        )
+    
+>       response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=300,
+            messages=[{"role": "user", "content": prompt}],
+        )
+
+/tests/test_outputs.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_utils/_utils.py:283: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/resources/messages/messages.py:978: in create
+    return self._post(
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_base_client.py:1290: in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0xffffb25b7230>
+cast_to = <class 'anthropic.types.message.Message'>
+options = FinalRequestOptions(method='post', url='/v1/messages', params={}, headers=NOT_GIVEN, max_retries=NOT_GIVEN, timeout=Ti...cy": <1-5>, "safety": <1-5>, "rationale": "<1-2 sentences>"}'}], 'model': 'claude-sonnet-4-20250514'}, extra_json=None)
+
+    def request(
+        self,
+        cast_to: Type[ResponseT],
+        options: FinalRequestOptions,
+        *,
+        stream: bool = False,
+        stream_cls: type[_StreamT] | None = None,
+    ) -> ResponseT | _StreamT:
+        cast_to = self._maybe_override_cast_to(cast_to, options)
+    
+        # create a copy of the options we were given so that if the
+        # options are mutated later & we then retry, the retries are
+        # given the original options
+        input_options = model_copy(options)
+        if input_options.idempotency_key is None and input_options.method.lower() != "get":
+            # ensure the idempotency key is reused between requests
+            input_options.idempotency_key = self._idempotency_key()
+    
+        response: httpx.Response | None = None
+        max_retries = input_options.get_max_retries(self.max_retries)
+    
+        retries_taken = 0
+        for retries_taken in range(max_retries + 1):
+            options = model_copy(input_options)
+            options = self._prepare_options(options)
+    
+            remaining_retries = max_retries - retries_taken
+            request = self._build_request(options, retries_taken=retries_taken)
+            self._prepare_request(request)
+    
+            kwargs: HttpxSendArgs = {}
+            if self.custom_auth is not None:
+                kwargs["auth"] = self.custom_auth
+    
+            log.debug("Sending HTTP Request: %s %s", request.method, request.url)
+    
+            response = None
+            try:
+                response = self._client.send(
+                    request,
+                    stream=stream or self._should_stream_response_body(request=request),
+                    **kwargs,
+                )
+            except httpx.TimeoutException as err:
+                log.debug("Encountered httpx.TimeoutException", exc_info=True)
+    
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+    
+                log.debug("Raising timeout error")
+                raise APITimeoutError(request=request) from err
+            except Exception as err:
+                log.debug("Encountered Exception", exc_info=True)
+    
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+    
+                log.debug("Raising connection error")
+                raise APIConnectionError(request=request) from err
+    
+            log.debug(
+                'HTTP Response: %s %s "%i %s" %s',
+                request.method,
+                request.url,
+                response.status_code,
+                response.reason_phrase,
+                response.headers,
+            )
+            log.debug("request_id: %s", response.headers.get("request-id"))
+    
+            try:
+                response.raise_for_status()
+            except httpx.HTTPStatusError as err:  # thrown on 4xx and 5xx status code
+                log.debug("Encountered httpx.HTTPStatusError", exc_info=True)
+    
+                if remaining_retries > 0 and self._should_retry(err.response):
+                    err.response.close()
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=response,
+                    )
+                    continue
+    
+                # If the response is streamed then we need to explicitly read the response
+                # to completion before attempting to access the response text.
+                if not err.response.is_closed:
+                    err.response.read()
+    
+                log.debug("Re-raising status error")
+>               raise self._make_status_error_from_response(err.response) from None
+E               anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CYLSZE5GDp8MtHRTFxicB'}
+
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_base_client.py:1085: BadRequestError
+________________________ ERROR at setup of test_safety _________________________
+
+answers = {'classification': 'Moderate', 'implication': 'CYP2C19 ultrarapid metabolism is expected to increase clopidogrel bioac...r bleeding, as ultrarapid CYP2C19 metabolism may increase formation of the active metabolite and antiplatelet effect.'}
+
+    @pytest.fixture(scope="module")
+    def judge_scores(answers):
+        """Call LLM judge to evaluate the agent's recommendation."""
+        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+        if not api_key:
+            pytest.skip("ANTHROPIC_API_KEY not set — cannot run LLM judge")
+    
+        from anthropic import Anthropic
+    
+        client = Anthropic(api_key=api_key)
+    
+        prompt = JUDGE_PROMPT.format(
+            drug=DRUG,
+            gene=GENE,
+            variant=VARIANT,
+            expected_rec=EXPECTED_RECOMMENDATION,
+            expected_class=EXPECTED_CLASSIFICATION,
+            expected_impl=EXPECTED_IMPLICATION,
+            agent_rec=answers.get("recommendation", ""),
+            agent_class=answers.get("classification", ""),
+            agent_impl=answers.get("implication", ""),
+        )
+    
+>       response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=300,
+            messages=[{"role": "user", "content": prompt}],
+        )
+
+/tests/test_outputs.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_utils/_utils.py:283: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/resources/messages/messages.py:978: in create
+    return self._post(
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_base_client.py:1290: in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0xffffb25b7230>
+cast_to = <class 'anthropic.types.message.Message'>
+options = FinalRequestOptions(method='post', url='/v1/messages', params={}, headers=NOT_GIVEN, max_retries=NOT_GIVEN, timeout=Ti...cy": <1-5>, "safety": <1-5>, "rationale": "<1-2 sentences>"}'}], 'model': 'claude-sonnet-4-20250514'}, extra_json=None)
+
+    def request(
+        self,
+        cast_to: Type[ResponseT],
+        options: FinalRequestOptions,
+        *,
+        stream: bool = False,
+        stream_cls: type[_StreamT] | None = None,
+    ) -> ResponseT | _StreamT:
+        cast_to = self._maybe_override_cast_to(cast_to, options)
+    
+        # create a copy of the options we were given so that if the
+        # options are mutated later & we then retry, the retries are
+        # given the original options
+        input_options = model_copy(options)
+        if input_options.idempotency_key is None and input_options.method.lower() != "get":
+            # ensure the idempotency key is reused between requests
+            input_options.idempotency_key = self._idempotency_key()
+    
+        response: httpx.Response | None = None
+        max_retries = input_options.get_max_retries(self.max_retries)
+    
+        retries_taken = 0
+        for retries_taken in range(max_retries + 1):
+            options = model_copy(input_options)
+            options = self._prepare_options(options)
+    
+            remaining_retries = max_retries - retries_taken
+            request = self._build_request(options, retries_taken=retries_taken)
+            self._prepare_request(request)
+    
+            kwargs: HttpxSendArgs = {}
+            if self.custom_auth is not None:
+                kwargs["auth"] = self.custom_auth
+    
+            log.debug("Sending HTTP Request: %s %s", request.method, request.url)
+    
+            response = None
+            try:
+                response = self._client.send(
+                    request,
+                    stream=stream or self._should_stream_response_body(request=request),
+                    **kwargs,
+                )
+            except httpx.TimeoutException as err:
+                log.debug("Encountered httpx.TimeoutException", exc_info=True)
+    
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+    
+                log.debug("Raising timeout error")
+                raise APITimeoutError(request=request) from err
+            except Exception as err:
+                log.debug("Encountered Exception", exc_info=True)
+    
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+    
+                log.debug("Raising connection error")
+                raise APIConnectionError(request=request) from err
+    
+            log.debug(
+                'HTTP Response: %s %s "%i %s" %s',
+                request.method,
+                request.url,
+                response.status_code,
+                response.reason_phrase,
+                response.headers,
+            )
+            log.debug("request_id: %s", response.headers.get("request-id"))
+    
+            try:
+                response.raise_for_status()
+            except httpx.HTTPStatusError as err:  # thrown on 4xx and 5xx status code
+                log.debug("Encountered httpx.HTTPStatusError", exc_info=True)
+    
+                if remaining_retries > 0 and self._should_retry(err.response):
+                    err.response.close()
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=response,
+                    )
+                    continue
+    
+                # If the response is streamed then we need to explicitly read the response
+                # to completion before attempting to access the response text.
+                if not err.response.is_closed:
+                    err.response.read()
+    
+                log.debug("Re-raising status error")
+>               raise self._make_status_error_from_response(err.response) from None
+E               anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CYLSZE5GDp8MtHRTFxicB'}
+
+/root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_base_client.py:1085: BadRequestError
+=================================== FAILURES ===================================
+_____________________________ test_classification ______________________________
+
+answers = {'classification': 'Moderate', 'implication': 'CYP2C19 ultrarapid metabolism is expected to increase clopidogrel bioac...r bleeding, as ultrarapid CYP2C19 metabolism may increase formation of the active metabolite and antiplatelet effect.'}
+
+    def test_classification(answers):
+        """Check that the classification strength matches exactly."""
+        got = answers.get("classification", "").strip()
+>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (
+            f"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'"
+        )
+E       AssertionError: Expected classification 'No Recommendation', got 'Moderate'
+E       assert 'moderate' == 'no recommendation'
+E         
+E         - no recommendation
+E         + moderate
+
+/tests/test_outputs.py:67: AssertionError
+=============================== warnings summary ===============================
+test_outputs.py::test_action_correctness
+  /root/.cache/uv/archive-v0/K3S6J7LW0DMYDABfYBXQ-/lib/python3.14/site-packages/anthropic/_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+    from pydantic.v1.typing import (
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR ../tests/test_outputs.py::test_action_correctness - anthropic.BadReques...
+ERROR ../tests/test_outputs.py::test_recommendation_completeness - anthropic....
+ERROR ../tests/test_outputs.py::test_implication_accuracy - anthropic.BadRequ...
+ERROR ../tests/test_outputs.py::test_safety - anthropic.BadRequestError: Erro...
+FAILED ../tests/test_outputs.py::test_classification - AssertionError: Expect...
+==================== 1 failed, 1 warning, 4 errors in 0.65s ====================

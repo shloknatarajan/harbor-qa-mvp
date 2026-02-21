@@ -1,0 +1,77 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 1,
+            "failed": 4,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771633831.7389498,
+            "stop": 1771633835.6726062
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0006618339994020062,
+                "start": 1771633831.7677813,
+                "stop": 1771633831.7745686,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'Moderate', 'implication': 'CYP2C19 ultrarapid metabolism (commonly via CYP2C19*17) increases clopi... with increased attention to bleeding risk (e.g., review concomitant anticoagulants/NSAIDs and monitor for bleeding).'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'No Recommendation', got 'Moderate'\nE       assert 'moderate' == 'no recommendation'\nE         \nE         - no recommendation\nE         + moderate\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.887563293999847,
+                "start": 1771633831.7746859,
+                "stop": 1771633835.6675487,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 4, 'rationale': \"The agent provides a specific clinical recommendati...tradicts the guideline's position of not providing guidance for this genotype.\", 'recommendation_completeness': 2, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 1/5 (need >= 4). Rationale: The agent provides a specific clinical recommendation when CPIC explicitly states 'No recommendation' for ultrarapid metabolizers, which is a fundamental mismatch in clinical action. While the implication is mostly accurate and the recommendation isn't unsafe, it contradicts the guideline's position of not providing guidance for this genotype.\nE       assert 1 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0005541250002352172,
+                "start": 1771633835.668186,
+                "stop": 1771633835.670537,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 4, 'rationale': \"The agent provides a specific clinical recommendati...tradicts the guideline's position of not providing guidance for this genotype.\", 'recommendation_completeness': 2, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent provides a specific clinical recommendation when CPIC explicitly states 'No recommendation' for ultrarapid metabolizers, which is a fundamental mismatch in clinical action. While the implication is mostly accurate and the recommendation isn't unsafe, it contradicts the guideline's position of not providing guidance for this genotype.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00017862499998955172,
+                "start": 1771633835.6706388,
+                "stop": 1771633835.6708941,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00024054100049397675,
+                "start": 1771633835.6709924,
+                "stop": 1771633835.6724772,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 1, 'implication_accuracy': 4, 'rationale': \"The agent provides a specific clinical recommendati...tradicts the guideline's position of not providing guidance for this genotype.\", 'recommendation_completeness': 2, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent provides a specific clinical recommendation when CPIC explicitly states 'No recommendation' for ultrarapid metabolizers, which is a fundamental mismatch in clinical action. While the implication is mostly accurate and the recommendation isn't unsafe, it contradicts the guideline's position of not providing guidance for this genotype.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

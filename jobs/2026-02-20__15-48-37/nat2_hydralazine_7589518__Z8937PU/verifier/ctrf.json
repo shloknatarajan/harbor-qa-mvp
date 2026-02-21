@@ -1,0 +1,74 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771636173.0247104,
+            "stop": 1771636177.020832
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.00024762400062172674,
+                "start": 1771636173.0486655,
+                "stop": 1771636173.0490112,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3.937964251000267,
+                "start": 1771636173.0490887,
+                "stop": 1771636177.0157154,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': \"The agent recommends initiating at 'low end of usua... of specific dosing parameters makes the recommendation clinically incomplete.\", 'recommendation_completeness': 2, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 3/5 (need >= 4). Rationale: The agent recommends initiating at 'low end of usual dose range' but fails to specify the critical CPIC-recommended starting dose of 40-75 mg daily and the important 200 mg caution threshold. While the general approach is correct, the lack of specific dosing parameters makes the recommendation clinically incomplete.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00041212599990103627,
+                "start": 1771636177.0160258,
+                "stop": 1771636177.018164,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': \"The agent recommends initiating at 'low end of usua... of specific dosing parameters makes the recommendation clinically incomplete.\", 'recommendation_completeness': 2, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent recommends initiating at 'low end of usual dose range' but fails to specify the critical CPIC-recommended starting dose of 40-75 mg daily and the important 200 mg caution threshold. While the general approach is correct, the lack of specific dosing parameters makes the recommendation clinically incomplete.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00026695799988374347,
+                "start": 1771636177.0183222,
+                "stop": 1771636177.0186913,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00035191699953429634,
+                "start": 1771636177.0188394,
+                "stop": 1771636177.0206866,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': \"The agent recommends initiating at 'low end of usua... of specific dosing parameters makes the recommendation clinically incomplete.\", 'recommendation_completeness': 2, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent recommends initiating at 'low end of usual dose range' but fails to specify the critical CPIC-recommended starting dose of 40-75 mg daily and the important 200 mg caution threshold. While the general approach is correct, the lack of specific dosing parameters makes the recommendation clinically incomplete.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

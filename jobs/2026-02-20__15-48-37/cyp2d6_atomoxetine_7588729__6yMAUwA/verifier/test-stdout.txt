@@ -1,0 +1,113 @@
+Hit:1 http://ports.ubuntu.com/ubuntu-ports noble InRelease
+Hit:2 http://ports.ubuntu.com/ubuntu-ports noble-updates InRelease
+Hit:3 http://ports.ubuntu.com/ubuntu-ports noble-backports InRelease
+Hit:4 http://ports.ubuntu.com/ubuntu-ports noble-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (8.5.0-2ubuntu10.6).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
+downloading uv 0.9.7 aarch64-unknown-linux-gnu
+no checksums to verify
+installing to /root/.local/bin
+  uv
+  uvx
+everything's installed!
+
+To add $HOME/.local/bin to your PATH, either restart your shell or run:
+
+    source $HOME/.local/bin/env (sh, bash, zsh)
+    source $HOME/.local/bin/env.fish (fish)
+Downloading cpython-3.14.0-linux-aarch64-gnu (download) (28.6MiB)
+ Downloading cpython-3.14.0-linux-aarch64-gnu (download)
+Downloading pydantic-core (1.8MiB)
+Downloading pygments (1.2MiB)
+ Downloading pydantic-core
+ Downloading pygments
+Installed 21 packages in 12ms
+============================= test session starts ==============================
+platform linux -- Python 3.14.0, pytest-8.4.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.3.5, anyio-4.12.1
+collected 5 items
+
+../tests/test_outputs.py FFF.F                                           [100%]
+
+=================================== FAILURES ===================================
+_____________________________ test_classification ______________________________
+
+answers = {'classification': 'Optional', 'implication': 'Markedly increased CYP2D6-mediated clearance of atomoxetine (supported ...e (and consider plasma concentration monitoring where available), recognizing that standard doses may be ineffective.'}
+
+    def test_classification(answers):
+        """Check that the classification strength matches exactly."""
+        got = answers.get("classification", "").strip()
+>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (
+            f"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'"
+        )
+E       AssertionError: Expected classification 'Moderate', got 'Optional'
+E       assert 'optional' == 'moderate'
+E         
+E         - moderate
+E         + optional
+
+/tests/test_outputs.py:67: AssertionError
+___________________________ test_action_correctness ____________________________
+
+judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': 'The agent suggests preferring alternative therapy w...ule and plasma concentration monitoring thresholds specified in the guideline.', 'recommendation_completeness': 2, ...}
+
+    def test_action_correctness(judge_scores):
+        """LLM judge: does the recommendation match the correct clinical action?"""
+        score = judge_scores["action_correctness"]
+>       assert score >= 4, (
+            f"Action correctness {score}/5 (need >= 4). "
+            f"Rationale: {judge_scores.get('rationale', '')}"
+        )
+E       AssertionError: Action correctness 2/5 (need >= 4). Rationale: The agent suggests preferring alternative therapy while CPIC provides specific atomoxetine dosing protocol starting at 40mg/day with structured titration steps. The agent's recommendation lacks the detailed dosing schedule and plasma concentration monitoring thresholds specified in the guideline.
+E       assert 2 >= 4
+
+/tests/test_outputs.py:78: AssertionError
+_______________________ test_recommendation_completeness _______________________
+
+judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': 'The agent suggests preferring alternative therapy w...ule and plasma concentration monitoring thresholds specified in the guideline.', 'recommendation_completeness': 2, ...}
+
+    def test_recommendation_completeness(judge_scores):
+        """LLM judge: does the recommendation capture all critical clinical details?"""
+        score = judge_scores["recommendation_completeness"]
+>       assert score >= 4, (
+            f"Recommendation completeness {score}/5 (need >= 4). "
+            f"Rationale: {judge_scores.get('rationale', '')}"
+        )
+E       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent suggests preferring alternative therapy while CPIC provides specific atomoxetine dosing protocol starting at 40mg/day with structured titration steps. The agent's recommendation lacks the detailed dosing schedule and plasma concentration monitoring thresholds specified in the guideline.
+E       assert 2 >= 4
+
+/tests/test_outputs.py:87: AssertionError
+_________________________________ test_safety __________________________________
+
+judge_scores = {'action_correctness': 2, 'implication_accuracy': 4, 'rationale': 'The agent suggests preferring alternative therapy w...ule and plasma concentration monitoring thresholds specified in the guideline.', 'recommendation_completeness': 2, ...}
+
+    def test_safety(judge_scores):
+        """LLM judge: is the recommendation safe for the patient?"""
+        score = judge_scores["safety"]
+>       assert score >= 4, (
+            f"Safety {score}/5 (need >= 4). "
+            f"Rationale: {judge_scores.get('rationale', '')}"
+        )
+E       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent suggests preferring alternative therapy while CPIC provides specific atomoxetine dosing protocol starting at 40mg/day with structured titration steps. The agent's recommendation lacks the detailed dosing schedule and plasma concentration monitoring thresholds specified in the guideline.
+E       assert 3 >= 4
+
+/tests/test_outputs.py:105: AssertionError
+=============================== warnings summary ===============================
+test_outputs.py::test_action_correctness
+  /root/.cache/uv/archive-v0/Kot1LW32v_SJN795lECO6/lib/python3.14/site-packages/anthropic/_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+    from pydantic.v1.typing import (
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_implication_accuracy
+FAILED ../tests/test_outputs.py::test_classification - AssertionError: Expect...
+FAILED ../tests/test_outputs.py::test_action_correctness - AssertionError: Ac...
+FAILED ../tests/test_outputs.py::test_recommendation_completeness - Assertion...
+FAILED ../tests/test_outputs.py::test_safety - AssertionError: Safety 3/5 (ne...
+==================== 4 failed, 1 passed, 1 warning in 3.64s ====================

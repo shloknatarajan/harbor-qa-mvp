@@ -1,0 +1,74 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771639994.7340915,
+            "stop": 1771639999.02416
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.000457875003121444,
+                "start": 1771639994.757018,
+                "stop": 1771639994.7642887,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "answers = {'classification': 'No Recommendation', 'implication': 'CYP2D6 activity score 2.25 indicates relatively high CYP2D6 ac..., manage clinically (e.g., alternative or additional antiemetic) based on symptoms rather than CYP2D6 genotype alone.'}\n\n    def test_classification(answers):\n        \"\"\"Check that the classification strength matches exactly.\"\"\"\n        got = answers.get(\"classification\", \"\").strip()\n>       assert got.lower() == EXPECTED_CLASSIFICATION.lower(), (\n            f\"Expected classification '{EXPECTED_CLASSIFICATION}', got '{got}'\"\n        )\nE       AssertionError: Expected classification 'Strong', got 'No Recommendation'\nE       assert 'no recommendation' == 'strong'\nE         \nE         - strong\nE         + no recommendation\n\n/tests/test_outputs.py:67: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "passed",
+                "duration": 4.233865502001208,
+                "start": 1771639994.7644124,
+                "stop": 1771639999.0002792,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.003530209000018658,
+                "start": 1771639999.0053961,
+                "stop": 1771639999.020569,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 4, 'implication_accuracy': 3, 'rationale': \"The agent correctly recommends standard dosing whic...ation is partially correct but lacks precision about normal metabolism status.\", 'recommendation_completeness': 2, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 2/5 (need >= 4). Rationale: The agent correctly recommends standard dosing which aligns with CPIC's recommendation to initiate with recommended starting dose, but fails to provide the definitive clinical guidance expected and inappropriately states there's insufficient evidence when CPIC has a strong recommendation. The phenotype interpretation is partially correct but lacks precision about normal metabolism status.\nE       assert 2 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0003795409993472276,
+                "start": 1771639999.0208373,
+                "stop": 1771639999.0229032,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 4, 'implication_accuracy': 3, 'rationale': \"The agent correctly recommends standard dosing whic...ation is partially correct but lacks precision about normal metabolism status.\", 'recommendation_completeness': 2, ...}\n\n    def test_implication_accuracy(judge_scores):\n        \"\"\"LLM judge: is the stated implication correct for this genotype?\"\"\"\n        score = judge_scores[\"implication_accuracy\"]\n>       assert score >= 4, (\n            f\"Implication accuracy {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Implication accuracy 3/5 (need >= 4). Rationale: The agent correctly recommends standard dosing which aligns with CPIC's recommendation to initiate with recommended starting dose, but fails to provide the definitive clinical guidance expected and inappropriately states there's insufficient evidence when CPIC has a strong recommendation. The phenotype interpretation is partially correct but lacks precision about normal metabolism status.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:96: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "passed",
+                "duration": 0.00045045800288789906,
+                "start": 1771639999.0230532,
+                "stop": 1771639999.023645,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

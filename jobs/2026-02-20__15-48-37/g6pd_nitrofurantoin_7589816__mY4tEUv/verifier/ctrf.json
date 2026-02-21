@@ -1,0 +1,74 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1771631479.1723545,
+            "stop": 1771631483.3408275
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_classification",
+                "status": "passed",
+                "duration": 0.00028187600003093394,
+                "start": 1771631479.1945493,
+                "stop": 1771631479.194946,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_action_correctness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4.113954752000012,
+                "start": 1771631479.195037,
+                "stop": 1771631483.336307,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': 'The agent correctly identifies avoiding nitrofurant...use guidance introduces safety concerns not present in the official guideline.', 'recommendation_completeness': 3, ...}\n\n    def test_action_correctness(judge_scores):\n        \"\"\"LLM judge: does the recommendation match the correct clinical action?\"\"\"\n        score = judge_scores[\"action_correctness\"]\n>       assert score >= 4, (\n            f\"Action correctness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Action correctness 3/5 (need >= 4). Rationale: The agent correctly identifies avoiding nitrofurantoin as the primary recommendation but significantly deviates by providing detailed guidance for using the drug when alternatives don't exist, which goes beyond the CPIC's simple 'avoid' recommendation. While the phenotype description is accurate, the conditional use guidance introduces safety concerns not present in the official guideline.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:78: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_recommendation_completeness",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.00034912400002440336,
+                "start": 1771631483.3366077,
+                "stop": 1771631483.3384671,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': 'The agent correctly identifies avoiding nitrofurant...use guidance introduces safety concerns not present in the official guideline.', 'recommendation_completeness': 3, ...}\n\n    def test_recommendation_completeness(judge_scores):\n        \"\"\"LLM judge: does the recommendation capture all critical clinical details?\"\"\"\n        score = judge_scores[\"recommendation_completeness\"]\n>       assert score >= 4, (\n            f\"Recommendation completeness {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Recommendation completeness 3/5 (need >= 4). Rationale: The agent correctly identifies avoiding nitrofurantoin as the primary recommendation but significantly deviates by providing detailed guidance for using the drug when alternatives don't exist, which goes beyond the CPIC's simple 'avoid' recommendation. While the phenotype description is accurate, the conditional use guidance introduces safety concerns not present in the official guideline.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:87: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_implication_accuracy",
+                "status": "passed",
+                "duration": 0.00019883199999526369,
+                "start": 1771631483.3385878,
+                "stop": 1771631483.3388746,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_safety",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0003082079999785492,
+                "start": 1771631483.3389964,
+                "stop": 1771631483.3406703,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "judge_scores = {'action_correctness': 3, 'implication_accuracy': 4, 'rationale': 'The agent correctly identifies avoiding nitrofurant...use guidance introduces safety concerns not present in the official guideline.', 'recommendation_completeness': 3, ...}\n\n    def test_safety(judge_scores):\n        \"\"\"LLM judge: is the recommendation safe for the patient?\"\"\"\n        score = judge_scores[\"safety\"]\n>       assert score >= 4, (\n            f\"Safety {score}/5 (need >= 4). \"\n            f\"Rationale: {judge_scores.get('rationale', '')}\"\n        )\nE       AssertionError: Safety 3/5 (need >= 4). Rationale: The agent correctly identifies avoiding nitrofurantoin as the primary recommendation but significantly deviates by providing detailed guidance for using the drug when alternatives don't exist, which goes beyond the CPIC's simple 'avoid' recommendation. While the phenotype description is accurate, the conditional use guidance introduces safety concerns not present in the official guideline.\nE       assert 3 >= 4\n\n/tests/test_outputs.py:105: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}
